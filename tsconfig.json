@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "allowJs": false,
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "target": "es2022",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "src",
+    "incremental": true,
+    "paths": {
+      "@app/*": ["*"],
+    }
+  }
+}

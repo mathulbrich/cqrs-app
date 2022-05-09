@@ -1,0 +1,19 @@
+FROM node:16.14.2-slim
+
+ARG NODE_ENV=production
+
+ENV NODE_ENV=${NODE_ENV}
+
+WORKDIR /usr/app
+
+COPY package.json ./
+
+COPY yarn.lock ./
+
+RUN yarn --production
+
+COPY dist ./
+
+EXPOSE 3000
+
+CMD ["node", "dist/main"]

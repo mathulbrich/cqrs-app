@@ -1,0 +1,17 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+      {
+          "name": "App Debug",
+          "type": "node",
+          "request": "attach",
+          "remoteRoot": "/usr/app",
+          "restart": true,
+          "sourceMaps": true,
+          "outFiles": [
+              "${workspaceFolder}/dist/*/.js",
+              "!*/node_modules/*"
+          ]
+      }
+  ]
+}

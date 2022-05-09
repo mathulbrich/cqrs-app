@@ -1,0 +1,60 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "tsconfig.json",
+    "sourceType": "module"
+  },
+  "plugins": [
+    "import",
+    "@typescript-eslint/eslint-plugin"
+  ],
+  "extends": [
+    "plugin:@typescript-eslint/recommended",
+    "prettier/@typescript-eslint",
+    "plugin:prettier/recommended"
+  ],
+  "root": true,
+  "env": {
+    "node": true,
+    "jest": true
+  },
+  "settings": {
+    "import/resolver": {
+      "alias": {
+        "map": [
+          ["@app", "./src"]
+        ],
+        "extensions": [".ts", ".js", ".json"]
+      }
+    }
+  },
+  "rules": {
+    "@typescript-eslint/explicit-function-return-type": 0,
+    "@typescript-eslint/explicit-module-boundary-types": 0,
+    "@typescript-eslint/interface-name-prefix": 0,
+    "@typescript-eslint/no-explicit-any": 0,
+    "@typescript-eslint/no-floating-promises": 2,
+    "no-restricted-imports": ["error", {
+      "patterns": [
+        {
+          "group": ["./*", "../*", "*/../*"],
+          "message": "relative import is not allowed"
+        }
+      ]
+    }],
+    "import/no-restricted-paths": ["error", {
+      "zones": [
+        {
+          "target": "./src/**/domain/**/*",
+          "from": "./src/**/application/**/*",
+          "message": "import from application layer is not allowed in domain layer"
+        },
+        {
+          "target": "./src/**/domain/**/*",
+          "from": "./src/**/infrastructure/**/*",
+          "message": "import from infrastructure layer is not allowed in domain layer"
+        }
+      ]
+    }]
+  }
+}
