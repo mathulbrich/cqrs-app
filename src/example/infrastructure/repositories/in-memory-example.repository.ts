@@ -2,6 +2,7 @@ import { Optional, Option } from '@app/lib/optional';
 import { Injectable } from '@nestjs/common';
 import { ExampleRepository } from '@app/example/domain/repositories/example.repository';
 import { Example } from '@app/example/domain/example';
+import { Uuid } from '@app/lib/uuid';
 
 @Injectable()
 export class InMemoryExampleRepository implements ExampleRepository {
@@ -11,7 +12,7 @@ export class InMemoryExampleRepository implements ExampleRepository {
     this.examples.set(example.id, example);
   }
 
-  public async findById(id: string): Promise<Optional<Example>> {
-    return Option(this.examples.get(id));
+  public async findById(id: Uuid): Promise<Optional<Example>> {
+    return Option(this.examples.get(id.toString()));
   }
 }
