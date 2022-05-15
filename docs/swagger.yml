@@ -4,10 +4,10 @@ info:
   version: 1.0.0
 
 servers:
-  - url: http://localhost:3000/api/v1/
+  - url: http://localhost:3000/api/
 
 paths:
-  /example/{id}:
+  /v1/example/{id}:
     get:
       summary: Get example
       tags:
@@ -33,7 +33,7 @@ paths:
               schema:
                 $ref: 'schemas.yml#/components/schemas/NotFoundResponse'
 
-  /create-example:
+  /v1/create-example:
     post:
       summary: Create new example
       tags:
@@ -53,4 +53,11 @@ paths:
               schema:
                 type: string
 
-
+components:
+  schemas: 
+    CreateExampleRequest:
+      $ref: 'schemas.yml#/components/schemas/CreateExampleRequest'
+    GetExampleResponse:
+      $ref: 'schemas.yml#/components/schemas/GetExampleResponse'
+    NotFoundResponse:
+      $ref: 'schemas.yml#/components/schemas/NotFoundResponse'
