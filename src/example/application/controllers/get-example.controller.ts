@@ -3,7 +3,7 @@ import { ExampleRepository } from '@app/example/domain/repositories/example.repo
 import { Example } from '@app/example/domain/example';
 import { GetExampleResponse } from '@app/example/application/controllers/get-example-response';
 
-@Controller('api/v1/example')
+@Controller('v1/example')
 export class GetExampleController {
   public constructor(private readonly repository: ExampleRepository) {}
 

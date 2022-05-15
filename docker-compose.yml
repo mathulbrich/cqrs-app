@@ -1,0 +1,35 @@
+version: '3.7'
+
+networks:
+  default:
+
+services:
+  cqrs-app:
+    container_name: cqrs-app
+    image: cqrs-app-dev:latest
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+      target: dev
+    ports:
+      - "3000:3000"
+      - "9229:9229"
+    volumes:
+      - "./:/usr/app"
+    networks:
+      - default
+    env_file:
+      - ./env/local.env
+
+  gtasks:
+    container_name: gtasks
+    image: ghcr.io/aertje/cloud-tasks-emulator:latest
+    restart: always
+    command: -host 0.0.0.0 -port 8123 
+      -queue "projects/dev/locations/local/queues/create-example"
+    ports:
+    - "${TASKS_PORT:-8123}:8123"
+    environment:
+      APP_ENGINE_EMULATOR_HOST: http://cqrs-app:3000
+    networks:
+      - default

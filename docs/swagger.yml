@@ -1,0 +1,56 @@
+openapi: 3.0.0
+info:
+  title: CQRS App Documentation
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:3000/api/v1/
+
+paths:
+  /example/{id}:
+    get:
+      summary: Get example
+      tags:
+        - Example
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            example: 71c83024-51ce-4223-b262-defb0d72de30
+      responses:
+        '200':
+          description: Example found
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas.yml#/components/schemas/GetExampleResponse'
+        '404':
+          description: Example not found
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas.yml#/components/schemas/NotFoundResponse'
+
+  /create-example:
+    post:
+      summary: Create new example
+      tags:
+        - Example
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'schemas.yml#/components/schemas/CreateExampleRequest'
+      responses:
+        '201':
+          description: Created example response
+          headers: 
+            example-id:
+              description: The identifier of the created resource
+              schema:
+                type: string
+
+

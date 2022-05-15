@@ -1,0 +1,36 @@
+components:
+  schemas:
+    CreateExampleRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          required: true
+          example: ipsum lorem
+        description:
+          type: string
+          required: true
+          example: Sed ut risus quis ligula rhoncus bibendum. Curabitur facilisis elementum orci nec faucibus.
+    
+    GetExampleResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 71c83024-51ce-4223-b262-defb0d72de30
+        name:
+          type: string
+          example: ipsum lorem
+        description:
+          type: string
+          example: Sed ut risus quis ligula rhoncus bibendum. Curabitur facilisis elementum orci nec faucibus.
+    
+    NotFoundResponse:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 404
+        message:
+          type: string
+          example: Not Found

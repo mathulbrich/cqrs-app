@@ -53,6 +53,11 @@
           "target": "./src/**/domain/**/*",
           "from": "./src/**/infrastructure/**/*",
           "message": "import from infrastructure layer is not allowed in domain layer"
+        },
+        {
+          "target": "./src/**/infrastructure/**/*",
+          "from": "./src/**/application/**/*",
+          "message": "import from application layer is not allowed in infrastructure layer"
         }
       ]
     }]

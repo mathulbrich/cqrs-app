@@ -2,18 +2,14 @@ import { CloudTasksClient } from '@google-cloud/tasks';
 import { credentials } from '@grpc/grpc-js';
 import { Injectable, Logger } from '@nestjs/common';
 import { config } from '@app/config/config.envs';
-
-interface EnqueueArguments {
-  queue: string;
-  syncId: string;
-  payload: string;
-}
+import { Enqueuer, EnqueueArguments } from '@app/queue/infrastructure/enqueuer';
 
 @Injectable()
-export class Enqueuer {
+export class GcloudTasksEnqueuer extends Enqueuer {
   private readonly client: CloudTasksClient;
 
   public constructor() {
+    super();
     this.client = new CloudTasksClient({
       port: config.queue.queuePort,
       servicePath: config.queue.queueHost,
