@@ -1,7 +1,8 @@
 import { Baseclass } from '@app/lib/baseclass';
+import { Uuid } from '@app/lib/uuid';
 
 export interface CreateExampleCommandAttributes {
-  readonly id: string;
+  readonly id: Uuid;
   readonly name: string;
   readonly description: string;
 }

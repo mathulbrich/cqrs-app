@@ -1,9 +1,9 @@
 import { z } from 'zod';
 
 export const CreateExampleQueuePayload = z.object({
-  id: z.string().nonempty(),
-  name: z.string().nonempty(),
-  description: z.string().nonempty(),
+  id: z.string().uuid(),
+  name: z.string().min(1),
+  description: z.string().min(1),
 });
 
 export type CreateExampleQueuePayload = z.infer<

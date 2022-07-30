@@ -1,7 +1,8 @@
 import { Baseclass } from '@app/lib/baseclass';
+import { Uuid } from '@app/lib/uuid';
 
-interface ExampleAttributes {
-  id: string;
+export interface ExampleAttributes {
+  id: Uuid;
   name: string;
   description: string;
   createdAt: Date;

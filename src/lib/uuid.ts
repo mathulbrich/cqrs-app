@@ -14,6 +14,10 @@ export class Uuid {
     return new Uuid(uuidV4());
   }
 
+  public equals(other: Uuid): boolean {
+    return this.uuid === other.uuid;
+  }
+
   public toString(): string {
     return this.uuid;
   }

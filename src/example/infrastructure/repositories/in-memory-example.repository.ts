@@ -9,7 +9,13 @@ export class InMemoryExampleRepository implements ExampleRepository {
   private readonly examples: Map<string, Example> = new Map();
 
   public async store(example: Example): Promise<void> {
-    this.examples.set(example.id, example);
+    this.examples.set(example.id.toString(), example);
+  }
+
+  public async *findAll(): AsyncGenerator<Example> {
+    for (const example of this.examples.values()) {
+      yield example;
+    }
   }
 
   public async findById(id: Uuid): Promise<Optional<Example>> {

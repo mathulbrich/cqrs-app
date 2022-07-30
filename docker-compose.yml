@@ -21,6 +21,18 @@ services:
     env_file:
       - ./env/local.env
 
+  mongodb:
+    container_name: mongodb
+    image: mongo:latest
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+    networks:
+      - default
+
   gtasks:
     container_name: gtasks
     image: ghcr.io/aertje/cloud-tasks-emulator:latest

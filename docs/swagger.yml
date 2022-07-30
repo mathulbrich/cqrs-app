@@ -7,6 +7,21 @@ servers:
   - url: http://localhost:3000/api/
 
 paths:
+  /v1/example:
+    get:
+      summary: Get all examples
+      tags:
+        - Example
+      responses:
+        '200':
+          description: Examples list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: 'schemas.yml#/components/schemas/GetExampleResponse'
+
   /v1/example/{id}:
     get:
       summary: Get example

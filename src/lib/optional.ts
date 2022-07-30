@@ -1,7 +1,7 @@
 import * as assert from 'assert';
 
 export const Option = <T>(value: T | undefined) => new Optional(value);
-export const None = () => new Optional();
+export const None = <T>() => new Optional<T>();
 
 export class Optional<T> {
   public constructor(private readonly value?: T) {}
