@@ -4,6 +4,7 @@ import { raw } from 'body-parser';
 import * as express from 'express';
 import { AppModule } from '@app/app.module';
 import helmet from 'helmet';
+import { AppConfigService } from '@app/common/infrastructure/config/app-config-service';
 
 const bootstrap = async () => {
   const app = await NestFactory.create(AppModule);
@@ -13,7 +14,7 @@ const bootstrap = async () => {
   app.setGlobalPrefix('api', {
     exclude: ['/health'],
   });
-  await app.listen(3000);
+  await app.listen(app.get(AppConfigService).app.port);
 };
 
 // eslint-disable-next-line @typescript-eslint/no-floating-promises

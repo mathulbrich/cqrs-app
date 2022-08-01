@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { z } from 'zod';
 import validator from 'validator';
+import { Logger } from '@nestjs/common';
+import { parseInt } from 'lodash';
 
 export const Env = {
   APP_PORT: 'APP_PORT',
@@ -25,14 +27,14 @@ const booleanStringDisabledByDefault = z
   .transform((data) => validator.toBoolean(data));
 
 const AppEnvs = z.object({
-  port: z.number(),
+  port: z.string().transform((data) => parseInt(data, 10)),
   useInMemoryRepository: booleanStringDisabledByDefault,
 });
 type AppEnvs = z.infer<typeof AppEnvs>;
 
 const QueueEnvs = z.object({
   queueHost: z.string(),
-  queuePort: z.number(),
+  queuePort: z.string().transform((data) => parseInt(data, 10)),
   queueProject: z.string(),
   queueRegion: z.string(),
   queueHandlerUrl: z.string().url(),
@@ -51,19 +53,18 @@ export const ConfigEnvs = z.object({
 });
 export type ConfigEnvs = z.infer<typeof ConfigEnvs>;
 
-export type ConfigurationInput = z.input<typeof ConfigEnvs>;
-export type ConfigurationOutput = z.output<typeof ConfigEnvs>;
+type ConfigurationInput = z.input<typeof ConfigEnvs>;
 
-export const configInput = (
+const configInput = (
   inputConfig: Record<string, string | undefined> = process.env,
 ): ConfigurationInput => ({
   app: {
-    port: Number(inputConfig[Env.APP_PORT]),
+    port: inputConfig[Env.APP_PORT]!,
     useInMemoryRepository: inputConfig[OptionalEnv.USE_IN_MEMORY_REPOSITORY],
   },
   queue: {
     queueHost: inputConfig[Env.GCP_QUEUE_HOST]!,
-    queuePort: Number(inputConfig[Env.GCP_QUEUE_PORT]),
+    queuePort: inputConfig[Env.GCP_QUEUE_PORT]!,
     queueProject: inputConfig[Env.GCP_QUEUE_PROJECT]!,
     queueRegion: inputConfig[Env.GCP_QUEUE_REGION]!,
     queueHandlerUrl: inputConfig[Env.GCP_QUEUE_HANDLER_URL]!,
@@ -72,3 +73,12 @@ export const configInput = (
     connectionUri: inputConfig[Env.MONGODB_CONNECTION_URI]!,
   },
 });
+
+export const validateConfig = (config: Record<string, string | undefined>) => {
+  const parsed = ConfigEnvs.safeParse(configInput(config));
+  if (!parsed.success) {
+    Logger.error('Environment variables is invalid');
+    throw new Error(parsed.error.message);
+  }
+  return parsed.data;
+};
