@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, Provider } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { CreateExampleQueueHandler } from '@app/example/application/queues/create-example-queue.handler';
 import { CreateExampleController } from '@app/example/application/controllers/create-example.controller';
@@ -8,13 +8,16 @@ import { ExampleRepository } from '@app/example/domain/repositories/example.repo
 import { MongoDBExampleRepository } from '@app/example/infrastructure/repositories/mongodb-example.repository';
 import { GetExampleController } from '@app/example/application/controllers/get-example.controller';
 import { InMemoryExampleRepository } from '@app/example/infrastructure/repositories/in-memory-example.repository';
-import { config } from '@app/config/config-load';
+import { AppConfigService } from '@app/common/infrastructure/config/app-config-service';
 
-const provideRepository = () =>
-  config.app.useInMemoryRepository
-    ? InMemoryExampleRepository
-    : MongoDBExampleRepository;
-
+const loadExampleRepository = (): Provider => ({
+  provide: ExampleRepository,
+  inject: [AppConfigService],
+  useFactory: (appConfig: AppConfigService) =>
+    appConfig.app?.useInMemoryRepository
+      ? InMemoryExampleRepository
+      : MongoDBExampleRepository,
+});
 @Module({
   imports: [CqrsModule],
   exports: [CreateExampleQueueHandler],
@@ -23,10 +26,7 @@ const provideRepository = () =>
     LogExampleCreatedEventHandler,
     CreateExampleCommandHandler,
     CreateExampleQueueHandler,
-    {
-      provide: ExampleRepository,
-      useClass: provideRepository(),
-    },
+    loadExampleRepository(),
   ],
 })
 export class ExampleModule {}

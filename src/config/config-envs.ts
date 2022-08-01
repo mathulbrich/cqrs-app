@@ -54,19 +54,21 @@ export type ConfigEnvs = z.infer<typeof ConfigEnvs>;
 export type ConfigurationInput = z.input<typeof ConfigEnvs>;
 export type ConfigurationOutput = z.output<typeof ConfigEnvs>;
 
-export const configInput: ConfigurationInput = {
+export const configInput = (
+  inputConfig: Record<string, string | undefined> = process.env,
+): ConfigurationInput => ({
   app: {
-    port: Number(process.env[Env.APP_PORT]),
-    useInMemoryRepository: process.env[OptionalEnv.USE_IN_MEMORY_REPOSITORY],
+    port: Number(inputConfig[Env.APP_PORT]),
+    useInMemoryRepository: inputConfig[OptionalEnv.USE_IN_MEMORY_REPOSITORY],
   },
   queue: {
-    queueHost: process.env[Env.GCP_QUEUE_HOST]!,
-    queuePort: Number(process.env[Env.GCP_QUEUE_PORT]),
-    queueProject: process.env[Env.GCP_QUEUE_PROJECT]!,
-    queueRegion: process.env[Env.GCP_QUEUE_REGION]!,
-    queueHandlerUrl: process.env[Env.GCP_QUEUE_HANDLER_URL]!,
+    queueHost: inputConfig[Env.GCP_QUEUE_HOST]!,
+    queuePort: Number(inputConfig[Env.GCP_QUEUE_PORT]),
+    queueProject: inputConfig[Env.GCP_QUEUE_PROJECT]!,
+    queueRegion: inputConfig[Env.GCP_QUEUE_REGION]!,
+    queueHandlerUrl: inputConfig[Env.GCP_QUEUE_HANDLER_URL]!,
   },
   mongoDb: {
-    connectionUri: process.env[Env.MONGODB_CONNECTION_URI]!,
+    connectionUri: inputConfig[Env.MONGODB_CONNECTION_URI]!,
   },
-};
+});

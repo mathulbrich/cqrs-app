@@ -1,6 +1,4 @@
 /* istanbul ignore file */
-import 'module-alias/register';
-import { config } from '@app/config/config-load';
 import { NestFactory } from '@nestjs/core';
 import { raw } from 'body-parser';
 import * as express from 'express';
@@ -15,7 +13,7 @@ const bootstrap = async () => {
   app.setGlobalPrefix('api', {
     exclude: ['/health'],
   });
-  await app.listen(config.app.port);
+  await app.listen(3000);
 };
 
 // eslint-disable-next-line @typescript-eslint/no-floating-promises
