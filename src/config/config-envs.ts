@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { z } from 'zod';
 import validator from 'validator';
-import { Logger } from '@nestjs/common';
 import { parseInt } from 'lodash';
 
 export const Env = {
@@ -20,21 +19,24 @@ export const OptionalEnv = {
 } as const;
 type OptionalEnv = keyof typeof OptionalEnv;
 
-const booleanStringDisabledByDefault = z
-  .string()
-  .refine(validator.isBoolean)
-  .default('0')
-  .transform((data) => validator.toBoolean(data));
+const stringToBooleanDisabledByDefault = () =>
+  z
+    .string()
+    .refine(validator.isBoolean)
+    .default('0')
+    .transform((data) => validator.toBoolean(data));
+
+const stringToNumber = () => z.string().transform((data) => parseInt(data, 10));
 
 const AppEnvs = z.object({
-  port: z.string().transform((data) => parseInt(data, 10)),
-  useInMemoryRepository: booleanStringDisabledByDefault,
+  port: stringToNumber(),
+  useInMemoryRepository: stringToBooleanDisabledByDefault(),
 });
 type AppEnvs = z.infer<typeof AppEnvs>;
 
 const QueueEnvs = z.object({
   queueHost: z.string(),
-  queuePort: z.string().transform((data) => parseInt(data, 10)),
+  queuePort: stringToNumber(),
   queueProject: z.string(),
   queueRegion: z.string(),
   queueHandlerUrl: z.string().url(),
@@ -74,11 +76,5 @@ const configInput = (
   },
 });
 
-export const validateConfig = (config: Record<string, string | undefined>) => {
-  const parsed = ConfigEnvs.safeParse(configInput(config));
-  if (!parsed.success) {
-    Logger.error('Environment variables is invalid');
-    throw new Error(parsed.error.message);
-  }
-  return parsed.data;
-};
+export const validateConfig = (config: Record<string, string | undefined>) =>
+  ConfigEnvs.parse(configInput(config));
