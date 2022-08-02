@@ -1,4 +1,3 @@
-import { MongooseModule } from "@nestjs/mongoose";
 import mongoose from "mongoose";
 
 import { Uuid } from "@app/lib/uuid";
@@ -6,14 +5,6 @@ import { Uuid } from "@app/lib/uuid";
 export const mongoUri = (suffix: string) => {
   return `mongodb://admin:admin@mongodb/app-${suffix}?authSource=admin`;
 };
-
-export const mongooseTestConfig = (suffix: string) =>
-  MongooseModule.forRootAsync({
-    useFactory: () => ({
-      uri: mongoUri(suffix),
-      useNewUrlParser: true,
-    }),
-  });
 
 export const dropDatabase = async (databaseSuffix: string) => {
   const mongo = await mongoose.connect(mongoUri(databaseSuffix));

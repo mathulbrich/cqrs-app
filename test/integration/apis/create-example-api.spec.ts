@@ -4,9 +4,14 @@ import * as request from "supertest";
 
 import { MongoDBExampleRepository } from "@app/example/infrastructure/repositories/mongodb-example.repository";
 import { Uuid } from "@app/lib/uuid";
-import { TestSetup } from "@test/integration/setup/test-setup";
+import {
+  TestSetup,
+  INTEGRATION_DEFAULT_TIMEOUT,
+} from "@test/integration/setup/test-setup";
 
-describe.skip("Create Example API", () => {
+describe("Create Example API", () => {
+  jest.setTimeout(INTEGRATION_DEFAULT_TIMEOUT);
+
   it("Should create and store the example", async () => {
     await new TestSetup().run(async ({ app, mongoConnection }) => {
       const response = await request(app.getHttpServer())

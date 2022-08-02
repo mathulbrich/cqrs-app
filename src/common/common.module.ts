@@ -13,6 +13,7 @@ import { validateConfig } from "@app/config/config-envs";
   imports: [
     ConfigModule.forRoot({
       validate: validateConfig,
+      expandVariables: true,
     }),
     CqrsModule,
     MongooseModuleConfig,
