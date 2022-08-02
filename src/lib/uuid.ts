@@ -1,4 +1,5 @@
-import { v4 as uuidV4 } from "uuid";
+import { randomUUID } from "crypto";
+
 import { z } from "zod";
 
 export const UuidSchema = z.string().uuid();
@@ -11,7 +12,7 @@ export class Uuid {
   }
 
   public static generate(): Uuid {
-    return new Uuid(uuidV4());
+    return new Uuid(randomUUID());
   }
 
   public equals(other: Uuid): boolean {
