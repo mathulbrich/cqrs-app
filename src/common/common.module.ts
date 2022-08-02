@@ -1,6 +1,6 @@
 import { Module, Global } from '@nestjs/common';
 import { validateConfig } from '@app/config/config-envs';
-import { MoongoseModuleConfig } from '@app/common/infrastructure/mongoose';
+import { MongooseModuleConfig as MongooseModuleConfig } from '@app/common/infrastructure/mongoose';
 import { EventBusPublisher } from '@app/common//infrastructure/event-bus-publisher';
 import { EventPublisher } from '@app/common/domain/event-publisher';
 import { CqrsModule } from '@nestjs/cqrs';
@@ -14,7 +14,7 @@ import { AppConfigService } from '@app/common/infrastructure/config/app-config-s
     ConfigModule.forRoot({
       validate: validateConfig,
     }),
-    MoongoseModuleConfig,
+    MongooseModuleConfig,
   ],
   providers: [
     AppConfigService,

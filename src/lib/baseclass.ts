@@ -1,4 +1,4 @@
-export const Baseclass = <T>() =>
+export const BaseClass = <T>() =>
   class Base {
     public constructor(data: T) {
       Object.assign(this, data);

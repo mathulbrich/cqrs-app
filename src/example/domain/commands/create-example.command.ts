@@ -1,4 +1,4 @@
-import { Baseclass } from '@app/lib/baseclass';
+import { BaseClass } from '@app/lib/baseclass';
 import { Uuid } from '@app/lib/uuid';
 
 export interface CreateExampleCommandAttributes {
@@ -7,7 +7,7 @@ export interface CreateExampleCommandAttributes {
   readonly description: string;
 }
 
-export class CreateExampleCommand extends Baseclass<CreateExampleCommandAttributes>() {
+export class CreateExampleCommand extends BaseClass<CreateExampleCommandAttributes>() {
   public constructor(attributes: CreateExampleCommandAttributes) {
     super(attributes);
   }
