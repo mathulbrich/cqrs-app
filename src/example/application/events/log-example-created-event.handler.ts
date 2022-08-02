@@ -1,6 +1,7 @@
-import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
-import { Logger } from '@nestjs/common';
-import { ExampleCreatedEvent } from '@app/example/domain/events/example-created.event';
+import { Logger } from "@nestjs/common";
+import { EventsHandler, IEventHandler } from "@nestjs/cqrs";
+
+import { ExampleCreatedEvent } from "@app/example/domain/events/example-created.event";
 
 @EventsHandler(ExampleCreatedEvent)
 export class LogExampleCreatedEventHandler

@@ -1,8 +1,9 @@
-import { Optional, Option } from '@app/lib/optional';
-import { Injectable } from '@nestjs/common';
-import { ExampleRepository } from '@app/example/domain/repositories/example.repository';
-import { Example } from '@app/example/domain/example';
-import { Uuid } from '@app/lib/uuid';
+import { Injectable } from "@nestjs/common";
+
+import { Example } from "@app/example/domain/example";
+import { ExampleRepository } from "@app/example/domain/repositories/example.repository";
+import { Optional, Option } from "@app/lib/optional";
+import { Uuid } from "@app/lib/uuid";
 
 @Injectable()
 export class InMemoryExampleRepository implements ExampleRepository {

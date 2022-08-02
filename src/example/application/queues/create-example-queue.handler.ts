@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
-import { CommandBus } from '@nestjs/cqrs';
-import { CreateExampleCommand } from '@app/example/domain/commands/create-example.command';
-import { CreateExampleQueuePayload } from '@app/example/application/queues/create-example-queue.payload';
-import { Uuid } from '@app/lib/uuid';
+import { Injectable } from "@nestjs/common";
+import { CommandBus } from "@nestjs/cqrs";
+
+import { CreateExampleQueuePayload } from "@app/example/application/queues/create-example-queue.payload";
+import { CreateExampleCommand } from "@app/example/domain/commands/create-example.command";
+import { Uuid } from "@app/lib/uuid";
 
 @Injectable()
 export class CreateExampleQueueHandler {

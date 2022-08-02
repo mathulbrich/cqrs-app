@@ -1,6 +1,6 @@
-import { Optional } from '@app/lib/optional';
-import { Example } from '@app/example/domain/example';
-import { Uuid } from '@app/lib/uuid';
+import { Example } from "@app/example/domain/example";
+import { Optional } from "@app/lib/optional";
+import { Uuid } from "@app/lib/uuid";
 
 export abstract class ExampleRepository {
   public abstract store(example: Example): Promise<void>;

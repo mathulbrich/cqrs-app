@@ -1,6 +1,7 @@
-import mongoose from 'mongoose';
-import { Uuid } from '@app/lib/uuid';
-import { MongooseModule } from '@nestjs/mongoose';
+import { MongooseModule } from "@nestjs/mongoose";
+import mongoose from "mongoose";
+
+import { Uuid } from "@app/lib/uuid";
 
 export const mongoUri = (suffix: string) => {
   return `mongodb://admin:admin@mongodb/app-${suffix}?authSource=admin`;

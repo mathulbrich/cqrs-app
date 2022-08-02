@@ -1,5 +1,5 @@
-import { BadRequestException, PipeTransform, UsePipes } from '@nestjs/common';
-import { ZodType } from 'zod';
+import { BadRequestException, PipeTransform, UsePipes } from "@nestjs/common";
+import { ZodType } from "zod";
 
 export const ValidateSchema = (schema: ZodType) =>
   UsePipes(new SchemaValidationPipe(schema));

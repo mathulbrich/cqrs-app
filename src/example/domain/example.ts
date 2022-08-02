@@ -1,5 +1,5 @@
-import { BaseClass } from '@app/lib/baseclass';
-import { Uuid } from '@app/lib/uuid';
+import { BaseClass } from "@app/lib/baseclass";
+import { Uuid } from "@app/lib/uuid";
 
 export interface ExampleAttributes {
   id: Uuid;
@@ -9,7 +9,7 @@ export interface ExampleAttributes {
 }
 
 type RequiredExampleAttributes = Partial<ExampleAttributes> &
-  Omit<ExampleAttributes, 'createdAt'>;
+  Omit<ExampleAttributes, "createdAt">;
 
 export class Example extends BaseClass<RequiredExampleAttributes>() {
   constructor(attributes: RequiredExampleAttributes) {

@@ -1,8 +1,9 @@
-import { CloudTasksClient } from '@google-cloud/tasks';
-import { credentials } from '@grpc/grpc-js';
-import { Injectable, Logger } from '@nestjs/common';
-import { Enqueuer, EnqueueArguments } from '@app/queue/infrastructure/enqueuer';
-import { AppConfigService } from '@app/common/infrastructure/config/app-config-service';
+import { CloudTasksClient } from "@google-cloud/tasks";
+import { credentials } from "@grpc/grpc-js";
+import { Injectable, Logger } from "@nestjs/common";
+
+import { AppConfigService } from "@app/common/infrastructure/config/app-config-service";
+import { Enqueuer, EnqueueArguments } from "@app/queue/infrastructure/enqueuer";
 
 @Injectable()
 export class GcloudTasksEnqueuer implements Enqueuer {
@@ -28,11 +29,11 @@ export class GcloudTasksEnqueuer implements Enqueuer {
       task: {
         name: this.client.taskPath(queueProject, queueRegion, queue, syncId),
         httpRequest: {
-          httpMethod: 'POST',
+          httpMethod: "POST",
           url: `${queueHandlerUrl}/${queue}`,
-          body: Buffer.from(payload).toString('base64'),
+          body: Buffer.from(payload).toString("base64"),
           headers: {
-            'Content-Type': 'application/octet-stream',
+            "Content-Type": "application/octet-stream",
           },
         },
       },

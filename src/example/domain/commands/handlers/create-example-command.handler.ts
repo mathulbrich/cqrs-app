@@ -1,9 +1,10 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { CreateExampleCommand } from '@app/example/domain/commands/create-example.command';
-import { ExampleRepository } from '@app/example/domain/repositories/example.repository';
-import { Example } from '@app/example/domain/example';
-import { ExampleCreatedEvent } from '@app/example/domain/events/example-created.event';
-import { EventPublisher } from '@app/common/domain/event-publisher';
+import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
+
+import { EventPublisher } from "@app/common/domain/event-publisher";
+import { CreateExampleCommand } from "@app/example/domain/commands/create-example.command";
+import { ExampleCreatedEvent } from "@app/example/domain/events/example-created.event";
+import { Example } from "@app/example/domain/example";
+import { ExampleRepository } from "@app/example/domain/repositories/example.repository";
 
 @CommandHandler(CreateExampleCommand)
 export class CreateExampleCommandHandler

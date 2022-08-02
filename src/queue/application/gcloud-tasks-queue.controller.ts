@@ -1,3 +1,5 @@
+import * as assert from "assert";
+
 import {
   Body,
   Controller,
@@ -6,22 +8,22 @@ import {
   Logger,
   BadRequestException,
   Param,
-} from '@nestjs/common';
-import { ModuleRef } from '@nestjs/core';
+} from "@nestjs/common";
+import { ModuleRef } from "@nestjs/core";
+
 import {
   QueueMapping,
   isValidQueue,
-} from '@app/queue/application/queue-mapper';
-import * as assert from 'assert';
+} from "@app/queue/application/queue-mapper";
 
-@Controller('v1/queue-handler')
+@Controller("v1/queue-handler")
 export class GcloudTasksQueueController {
   public constructor(private readonly moduleRef: ModuleRef) {}
 
-  @Post(':queue')
+  @Post(":queue")
   @HttpCode(200)
   public async handle(
-    @Param('queue') queueName: string,
+    @Param("queue") queueName: string,
     @Body() payload: Buffer,
   ): Promise<void> {
     Logger.log(`Processing queue ${queueName}`);

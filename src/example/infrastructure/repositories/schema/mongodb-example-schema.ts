@@ -1,8 +1,9 @@
-import { model, Schema, Document } from 'mongoose';
-import { Example } from '@app/example/domain/example';
-import { Uuid } from '@app/lib/uuid';
+import { model, Schema, Document } from "mongoose";
 
-export const EXAMPLE_COLLECTION = 'Example';
+import { Example } from "@app/example/domain/example";
+import { Uuid } from "@app/lib/uuid";
+
+export const EXAMPLE_COLLECTION = "Example";
 
 interface MongoDBExample extends Document {
   id: string;

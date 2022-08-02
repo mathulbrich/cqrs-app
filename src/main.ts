@@ -1,18 +1,21 @@
 /* istanbul ignore file */
-import { NestFactory } from '@nestjs/core';
-import { raw } from 'body-parser';
-import * as express from 'express';
-import { AppModule } from '@app/app.module';
-import helmet from 'helmet';
-import { AppConfigService } from '@app/common/infrastructure/config/app-config-service';
+import { NestFactory } from "@nestjs/core";
+import { raw } from "body-parser";
+import * as express from "express";
+import helmet from "helmet";
+import { Logger } from "nestjs-pino";
+
+import { AppModule } from "@app/app.module";
+import { AppConfigService } from "@app/common/infrastructure/config/app-config-service";
 
 const bootstrap = async () => {
-  const app = await NestFactory.create(AppModule);
-  app.use(raw({ type: 'application/octet-stream' }));
-  app.use('/docs', express.static('docs/'));
+  const app = await NestFactory.create(AppModule, { bufferLogs: true });
+  app.useLogger(app.get(Logger));
+  app.use(raw({ type: "application/octet-stream" }));
+  app.use("/docs", express.static("docs/"));
   app.use(helmet());
-  app.setGlobalPrefix('api', {
-    exclude: ['/health'],
+  app.setGlobalPrefix("api", {
+    exclude: ["/health"],
   });
   await app.listen(app.get(AppConfigService).app.port);
 };

@@ -1,5 +1,6 @@
-import { z } from 'zod';
-import { Example } from '@app/example/domain/example';
+import { z } from "zod";
+
+import { Example } from "@app/example/domain/example";
 
 export const GetExampleResponse = z.object({
   id: z.string().uuid(),

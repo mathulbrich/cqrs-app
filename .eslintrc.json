@@ -6,11 +6,11 @@
   },
   "plugins": [
     "import",
-    "@typescript-eslint/eslint-plugin"
+    "@typescript-eslint"
   ],
   "extends": [
     "plugin:@typescript-eslint/recommended",
-    "prettier/@typescript-eslint",
+    "prettier",
     "plugin:prettier/recommended"
   ],
   "root": true,
@@ -29,11 +29,10 @@
     }
   },
   "rules": {
-    "@typescript-eslint/explicit-function-return-type": 0,
-    "@typescript-eslint/explicit-module-boundary-types": 0,
-    "@typescript-eslint/interface-name-prefix": 0,
-    "@typescript-eslint/no-explicit-any": 0,
-    "@typescript-eslint/no-floating-promises": 2,
+    "prettier/prettier": ["error", { "singleQuote": false }],
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/interface-name-prefix": "off",
+    "@typescript-eslint/no-floating-promises": "error",
     "no-restricted-imports": ["error", {
       "patterns": [
         {
@@ -60,6 +59,32 @@
           "message": "import from application layer is not allowed in infrastructure layer"
         }
       ]
-    }]
+    }],
+    "import/order": [
+      "error",
+      {
+        "groups": ["builtin", "external", "internal", "parent", "sibling", "index", "object"],
+        "pathGroups": [
+          {
+            "pattern": "@app/**",
+            "group": "parent"
+          },
+          {
+            "pattern": "@test/**",
+            "group": "parent"
+          },
+          {
+            "pattern": "@migrations/**",
+            "group": "parent"
+          }
+        ],
+        "pathGroupsExcludedImportTypes": ["builtin"],
+        "newlines-between": "always",
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        }
+      }
+    ]
   }
 }

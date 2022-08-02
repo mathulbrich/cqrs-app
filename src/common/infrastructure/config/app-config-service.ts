@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { BaseClass } from '@app/lib/baseclass';
-import { ConfigEnvs } from '@app/config/config-envs';
+import { Injectable } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+
+import { ConfigEnvs } from "@app/config/config-envs";
+import { BaseClass } from "@app/lib/baseclass";
 
 @Injectable()
 export class AppConfigService extends BaseClass<ConfigEnvs>() {
