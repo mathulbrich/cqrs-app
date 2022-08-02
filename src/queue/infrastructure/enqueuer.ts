@@ -1,4 +1,4 @@
-import { QueueNames } from '@app/queue/infrastructure/queue-names';
+import { QueueNames } from "@app/queue/infrastructure/queue-names";
 
 export interface EnqueueArguments {
   queue: QueueNames;

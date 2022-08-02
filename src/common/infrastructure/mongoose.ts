@@ -1,6 +1,7 @@
-import { MongooseModule } from '@nestjs/mongoose';
-import { ConfigModule } from '@nestjs/config';
-import { AppConfigService } from '@app/common/infrastructure/config/app-config-service';
+import { ConfigModule } from "@nestjs/config";
+import { MongooseModule } from "@nestjs/mongoose";
+
+import { AppConfigService } from "@app/common/infrastructure/config/app-config-service";
 
 export const MongooseModuleConfig = MongooseModule.forRootAsync({
   imports: [ConfigModule],

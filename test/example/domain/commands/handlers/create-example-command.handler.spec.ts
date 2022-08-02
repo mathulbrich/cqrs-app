@@ -1,10 +1,11 @@
-import { CreateExampleCommandHandler } from '@app/example/domain/commands/handlers/create-example-command.handler';
-import { InMemoryExampleRepository } from '@app/example/infrastructure/repositories/in-memory-example.repository';
-import { CreateExampleCommand } from '@app/example/domain/commands/create-example.command';
-import { Uuid } from '@app/lib/uuid';
-import { TestEventPublisher } from '@test/resources/test-event-publisher';
-import { omit } from 'lodash';
-import { faker } from '@faker-js/faker';
+import { faker } from "@faker-js/faker";
+import { omit } from "lodash";
+
+import { CreateExampleCommand } from "@app/example/domain/commands/create-example.command";
+import { CreateExampleCommandHandler } from "@app/example/domain/commands/handlers/create-example-command.handler";
+import { InMemoryExampleRepository } from "@app/example/infrastructure/repositories/in-memory-example.repository";
+import { Uuid } from "@app/lib/uuid";
+import { TestEventPublisher } from "@test/resources/test-event-publisher";
 
 class TestArguments {
   public readonly publisher = new TestEventPublisher();
@@ -16,7 +17,7 @@ class TestArguments {
 }
 
 describe(CreateExampleCommandHandler.name, () => {
-  it('Should store example and publish event', async () => {
+  it("Should store example and publish event", async () => {
     // Setup
     const { handler, repository, publisher } = new TestArguments();
     const command = new CreateExampleCommand({
@@ -32,7 +33,7 @@ describe(CreateExampleCommandHandler.name, () => {
     expect(publisher.publishedEvents).toHaveLength(1);
     const example = await repository.findById(command.id);
     expect(example).toBeDefined();
-    expect(omit(example.get(), 'createdAt')).toStrictEqual({
+    expect(omit(example.get(), "createdAt")).toStrictEqual({
       description: command.description,
       id: command.id,
       name: command.name,

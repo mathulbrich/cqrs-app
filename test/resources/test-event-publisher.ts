@@ -1,4 +1,4 @@
-import { EventPublisher, Event } from '@app/common/domain/event-publisher';
+import { EventPublisher, Event } from "@app/common/domain/event-publisher";
 
 export class TestEventPublisher implements EventPublisher {
   public readonly publishedEvents: Array<Event> = [];

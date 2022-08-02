@@ -1,11 +1,12 @@
-import { Body, Controller, Post, Response } from '@nestjs/common';
-import { Enqueuer } from '@app/queue/infrastructure/enqueuer';
-import { Response as Res } from 'express';
-import { CreateExamplePayload } from '@app/example/application/controllers/create-example.payload';
-import { Uuid } from '@app/lib/uuid';
-import { ValidateSchema } from '@app/common/application/schema-validation-pipe';
+import { Body, Controller, Post, Response } from "@nestjs/common";
+import { Response as Res } from "express";
 
-@Controller('v1/create-example')
+import { ValidateSchema } from "@app/common/application/schema-validation-pipe";
+import { CreateExamplePayload } from "@app/example/application/controllers/create-example.payload";
+import { Uuid } from "@app/lib/uuid";
+import { Enqueuer } from "@app/queue/infrastructure/enqueuer";
+
+@Controller("v1/create-example")
 export class CreateExampleController {
   public constructor(private readonly enqueuer: Enqueuer) {}
 
@@ -19,7 +20,7 @@ export class CreateExampleController {
     const id = Uuid.generate().toString();
 
     await this.enqueuer.enqueue({
-      queue: 'create-example',
+      queue: "create-example",
       payload: JSON.stringify({
         id,
         description,
@@ -28,6 +29,6 @@ export class CreateExampleController {
       syncId: id,
     });
 
-    res.set('example-id', id).send();
+    res.set("example-id", id).send();
   }
 }

@@ -1,7 +1,8 @@
-import { Example, ExampleAttributes } from '@app/example/domain/example';
-import { Uuid } from '@app/lib/uuid';
-import { times } from 'lodash';
-import { faker } from '@faker-js/faker';
+import { faker } from "@faker-js/faker";
+import { times } from "lodash";
+
+import { Example, ExampleAttributes } from "@app/example/domain/example";
+import { Uuid } from "@app/lib/uuid";
 
 type PartialExample = Partial<ExampleAttributes>;
 

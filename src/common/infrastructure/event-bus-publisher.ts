@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
-import { EventPublisher, Event } from '@app/common/domain/event-publisher';
-import { EventBus } from '@nestjs/cqrs';
+import { Injectable } from "@nestjs/common";
+import { EventBus } from "@nestjs/cqrs";
+
+import { EventPublisher, Event } from "@app/common/domain/event-publisher";
 
 @Injectable()
 export class EventBusPublisher implements EventPublisher {

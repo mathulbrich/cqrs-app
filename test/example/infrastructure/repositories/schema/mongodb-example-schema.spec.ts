@@ -1,12 +1,12 @@
-import { ExampleFixture } from '@test/resources/fixtures/example-fixture';
 import {
   fromDomain,
   toDomain,
-} from '@app/example/infrastructure/repositories/schema/mongodb-example-schema';
+} from "@app/example/infrastructure/repositories/schema/mongodb-example-schema";
+import { ExampleFixture } from "@test/resources/fixtures/example-fixture";
 
-describe('Mongodb Example Schema', () => {
-  describe('#fromDomain', () => {
-    it('Should parse from domain', () => {
+describe("Mongodb Example Schema", () => {
+  describe("#fromDomain", () => {
+    it("Should parse from domain", () => {
       // Setup
       const example = new ExampleFixture().build();
 
@@ -20,8 +20,8 @@ describe('Mongodb Example Schema', () => {
     });
   });
 
-  describe('#toDomain', () => {
-    it('Should parse to domain', () => {
+  describe("#toDomain", () => {
+    it("Should parse to domain", () => {
       // Setup
       const example = new ExampleFixture().build();
       const parsed = fromDomain(example);

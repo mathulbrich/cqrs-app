@@ -1,9 +1,10 @@
-import { CreateExampleQueuePayload } from '@app/example/application/queues/create-example-queue.payload';
-import { Uuid } from '@app/lib/uuid';
-import { faker } from '@faker-js/faker';
+import { faker } from "@faker-js/faker";
 
-describe('CreateExampleQueuePayload', () => {
-  it('Should validate and parse payload', () => {
+import { CreateExampleQueuePayload } from "@app/example/application/queues/create-example-queue.payload";
+import { Uuid } from "@app/lib/uuid";
+
+describe("CreateExampleQueuePayload", () => {
+  it("Should validate and parse payload", () => {
     // Setup
     const payload: CreateExampleQueuePayload = {
       id: Uuid.generate().toString(),
@@ -18,7 +19,7 @@ describe('CreateExampleQueuePayload', () => {
     expect(parse.success).toBeTruthy();
   });
 
-  it('Should fail to parse non uuid id', () => {
+  it("Should fail to parse non uuid id", () => {
     // Setup
     const payload: CreateExampleQueuePayload = {
       id: faker.lorem.word(),
@@ -33,11 +34,11 @@ describe('CreateExampleQueuePayload', () => {
     expect(parse.success).toBeFalsy();
   });
 
-  it('Should fail to parse empty name', () => {
+  it("Should fail to parse empty name", () => {
     // Setup
     const payload: CreateExampleQueuePayload = {
       id: Uuid.generate().toString(),
-      name: '',
+      name: "",
       description: faker.lorem.words(),
     };
 
@@ -48,12 +49,12 @@ describe('CreateExampleQueuePayload', () => {
     expect(parse.success).toBeFalsy();
   });
 
-  it('Should fail to parse empty description', () => {
+  it("Should fail to parse empty description", () => {
     // Setup
     const payload: CreateExampleQueuePayload = {
       id: Uuid.generate().toString(),
       name: faker.lorem.word(),
-      description: '',
+      description: "",
     };
 
     // Exercise

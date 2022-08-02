@@ -1,4 +1,4 @@
-import * as assert from 'assert';
+import * as assert from "assert";
 
 export const Option = <T>(value: T | undefined) => new Optional(value);
 export const None = <T>() => new Optional<T>();
@@ -11,7 +11,7 @@ export class Optional<T> {
   }
 
   public get(): T {
-    assert(this.value !== undefined, 'Value is undefined');
+    assert(this.value !== undefined, "Value is undefined");
     return this.value;
   }
 

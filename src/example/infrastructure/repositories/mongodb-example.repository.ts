@@ -1,17 +1,18 @@
-import { Optional, Option, None } from '@app/lib/optional';
-import { Injectable } from '@nestjs/common';
-import { ExampleRepository } from '@app/example/domain/repositories/example.repository';
-import { Example } from '@app/example/domain/example';
-import { Uuid } from '@app/lib/uuid';
-import { InjectConnection } from '@nestjs/mongoose';
-import { Connection } from 'mongoose';
-import { isNil } from 'lodash';
+import { Injectable } from "@nestjs/common";
+import { InjectConnection } from "@nestjs/mongoose";
+import { isNil } from "lodash";
+import { Connection } from "mongoose";
+
+import { Example } from "@app/example/domain/example";
+import { ExampleRepository } from "@app/example/domain/repositories/example.repository";
 import {
   EXAMPLE_COLLECTION,
   ExampleModel,
   fromDomain,
   toDomain,
-} from '@app/example/infrastructure/repositories/schema/mongodb-example-schema';
+} from "@app/example/infrastructure/repositories/schema/mongodb-example-schema";
+import { Optional, Option, None } from "@app/lib/optional";
+import { Uuid } from "@app/lib/uuid";
 
 @Injectable()
 export class MongoDBExampleRepository implements ExampleRepository {

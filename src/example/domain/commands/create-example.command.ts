@@ -1,5 +1,5 @@
-import { BaseClass } from '@app/lib/baseclass';
-import { Uuid } from '@app/lib/uuid';
+import { BaseClass } from "@app/lib/baseclass";
+import { Uuid } from "@app/lib/uuid";
 
 export interface CreateExampleCommandAttributes {
   readonly id: Uuid;
