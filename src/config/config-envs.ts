@@ -1,7 +1,11 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { parseInt } from "lodash";
-import validator from "validator";
 import { z } from "zod";
+
+import {
+  stringToBooleanDisabledByDefault,
+  stringToNumber,
+  stringToNumberWithDefault,
+} from "@app/lib/zod";
 
 export const Env = {
   APP_NAME: "APP_NAME",
@@ -22,25 +26,7 @@ export const OptionalEnv = {
   LOGGING_LEVEL: "LOGGING_LEVEL",
   USE_IN_MEMORY_REPOSITORY: "USE_IN_MEMORY_REPOSITORY",
 } as const;
-type OptionalEnv = keyof typeof OptionalEnv;
-
-const DECIMAL_RADIX = 10;
-
-const stringToBooleanDisabledByDefault = () =>
-  z
-    .string()
-    .refine(validator.isBoolean)
-    .default("0")
-    .transform((data) => validator.toBoolean(data));
-
-export const stringToNumberWithDefault = (def: string) =>
-  z
-    .string()
-    .default(def)
-    .transform((n) => parseInt(n, DECIMAL_RADIX));
-
-const stringToNumber = () =>
-  z.string().transform((data) => parseInt(data, DECIMAL_RADIX));
+export type OptionalEnv = keyof typeof OptionalEnv;
 
 export const ConfigEnvs = z.object({
   app: z.object({
@@ -68,6 +54,7 @@ export const ConfigEnvs = z.object({
 export type ConfigEnvs = z.infer<typeof ConfigEnvs>;
 
 const configInput = (
+  /* istanbul ignore next */
   inputConfig: Record<string, string | undefined> = process.env,
 ): z.input<typeof ConfigEnvs> => ({
   app: {

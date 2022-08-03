@@ -1,7 +1,9 @@
 import { Module } from "@nestjs/common";
 import { CqrsModule } from "@nestjs/cqrs";
+import { getConnectionToken } from "@nestjs/mongoose";
+import { Connection } from "mongoose";
 
-import { OptionalEnv } from "@app/config/config-envs";
+import { AppConfigService } from "@app/common/infrastructure/config/app-config-service";
 import { CreateExampleController } from "@app/example/application/controllers/create-example.controller";
 import { GetExampleController } from "@app/example/application/controllers/get-example.controller";
 import { LogExampleCreatedEventHandler } from "@app/example/application/events/log-example-created-event.handler";
@@ -21,9 +23,11 @@ import { MongoDBExampleRepository } from "@app/example/infrastructure/repositori
     CreateExampleQueueHandler,
     {
       provide: ExampleRepository,
-      useClass: process.env[OptionalEnv.USE_IN_MEMORY_REPOSITORY]
-        ? InMemoryExampleRepository
-        : MongoDBExampleRepository,
+      inject: [AppConfigService, getConnectionToken()],
+      useFactory: (service: AppConfigService, connection: Connection) =>
+        service.app.useInMemoryRepository
+          ? new InMemoryExampleRepository()
+          : new MongoDBExampleRepository(connection),
     },
   ],
 })

@@ -91,6 +91,9 @@
     "collectCoverageFrom": [
       "src/**/*.{ts,js}"
     ],
+    "coveragePathIgnorePatterns": [
+      "<rootDir>/src/app.controller.ts"
+    ],
     "moduleNameMapper": {
       "^@app/(.*)$": "<rootDir>/src/$1",
       "^@test/(.*)$": "<rootDir>/test/$1"
@@ -98,10 +101,10 @@
     "coverageDirectory": "./coverage",
     "coverageThreshold": {
       "global": {
-        "branches": 83.33,
-        "functions": 66.66,
-        "lines": 85.2,
-        "statements": 87.32
+        "branches": 100,
+        "functions": 100,
+        "lines": 100,
+        "statements": 100
       }
     },
     "testEnvironment": "node"
