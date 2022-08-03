@@ -3,14 +3,15 @@ import { NestFactory } from "@nestjs/core";
 import { raw } from "body-parser";
 import * as express from "express";
 import helmet from "helmet";
-import { Logger } from "nestjs-pino";
+import { Logger as PinoLogger } from "nestjs-pino";
 
 import { AppModule } from "@app/app.module";
 import { AppConfigService } from "@app/common/infrastructure/config/app-config-service";
 
 const bootstrap = async () => {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
-  app.useLogger(app.get(Logger));
+  const logger = app.get(PinoLogger);
+  app.useLogger(logger);
   app.use(raw({ type: "application/octet-stream" }));
   app.use("/docs", express.static("docs/"));
   app.use(helmet());
