@@ -1,0 +1,24 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Lambda testing
+
+Resources:
+  LambdaTest:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./
+      Handler: dist/src/lambda.handler
+      Timeout: 60
+      Runtime: nodejs16.x
+      Events:
+        Request:
+          Type: Api
+          Properties:
+            Path: '/'
+            Method: ANY
+        ProxyRequest:
+          Type: Api
+          Properties:
+            Path: '/{proxy+}'
+            Method: ANY
