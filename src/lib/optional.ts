@@ -1,4 +1,4 @@
-import * as assert from "assert";
+import assert from "assert";
 
 export const Option = <T>(value: T | undefined) => new Optional(value);
 export const None = <T>() => new Optional<T>();
