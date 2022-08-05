@@ -27,7 +27,7 @@ describe("zod utils", () => {
 
     it("should break when passed anything else", () => {
       const schema = stringToBooleanDisabledByDefault();
-      expect(() => schema.parse(faker.random.alphaNumeric())).toThrow();
+      expect(() => schema.parse(faker.random.words(3))).toThrow();
     });
   });
   describe("#stringToNumberWithDefault", () => {

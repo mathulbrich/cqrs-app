@@ -100,7 +100,8 @@
       "<rootDir>/src/app.controller.ts",
       "<rootDir>/src/bootstrap.ts",
       "<rootDir>/src/lambda.ts",
-      "<rootDir>/src/main.ts"
+      "<rootDir>/src/main.ts",
+      "<rootDir>/src/lib/nest/durable-context.strategy.ts"
     ],
     "moduleNameMapper": {
       "^@app/(.*)$": "<rootDir>/src/$1",

@@ -14,12 +14,15 @@ export const Env = {
   GCP_QUEUE_PORT: "GCP_QUEUE_PORT",
   GCP_QUEUE_PROJECT: "GCP_QUEUE_PROJECT",
   GCP_QUEUE_REGION: "GCP_QUEUE_REGION",
-  GCP_QUEUE_HANDLER_URL: "GCP_QUEUE_HANDLER_URL",
+  GCP_QUEUE_HANDLER_HOST: "GCP_QUEUE_HANDLER_HOST",
+  GCP_QUEUE_HANDLER_PORT: "GCP_QUEUE_HANDLER_PORT",
+  GCP_QUEUE_HANDLER_ENDPOINT: "GCP_QUEUE_HANDLER_ENDPOINT",
   MONGODB_CONNECTION_URI: "MONGODB_CONNECTION_URI",
 } as const;
 export type Env = keyof typeof Env;
 
 export const OptionalEnv = {
+  GCP_QUEUE_HANDLER_PROTOCOL: "GCP_QUEUE_HANDLER_PROTOCOL",
   NODE_ENV: "NODE_ENV",
   LOGGING_ASYNC: "LOGGING_ASYNC",
   LOGGING_ASYNC_MIN_LENGTH: "LOGGING_ASYNC_MIN_LENGTH",
@@ -45,7 +48,10 @@ export const ConfigEnvs = z.object({
     queuePort: stringToNumber(),
     queueProject: z.string(),
     queueRegion: z.string(),
-    queueHandlerUrl: z.string().url(),
+    queueHandlerProtocol: z.string().default("http"),
+    queueHandlerHost: z.string(),
+    queueHandlerPort: stringToNumberWithDefault("3000"),
+    queueHandlerEndpoint: z.string(),
   }),
   mongoDb: z.object({
     connectionUri: z.string().url(),
@@ -73,7 +79,10 @@ const configInput = (
     queuePort: inputConfig[Env.GCP_QUEUE_PORT]!,
     queueProject: inputConfig[Env.GCP_QUEUE_PROJECT]!,
     queueRegion: inputConfig[Env.GCP_QUEUE_REGION]!,
-    queueHandlerUrl: inputConfig[Env.GCP_QUEUE_HANDLER_URL]!,
+    queueHandlerProtocol: inputConfig[OptionalEnv.GCP_QUEUE_HANDLER_PROTOCOL]!,
+    queueHandlerHost: inputConfig[Env.GCP_QUEUE_HANDLER_HOST]!,
+    queueHandlerPort: inputConfig[Env.GCP_QUEUE_HANDLER_PORT],
+    queueHandlerEndpoint: inputConfig[Env.GCP_QUEUE_HANDLER_ENDPOINT]!,
   },
   mongoDb: {
     connectionUri: inputConfig[Env.MONGODB_CONNECTION_URI]!,

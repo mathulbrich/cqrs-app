@@ -24,14 +24,22 @@ export class GcloudTasksEnqueuer implements Enqueuer {
     payload,
   }: EnqueueArguments): Promise<void> {
     Logger.log(`Enqueuing task to queue ${queue}`);
-    const { queueProject, queueRegion, queueHandlerUrl } = this.config.queue;
+    const {
+      queueProject,
+      queueRegion,
+      queueHandlerProtocol,
+      queueHandlerHost,
+      queueHandlerPort,
+      queueHandlerEndpoint,
+    } = this.config.queue;
+
     await this.client.createTask({
       parent: this.client.queuePath(queueProject, queueRegion, queue),
       task: {
         name: this.client.taskPath(queueProject, queueRegion, queue, syncId),
         httpRequest: {
           httpMethod: "POST",
-          url: `${queueHandlerUrl}/${queue}`,
+          url: `${queueHandlerProtocol}://${queueHandlerHost}:${queueHandlerPort}/${queueHandlerEndpoint}/${queue}`,
           body: Buffer.from(payload).toString("base64"),
           headers: {
             "Content-Type": "application/octet-stream",
