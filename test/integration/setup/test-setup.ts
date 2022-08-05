@@ -2,7 +2,7 @@ import { INestApplication } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { Test } from "@nestjs/testing";
 import { raw } from "body-parser";
-import * as getPort from "get-port";
+import getPort from "get-port";
 import { Connection } from "mongoose";
 
 import { AppModule } from "@app/app.module";

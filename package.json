@@ -97,7 +97,10 @@
       "src/**/*.{ts,js}"
     ],
     "coveragePathIgnorePatterns": [
-      "<rootDir>/src/app.controller.ts"
+      "<rootDir>/src/app.controller.ts",
+      "<rootDir>/src/bootstrap.ts",
+      "<rootDir>/src/lambda.ts",
+      "<rootDir>/src/main.ts"
     ],
     "moduleNameMapper": {
       "^@app/(.*)$": "<rootDir>/src/$1",

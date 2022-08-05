@@ -2,7 +2,7 @@ import { Controller, Get, INestApplication } from "@nestjs/common";
 import { APP_INTERCEPTOR } from "@nestjs/core";
 import { Test } from "@nestjs/testing";
 import { Logger as PinoLogger, LoggerModule } from "nestjs-pino";
-import * as request from "supertest";
+import request from "supertest";
 
 import { Logger } from "@app/common/infrastructure/logging/logger";
 import { loggerConfig as defaultLoggerConfig } from "@app/common/infrastructure/logging/logging";
