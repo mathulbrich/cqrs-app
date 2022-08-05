@@ -42,7 +42,7 @@ export class TestSetup {
   ): Promise<void> {
     const port = await getPort();
     const envs = {
-      [Env.GCP_QUEUE_HANDLER_URL]: `http://cqrs-app:${port}/api/v1/queue-handler`,
+      [Env.GCP_QUEUE_HANDLER_PORT]: port.toString(),
       [Env.MONGODB_CONNECTION_URI]: mongoUri(this.databaseSuffix),
       ...this.envs,
     };

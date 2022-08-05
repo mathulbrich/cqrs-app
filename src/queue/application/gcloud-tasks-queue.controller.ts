@@ -29,10 +29,10 @@ export class GcloudTasksQueueController {
     Logger.log(`Processing queue ${queueName}`);
     assert(isValidQueue(queueName), new BadRequestException());
 
-    return this.moduleRef
-      .get(QueueMapping[queueName], {
+    return (
+      await this.moduleRef.resolve(QueueMapping[queueName], undefined, {
         strict: false,
       })
-      .execute(JSON.parse(payload.toString()));
+    ).execute(JSON.parse(payload.toString()));
   }
 }
