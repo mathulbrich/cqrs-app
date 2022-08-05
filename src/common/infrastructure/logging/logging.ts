@@ -41,7 +41,7 @@ export const loggerConfig = (data: LoggerData): Params => ({
               levelFirst: false,
               messageFormat: "\t{reqId.requestId} [{context}] {msg}",
               singleLine: true,
-              translateTime: "yyyy-MM-dd'T'HH:mm:ss.l'Z'",
+              translateTime: "SYS:yyyy-MM-dd'T'HH:mm:ss.l'Z'",
             },
           },
   },

@@ -29,7 +29,7 @@
     }
   },
   "rules": {
-    "prettier/prettier": ["error", { "singleQuote": false }],
+    "prettier/prettier": ["error", { "singleQuote": false, "trailingComma": "all" }],
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/interface-name-prefix": "off",
     "@typescript-eslint/no-floating-promises": "error",
@@ -38,6 +38,13 @@
         {
           "group": ["./*", "../*", "*/../*"],
           "message": "relative import is not allowed"
+        }
+      ],
+      "paths": [
+        {
+          "name": "@nestjs/common",
+          "importNames": ["Injectable"],
+          "message": "Please use @app/lib/nest/injectable instead"
         }
       ]
     }],
