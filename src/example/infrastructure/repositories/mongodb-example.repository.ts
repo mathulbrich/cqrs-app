@@ -1,4 +1,3 @@
-import { Injectable } from "@nestjs/common";
 import { InjectConnection } from "@nestjs/mongoose";
 import { isNil } from "lodash";
 import { Connection } from "mongoose";
@@ -11,6 +10,7 @@ import {
   fromDomain,
   toDomain,
 } from "@app/example/infrastructure/repositories/schema/mongodb-example-schema";
+import { Injectable } from "@app/lib/nest/injectable";
 import { Optional, Option, None } from "@app/lib/optional";
 import { Uuid } from "@app/lib/uuid";
 

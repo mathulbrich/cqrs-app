@@ -1,10 +1,11 @@
-import { Injectable } from "@nestjs/common";
+import { Scope } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 
 import { ConfigEnvs } from "@app/config/config-envs";
 import { BaseClass } from "@app/lib/baseclass";
+import { Injectable } from "@app/lib/nest/injectable";
 
-@Injectable()
+@Injectable({ scope: Scope.DEFAULT })
 export class AppConfigService extends BaseClass<ConfigEnvs>() {
   constructor(configService: ConfigService) {
     super(

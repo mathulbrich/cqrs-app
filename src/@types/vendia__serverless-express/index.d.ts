@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 declare module "@vendia/serverless-express" {
   interface ServerlessExpress {
     createServer(app: any): any;
