@@ -2,16 +2,17 @@ import {
   CallHandler,
   ExecutionContext,
   HttpStatus,
-  Injectable,
   NestInterceptor,
+  Scope,
 } from "@nestjs/common";
 import { catchError, Observable, tap, throwError } from "rxjs";
 
 import { Logger } from "@app/common/infrastructure/logging/logger";
+import { Injectable } from "@app/lib/nest/injectable";
 
 const IGNORED_URLS = ["/health", "/docs"];
 
-@Injectable()
+@Injectable({ scope: Scope.DEFAULT })
 export class LoggingInterceptor implements NestInterceptor {
   private readonly logger = new Logger(LoggingInterceptor.name);
 
