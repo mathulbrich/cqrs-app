@@ -1,7 +1,7 @@
 import {
   fromDomain,
   toDomain,
-} from "@app/example/infrastructure/repositories/schema/mongodb-example-schema";
+} from "@app/example/application/repositories/schema/mongodb-example-schema";
 import { ExampleFixture } from "@test/resources/fixtures/example-fixture";
 
 describe("Mongodb Example Schema", () => {

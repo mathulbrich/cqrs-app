@@ -3,7 +3,7 @@ import { randomUUID } from "crypto";
 import { LoggerModule, Params } from "nestjs-pino";
 import pino from "pino";
 
-import { AppConfigService } from "@app/common/infrastructure/config/app-config-service";
+import { AppConfigService } from "@app/config/app-config-service";
 
 type LoggerData = {
   app: Pick<AppConfigService["app"], "env" | "name">;
@@ -41,7 +41,7 @@ export const loggerConfig = (data: LoggerData): Params => ({
               levelFirst: false,
               messageFormat: "\t{reqId.requestId} [{context}] {msg}",
               singleLine: true,
-              translateTime: "SYS:yyyy-MM-dd'T'HH:mm:ss.l'Z'",
+              translateTime: "SYS:yyyy-mm-dd'T'HH:MM:ss.l'Z'",
             },
           },
   },

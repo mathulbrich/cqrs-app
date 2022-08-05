@@ -1,6 +1,6 @@
 import { MongooseModule } from "@nestjs/mongoose";
 
-import { AppConfigService } from "@app/common/infrastructure/config/app-config-service";
+import { AppConfigService } from "@app/config/app-config-service";
 
 export const MongooseModuleConfig = MongooseModule.forRootAsync({
   inject: [AppConfigService],

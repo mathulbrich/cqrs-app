@@ -4,9 +4,9 @@ import { Test } from "@nestjs/testing";
 import { Logger as PinoLogger, LoggerModule } from "nestjs-pino";
 import request from "supertest";
 
-import { Logger } from "@app/common/infrastructure/logging/logger";
-import { loggerConfig as defaultLoggerConfig } from "@app/common/infrastructure/logging/logging";
-import { LoggingInterceptor } from "@app/common/infrastructure/logging/logging.interceptor";
+import { Logger } from "@app/common/logging/logger";
+import { loggerConfig as defaultLoggerConfig } from "@app/common/logging/logging";
+import { LoggingInterceptor } from "@app/common/logging/logging.interceptor";
 
 const UUID_REGEX =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;

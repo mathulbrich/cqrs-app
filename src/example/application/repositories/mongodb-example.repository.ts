@@ -2,14 +2,14 @@ import { InjectConnection } from "@nestjs/mongoose";
 import { isNil } from "lodash";
 import { Connection } from "mongoose";
 
-import { Example } from "@app/example/domain/example";
-import { ExampleRepository } from "@app/example/domain/repositories/example.repository";
 import {
   EXAMPLE_COLLECTION,
   ExampleModel,
   fromDomain,
   toDomain,
-} from "@app/example/infrastructure/repositories/schema/mongodb-example-schema";
+} from "@app/example/application/repositories/schema/mongodb-example-schema";
+import { Example } from "@app/example/domain/example";
+import { ExampleRepository } from "@app/example/domain/repositories/example.repository";
 import { Injectable } from "@app/lib/nest/injectable";
 import { Optional, Option, None } from "@app/lib/optional";
 import { Uuid } from "@app/lib/uuid";
