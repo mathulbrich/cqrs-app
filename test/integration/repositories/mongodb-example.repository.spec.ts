@@ -1,5 +1,5 @@
+import { MongoDBExampleRepository } from "@app/example/application/repositories/mongodb-example.repository";
 import { Example } from "@app/example/domain/example";
-import { MongoDBExampleRepository } from "@app/example/infrastructure/repositories/mongodb-example.repository";
 import { Uuid } from "@app/lib/uuid";
 import { runWithMongoConnection } from "@test/integration/setup/mongodb";
 import { INTEGRATION_DEFAULT_TIMEOUT } from "@test/integration/setup/test-setup";

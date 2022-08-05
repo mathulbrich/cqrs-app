@@ -7,7 +7,7 @@ import {
 } from "@nestjs/common";
 import { catchError, Observable, tap, throwError } from "rxjs";
 
-import { Logger } from "@app/common/infrastructure/logging/logger";
+import { Logger } from "@app/common/logging/logger";
 import { Injectable } from "@app/lib/nest/injectable";
 
 const IGNORED_URLS = ["/health", "/docs"];

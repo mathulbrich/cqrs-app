@@ -4,7 +4,7 @@ import { Response as Res } from "express";
 import { ValidateSchema } from "@app/common/application/schema-validation-pipe";
 import { CreateExamplePayload } from "@app/example/application/controllers/create-example.payload";
 import { Uuid } from "@app/lib/uuid";
-import { Enqueuer } from "@app/queue/infrastructure/enqueuer";
+import { Enqueuer } from "@app/queue/application/enqueuer";
 
 @Controller("v1/create-example")
 export class CreateExampleController {

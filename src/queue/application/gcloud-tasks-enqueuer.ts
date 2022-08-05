@@ -2,9 +2,9 @@ import { CloudTasksClient } from "@google-cloud/tasks";
 import { credentials } from "@grpc/grpc-js";
 import { Logger } from "@nestjs/common";
 
-import { AppConfigService } from "@app/common/infrastructure/config/app-config-service";
+import { AppConfigService } from "@app/config/app-config-service";
 import { Injectable } from "@app/lib/nest/injectable";
-import { Enqueuer, EnqueueArguments } from "@app/queue/infrastructure/enqueuer";
+import { Enqueuer, EnqueueArguments } from "@app/queue/application/enqueuer";
 
 @Injectable()
 export class GcloudTasksEnqueuer implements Enqueuer {

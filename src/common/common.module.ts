@@ -2,11 +2,11 @@ import { Module, Global } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { CqrsModule } from "@nestjs/cqrs";
 
-import { EventBusPublisher } from "@app/common//infrastructure/event-bus-publisher";
+import { EventBusPublisher } from "@app/common/application/event-bus-publisher";
+import { MongooseModuleConfig as MongooseModuleConfig } from "@app/common/application/mongoose";
 import { EventPublisher } from "@app/common/domain/event-publisher";
-import { AppConfigService } from "@app/common/infrastructure/config/app-config-service";
-import { LoggingModuleConfig } from "@app/common/infrastructure/logging/logging";
-import { MongooseModuleConfig as MongooseModuleConfig } from "@app/common/infrastructure/mongoose";
+import { LoggingModuleConfig } from "@app/common/logging/logging";
+import { AppConfigService } from "@app/config/app-config-service";
 import { validateConfig } from "@app/config/config-envs";
 
 @Global()

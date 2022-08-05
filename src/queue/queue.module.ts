@@ -1,8 +1,8 @@
 import { Global, Module } from "@nestjs/common";
 
+import { Enqueuer } from "@app/queue/application/enqueuer";
+import { GcloudTasksEnqueuer } from "@app/queue/application/gcloud-tasks-enqueuer";
 import { GcloudTasksQueueController } from "@app/queue/application/gcloud-tasks-queue.controller";
-import { Enqueuer } from "@app/queue/infrastructure/enqueuer";
-import { GcloudTasksEnqueuer } from "@app/queue/infrastructure/gcloud-tasks-enqueuer";
 
 @Global()
 @Module({

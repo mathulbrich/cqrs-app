@@ -2,7 +2,7 @@ import { faker } from "@faker-js/faker";
 import { retry } from "async";
 import request from "supertest";
 
-import { MongoDBExampleRepository } from "@app/example/infrastructure/repositories/mongodb-example.repository";
+import { MongoDBExampleRepository } from "@app/example/application/repositories/mongodb-example.repository";
 import { Uuid } from "@app/lib/uuid";
 import {
   TestSetup,

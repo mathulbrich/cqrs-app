@@ -1,6 +1,6 @@
 import { CreateExampleQueueHandler } from "@app/example/application/queues/create-example-queue.handler";
 import { Newable } from "@app/lib/newable";
-import { QueueNames } from "@app/queue/infrastructure/queue-names";
+import { QueueNames } from "@app/queue/application/queue-names";
 
 type QueueHandler = Newable<{ execute(data: unknown): Promise<void> }>;
 

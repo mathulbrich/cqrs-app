@@ -3,7 +3,7 @@ import { retry } from "async";
 import request from "supertest";
 
 import { OptionalEnv } from "@app/config/config-envs";
-import { MongoDBExampleRepository } from "@app/example/infrastructure/repositories/mongodb-example.repository";
+import { MongoDBExampleRepository } from "@app/example/application/repositories/mongodb-example.repository";
 import {
   TestSetup,
   INTEGRATION_DEFAULT_TIMEOUT,
