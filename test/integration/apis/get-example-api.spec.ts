@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
 import { retry } from "async";
-import * as request from "supertest";
+import request from "supertest";
 
 import { OptionalEnv } from "@app/config/config-envs";
 import { MongoDBExampleRepository } from "@app/example/infrastructure/repositories/mongodb-example.repository";
