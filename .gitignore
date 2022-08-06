@@ -34,3 +34,8 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+# Codecov
+*.gcno
+*.gcda
+*.gcov

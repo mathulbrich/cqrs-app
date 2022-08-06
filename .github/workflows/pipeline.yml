@@ -89,3 +89,9 @@ jobs:
           name: code-coverage-report
           path: coverage/
           retention-days: 1
+      - name: Update codecov badge
+        run: |
+          curl -Os https://uploader.codecov.io/latest/linux/codecov
+
+          chmod +x codecov
+          ./codecov
