@@ -76,7 +76,6 @@ jobs:
           GCP_QUEUE_PROJECT: dev
           GCP_QUEUE_REGION: local
           GCP_QUEUE_HANDLER_HOST: cqrs-app
-          GCP_QUEUE_HANDLER_PORT: 3000
           GCP_QUEUE_HANDLER_ENDPOINT: api/v1/queue-handler
           MONGODB_CONNECTION_URI: mongodb://admin:admin@mongodb/app?authSource=admin # will be ignored on integration testing
           NODE_ENV: ci
