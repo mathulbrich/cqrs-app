@@ -18,6 +18,8 @@ import {
 
 @Controller("v1/queue-handler")
 export class GcloudTasksQueueController {
+  private readonly logger = new Logger(GcloudTasksQueueController.name);
+
   public constructor(private readonly moduleRef: ModuleRef) {}
 
   @Post(":queue")
@@ -26,7 +28,7 @@ export class GcloudTasksQueueController {
     @Param("queue") queueName: string,
     @Body() payload: Buffer,
   ): Promise<void> {
-    Logger.log(`Processing queue ${queueName}`);
+    this.logger.log(`Processing queue ${queueName}`);
     assert(isValidQueue(queueName), new BadRequestException());
 
     return (

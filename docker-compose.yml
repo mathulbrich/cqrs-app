@@ -54,3 +54,14 @@ services:
     - "${TASKS_PORT:-8123}:8123"
     networks:
       - default
+  
+  elasticmq:
+    container_name: elasticmq
+    image: softwaremill/elasticmq-native
+    networks:
+      - default
+    ports:
+      - 9324:9324
+      - 9325:9325
+    volumes:
+      - ./elasticmq.conf:/opt/elasticmq.conf

@@ -8,6 +8,7 @@ import { Enqueuer, EnqueueArguments } from "@app/queue/application/enqueuer";
 
 @Injectable()
 export class GcloudTasksEnqueuer implements Enqueuer {
+  private readonly logger = new Logger(GcloudTasksEnqueuer.name);
   private readonly client: CloudTasksClient;
 
   public constructor(private readonly config: AppConfigService) {
@@ -20,10 +21,10 @@ export class GcloudTasksEnqueuer implements Enqueuer {
 
   public async enqueue({
     queue,
-    syncId,
+    messageId,
     payload,
   }: EnqueueArguments): Promise<void> {
-    Logger.log(`Enqueuing task to queue ${queue}`);
+    this.logger.log(`Enqueuing task to queue ${queue}`);
     const {
       queueProject,
       queueRegion,
@@ -36,7 +37,7 @@ export class GcloudTasksEnqueuer implements Enqueuer {
     await this.client.createTask({
       parent: this.client.queuePath(queueProject, queueRegion, queue),
       task: {
-        name: this.client.taskPath(queueProject, queueRegion, queue, syncId),
+        name: this.client.taskPath(queueProject, queueRegion, queue, messageId),
         httpRequest: {
           httpMethod: "POST",
           url: `${queueHandlerProtocol}://${queueHandlerHost}:${queueHandlerPort}/${queueHandlerEndpoint}/${queue}`,

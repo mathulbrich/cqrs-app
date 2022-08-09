@@ -18,6 +18,8 @@ export const Env = {
   GCP_QUEUE_HANDLER_PORT: "GCP_QUEUE_HANDLER_PORT",
   GCP_QUEUE_HANDLER_ENDPOINT: "GCP_QUEUE_HANDLER_ENDPOINT",
   MONGODB_CONNECTION_URI: "MONGODB_CONNECTION_URI",
+  SQS_QUEUE_BASE_URL: "SQS_QUEUE_BASE_URL",
+  SQS_QUEUE_SUFFIX: "SQS_QUEUE_SUFFIX",
 } as const;
 export type Env = keyof typeof Env;
 
@@ -28,6 +30,7 @@ export const OptionalEnv = {
   LOGGING_ASYNC_MIN_LENGTH: "LOGGING_ASYNC_MIN_LENGTH",
   LOGGING_LEVEL: "LOGGING_LEVEL",
   USE_IN_MEMORY_REPOSITORY: "USE_IN_MEMORY_REPOSITORY",
+  SQS_QUEUE_ENDPOINT: "SQS_QUEUE_ENDPOINT",
 } as const;
 export type OptionalEnv = keyof typeof OptionalEnv;
 
@@ -52,6 +55,9 @@ export const ConfigEnvs = z.object({
     queueHandlerHost: z.string(),
     queueHandlerPort: stringToNumberWithDefault("3000"),
     queueHandlerEndpoint: z.string(),
+    sqsQueueBaseUrl: z.string().url(),
+    sqsQueueEndpoint: z.string().optional(),
+    sqsQueueSuffix: z.string().default(""),
   }),
   mongoDb: z.object({
     connectionUri: z.string().url(),
@@ -83,6 +89,9 @@ const configInput = (
     queueHandlerHost: inputConfig[Env.GCP_QUEUE_HANDLER_HOST]!,
     queueHandlerPort: inputConfig[Env.GCP_QUEUE_HANDLER_PORT],
     queueHandlerEndpoint: inputConfig[Env.GCP_QUEUE_HANDLER_ENDPOINT]!,
+    sqsQueueBaseUrl: inputConfig[Env.SQS_QUEUE_BASE_URL]!,
+    sqsQueueEndpoint: inputConfig[OptionalEnv.SQS_QUEUE_ENDPOINT],
+    sqsQueueSuffix: inputConfig[Env.SQS_QUEUE_SUFFIX],
   },
   mongoDb: {
     connectionUri: inputConfig[Env.MONGODB_CONNECTION_URI]!,
