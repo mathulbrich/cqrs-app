@@ -8,9 +8,10 @@ import {
 import { catchError, Observable, tap, throwError } from "rxjs";
 
 import { Logger } from "@app/common/logging/logger";
+import { SWAGGER_DOCS_ROUTE, HEALTH_ROUTE } from "@app/constants";
 import { Injectable } from "@app/lib/nest/injectable";
 
-const IGNORED_URLS = ["/health", "/docs"];
+const IGNORED_URLS = [HEALTH_ROUTE, SWAGGER_DOCS_ROUTE];
 
 @Injectable({ scope: Scope.DEFAULT })
 export class LoggingInterceptor implements NestInterceptor {
