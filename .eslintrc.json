@@ -47,6 +47,11 @@
           "name": "@nestjs/common",
           "importNames": ["Injectable"],
           "message": "Please use @app/lib/nest/injectable instead"
+        },
+        {
+          "name": "@nestjs/common",
+          "importNames": ["Logger"],
+          "message": "Please use @app/common/logging/logger instead"
         }
       ]
     }],
