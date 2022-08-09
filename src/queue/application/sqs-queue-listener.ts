@@ -8,12 +8,11 @@ import { storage, Store } from "nestjs-pino/storage";
 import { Consumer } from "sqs-consumer";
 
 import { Logger } from "@app/common/logging/logger";
+import { AppConfigService } from "@app/config/app-config-service";
 import { Injectable } from "@app/lib/nest/injectable";
 import { QueueMapping } from "@app/queue/application/queue-mapper";
 import { QueueNames } from "@app/queue/application/queue-names";
 import { SQSQueueUrlBuilder } from "@app/queue/application/sqs-queue-url-builder";
-
-const maxNumberOfMessages = 10;
 
 @Injectable({ scope: Scope.DEFAULT })
 export class SQSQueueListener implements OnModuleInit, OnModuleDestroy {
@@ -23,6 +22,7 @@ export class SQSQueueListener implements OnModuleInit, OnModuleDestroy {
   constructor(
     private readonly moduleRef: ModuleRef,
     private readonly urlBuilder: SQSQueueUrlBuilder,
+    private readonly config: AppConfigService,
     @Inject(PARAMS_PROVIDER_TOKEN)
     private readonly params: Params,
   ) {}
@@ -34,7 +34,8 @@ export class SQSQueueListener implements OnModuleInit, OnModuleDestroy {
       const queueUrl = this.urlBuilder.build(queue);
       const consumer = Consumer.create({
         queueUrl,
-        batchSize: maxNumberOfMessages,
+        waitTimeSeconds: this.config.queue.sqsQueueWaitTimeSeconds,
+        batchSize: this.config.queue.sqsQueueBatchConsumeSize,
         handleMessageBatch: async (messages) => {
           await Promise.all(
             messages.map(async ({ Body }) => {

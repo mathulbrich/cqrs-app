@@ -5,7 +5,7 @@ import getPort from "get-port";
 import { Connection } from "mongoose";
 
 import { AppModule } from "@app/app.module";
-import { Env, validateConfig } from "@app/config/config-envs";
+import { Env, validateConfig, OptionalEnv } from "@app/config/config-envs";
 import { Uuid } from "@app/lib/uuid";
 import {
   connect,
@@ -46,6 +46,7 @@ export class TestSetup {
     const envs = {
       [Env.SQS_QUEUE_SUFFIX]: this.queueSuffix,
       [Env.MONGODB_CONNECTION_URI]: mongoUri(this.databaseSuffix),
+      [OptionalEnv.SQS_QUEUE_WAIT_TIME_SECONDS]: "0",
       ...this.envs,
     };
 

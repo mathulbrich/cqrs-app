@@ -12,17 +12,19 @@ export const Env = {
   APP_PORT: "APP_PORT",
   MONGODB_CONNECTION_URI: "MONGODB_CONNECTION_URI",
   SQS_QUEUE_BASE_URL: "SQS_QUEUE_BASE_URL",
+  SQS_QUEUE_BATCH_CONSUMER_SIZE: "SQS_QUEUE_BATCH_CONSUMER_SIZE",
   SQS_QUEUE_SUFFIX: "SQS_QUEUE_SUFFIX",
 } as const;
 export type Env = keyof typeof Env;
 
 export const OptionalEnv = {
-  NODE_ENV: "NODE_ENV",
-  LOGGING_ASYNC: "LOGGING_ASYNC",
   LOGGING_ASYNC_MIN_LENGTH: "LOGGING_ASYNC_MIN_LENGTH",
+  LOGGING_ASYNC: "LOGGING_ASYNC",
   LOGGING_LEVEL: "LOGGING_LEVEL",
-  USE_IN_MEMORY_REPOSITORY: "USE_IN_MEMORY_REPOSITORY",
+  NODE_ENV: "NODE_ENV",
   SQS_QUEUE_ENDPOINT: "SQS_QUEUE_ENDPOINT",
+  SQS_QUEUE_WAIT_TIME_SECONDS: "SQS_QUEUE_WAIT_TIME_SECONDS",
+  USE_IN_MEMORY_REPOSITORY: "USE_IN_MEMORY_REPOSITORY",
 } as const;
 export type OptionalEnv = keyof typeof OptionalEnv;
 
@@ -40,8 +42,10 @@ export const ConfigEnvs = z.object({
   }),
   queue: z.object({
     sqsQueueBaseUrl: z.string().url(),
+    sqsQueueBatchConsumeSize: stringToNumber().default("10"),
     sqsQueueEndpoint: z.string().optional(),
     sqsQueueSuffix: z.string().default(""),
+    sqsQueueWaitTimeSeconds: stringToNumber().optional(),
   }),
   mongoDb: z.object({
     connectionUri: z.string().url(),
@@ -66,8 +70,11 @@ const configInput = (
   },
   queue: {
     sqsQueueBaseUrl: inputConfig[Env.SQS_QUEUE_BASE_URL]!,
+    sqsQueueBatchConsumeSize: inputConfig[Env.SQS_QUEUE_BATCH_CONSUMER_SIZE],
     sqsQueueEndpoint: inputConfig[OptionalEnv.SQS_QUEUE_ENDPOINT],
     sqsQueueSuffix: inputConfig[Env.SQS_QUEUE_SUFFIX],
+    sqsQueueWaitTimeSeconds:
+      inputConfig[OptionalEnv.SQS_QUEUE_WAIT_TIME_SECONDS],
   },
   mongoDb: {
     connectionUri: inputConfig[Env.MONGODB_CONNECTION_URI]!,
