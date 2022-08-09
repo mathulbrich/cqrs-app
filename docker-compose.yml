@@ -45,15 +45,6 @@ services:
     image: mongo-express
     networks:
       - default
-
-  gtasks:
-    container_name: gtasks
-    image: mathulbrich/cqrs-cloud-tasks-emulator:latest
-    restart: always
-    ports:
-    - "${TASKS_PORT:-8123}:8123"
-    networks:
-      - default
   
   elasticmq:
     container_name: elasticmq

@@ -45,7 +45,6 @@ export class TestSetup {
   ): Promise<void> {
     const port = await getPort();
     const envs = {
-      [Env.GCP_QUEUE_HANDLER_PORT]: port.toString(),
       [Env.SQS_QUEUE_SUFFIX]: this.queueSuffix,
       [Env.MONGODB_CONNECTION_URI]: mongoUri(this.databaseSuffix),
       ...this.envs,

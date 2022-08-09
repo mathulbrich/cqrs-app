@@ -1,6 +1,5 @@
 import { INestApplication } from "@nestjs/common";
 import { ContextIdFactory, NestFactory } from "@nestjs/core";
-import { raw } from "body-parser";
 import helmet from "helmet";
 import { Logger as PinoLogger } from "nestjs-pino";
 
@@ -14,7 +13,6 @@ export const bootstrap = async (): Promise<INestApplication> => {
   });
   ContextIdFactory.apply(new DurableContextIdStrategy());
   app.useLogger(app.get(PinoLogger));
-  app.use(raw({ type: "application/octet-stream" }));
   app.use(
     helmet({
       contentSecurityPolicy: false,

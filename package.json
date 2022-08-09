@@ -25,8 +25,6 @@
   },
   "dependencies": {
     "@aws-sdk/client-sqs": "^3.142.0",
-    "@google-cloud/tasks": "2.6.0",
-    "@grpc/grpc-js": "1.6.7",
     "@nestjs/common": "^9.0.7",
     "@nestjs/config": "^2.2.0",
     "@nestjs/core": "^9.0.7",

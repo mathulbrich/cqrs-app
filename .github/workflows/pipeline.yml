@@ -49,10 +49,10 @@ jobs:
         env:
           MONGO_INITDB_ROOT_USERNAME: admin
           MONGO_INITDB_ROOT_PASSWORD: admin
-      tasks-queue:
-        image: mathulbrich/cqrs-cloud-tasks-emulator:latest
+      sqs:
+        image: softwaremill/elasticmq-native
         ports:
-          - 8123:8123
+          - 9324:9324
     steps:
       - run: env
       - name: Checkout repository
@@ -71,14 +71,14 @@ jobs:
         env:
           APP_NAME: cqrs-app
           APP_PORT: 3000
-          GCP_QUEUE_HOST: tasks-queue
-          GCP_QUEUE_PORT: 8123
-          GCP_QUEUE_PROJECT: dev
-          GCP_QUEUE_REGION: local
-          GCP_QUEUE_HANDLER_HOST: cqrs-app
-          GCP_QUEUE_HANDLER_ENDPOINT: api/v1/queue-handler
+          AWS_ACCESS_KEY_ID: cqrsappaccesskeyid
+          AWS_REGION: us-east-1
+          AWS_SECRET_ACCESS_KEY: cqrsappsecretaccesskey
           MONGODB_CONNECTION_URI: mongodb://admin:admin@mongodb/app?authSource=admin # will be ignored on integration testing
           NODE_ENV: ci
+          SQS_QUEUE_BASE_URL: http://sqs:9324/queue/
+          SQS_QUEUE_ENDPOINT: http://sqs:9324
+          SQS_QUEUE_SUFFIX: .fifo
         run: |
           yarn test:cov
       - name: Store test results
