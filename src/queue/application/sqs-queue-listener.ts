@@ -1,13 +1,11 @@
-import { randomUUID } from "crypto";
-
 import { OnModuleInit, Scope, OnModuleDestroy, Inject } from "@nestjs/common";
 import { ModuleRef } from "@nestjs/core";
 import { keys } from "lodash";
-import { Params, PARAMS_PROVIDER_TOKEN, PinoLogger } from "nestjs-pino";
-import { storage, Store } from "nestjs-pino/storage";
+import { Params, PARAMS_PROVIDER_TOKEN } from "nestjs-pino";
 import { Consumer } from "sqs-consumer";
 
 import { Logger } from "@app/common/logging/logger";
+import { wrapInContext, WrapParams } from "@app/common/logging/wrap-in-context";
 import { AppConfigService } from "@app/config/app-config-service";
 import { Injectable } from "@app/lib/nest/injectable";
 import { QueueMapping } from "@app/queue/application/queue-mapper";
@@ -28,6 +26,10 @@ export class SQSQueueListener implements OnModuleInit, OnModuleDestroy {
   ) {}
 
   public onModuleInit(): void {
+    const wrapParams: WrapParams = {
+      loggerConfig: this.params,
+      executionContext: "SQS-QUEUE",
+    };
     for (const queue of keys(QueueMapping) as QueueNames[]) {
       this.logger.debug(`Listening queue ${queue}...`, SQSQueueListener.name);
 
@@ -38,11 +40,8 @@ export class SQSQueueListener implements OnModuleInit, OnModuleDestroy {
         batchSize: this.config.queue.sqsQueueBatchConsumeSize,
         handleMessageBatch: async (messages) => {
           await Promise.all(
-            messages.map(async ({ Body }) => {
-              return storage.run(new Store(PinoLogger.root), async () => {
-                new PinoLogger(this.params).assign({
-                  reqId: { requestId: randomUUID() },
-                });
+            messages.map(async ({ Body }) =>
+              wrapInContext(wrapParams, async () => {
                 const queueHandler = await this.moduleRef.resolve(
                   QueueMapping[queue],
                   undefined,
@@ -51,8 +50,8 @@ export class SQSQueueListener implements OnModuleInit, OnModuleDestroy {
                   },
                 );
                 return queueHandler.execute(JSON.parse(Body ?? "{}"));
-              });
-            }),
+              }),
+            ),
           );
         },
       });
