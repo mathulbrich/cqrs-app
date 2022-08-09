@@ -1,11 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+// eslint-disable-next-line no-restricted-imports
 import { Logger as NestLogger } from "@nestjs/common";
 
 export type LogLevel = "log" | "error" | "warn" | "debug" | "verbose";
 
-/**
- *
- */
 export class Logger {
   private readonly internalLogger: NestLogger;
 

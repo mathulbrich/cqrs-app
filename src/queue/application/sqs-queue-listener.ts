@@ -1,6 +1,10 @@
-import { OnModuleInit, Scope, OnModuleDestroy } from "@nestjs/common";
+import { randomUUID } from "crypto";
+
+import { OnModuleInit, Scope, OnModuleDestroy, Inject } from "@nestjs/common";
 import { ModuleRef } from "@nestjs/core";
 import { keys } from "lodash";
+import { Params, PARAMS_PROVIDER_TOKEN, PinoLogger } from "nestjs-pino";
+import { storage, Store } from "nestjs-pino/storage";
 import { Consumer } from "sqs-consumer";
 
 import { Logger } from "@app/common/logging/logger";
@@ -19,6 +23,8 @@ export class SQSQueueListener implements OnModuleInit, OnModuleDestroy {
   constructor(
     private readonly moduleRef: ModuleRef,
     private readonly urlBuilder: SQSQueueUrlBuilder,
+    @Inject(PARAMS_PROVIDER_TOKEN)
+    private readonly params: Params,
   ) {}
 
   public onModuleInit(): void {
@@ -31,15 +37,19 @@ export class SQSQueueListener implements OnModuleInit, OnModuleDestroy {
         batchSize: maxNumberOfMessages,
         handleMessageBatch: async (messages) => {
           await Promise.all(
-            messages.map(async ({ Body }) =>
-              (
-                await this.moduleRef.resolve(
+            messages.map(async ({ Body }) => {
+              return storage.run(new Store(PinoLogger.root), async () => {
+                new PinoLogger(this.params).assign({
+                  reqId: { requestId: randomUUID() },
+                });
+                const queueHandler = await this.moduleRef.resolve(
                   QueueMapping[queue as QueueNames],
                   undefined,
                   { strict: false },
-                )
-              ).execute(JSON.parse(Body ?? "")),
-            ),
+                );
+                return queueHandler.execute(JSON.parse(Body ?? "{}"));
+              });
+            }),
           );
         },
       });
