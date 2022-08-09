@@ -1,7 +1,6 @@
 import { INestApplication } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { Test } from "@nestjs/testing";
-import { raw } from "body-parser";
 import getPort from "get-port";
 import { Connection } from "mongoose";
 
@@ -62,7 +61,6 @@ export class TestSetup {
 
     const app = moduleFixture.createNestApplication();
     app.setGlobalPrefix("api", { exclude: ["/health"] });
-    app.use(raw({ type: "application/octet-stream" }));
     await this.queues.setUp();
     await app.listen(port);
     const mongoConnection = await connect(this.databaseSuffix);
