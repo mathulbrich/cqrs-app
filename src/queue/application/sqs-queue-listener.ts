@@ -43,9 +43,11 @@ export class SQSQueueListener implements OnModuleInit, OnModuleDestroy {
                   reqId: { requestId: randomUUID() },
                 });
                 const queueHandler = await this.moduleRef.resolve(
-                  QueueMapping[queue as QueueNames],
+                  QueueMapping[queue],
                   undefined,
-                  { strict: false },
+                  {
+                    strict: false,
+                  },
                 );
                 return queueHandler.execute(JSON.parse(Body ?? "{}"));
               });

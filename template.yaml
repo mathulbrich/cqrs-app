@@ -9,7 +9,7 @@ Resources:
     Properties:
       CodeUri: ./
       Handler: dist/src/lambda.handler
-      Timeout: 60
+      Timeout: 15
       Runtime: nodejs16.x
       Events:
         Request:

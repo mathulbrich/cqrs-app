@@ -13,11 +13,7 @@ export const bootstrap = async (): Promise<INestApplication> => {
   });
   ContextIdFactory.apply(new DurableContextIdStrategy());
   app.useLogger(app.get(PinoLogger));
-  app.use(
-    helmet({
-      contentSecurityPolicy: false,
-    }),
-  );
+  app.use(helmet());
   app.setGlobalPrefix("api", {
     exclude: ["/health"],
   });

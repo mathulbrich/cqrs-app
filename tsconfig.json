@@ -19,10 +19,6 @@
     "baseUrl": "src",
     "esModuleInterop": true,
     "incremental": true,
-    "typeRoots": [
-      "src/@types",
-      "node_modules/@types"
-    ],
     "paths": {
       "@app/*": ["*"],
       "@test/*": ["../test/*.ts"],
