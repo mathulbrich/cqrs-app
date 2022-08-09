@@ -26,7 +26,7 @@ export class CreateExampleController {
         description,
         name,
       }),
-      syncId: id,
+      messageId: id,
     });
 
     res.set("example-id", id).send();

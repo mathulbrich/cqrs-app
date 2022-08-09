@@ -13,6 +13,7 @@ import {
   dropDatabase,
   mongoUri,
 } from "@test/integration/setup/mongodb";
+import { SQSTestQueues } from "@test/integration/setup/sqs";
 
 export type Envs = {
   [key: string]: string;
@@ -31,6 +32,8 @@ export const INTEGRATION_DEFAULT_TIMEOUT = 300_000;
 
 export class TestSetup {
   private readonly databaseSuffix = Uuid.generate().toString();
+  private readonly queueSuffix = `${Uuid.generate().toString()}.fifo`;
+  private readonly queues = new SQSTestQueues(this.queueSuffix);
   private readonly envs?: Envs;
 
   constructor(args?: TestArguments) {
@@ -42,7 +45,7 @@ export class TestSetup {
   ): Promise<void> {
     const port = await getPort();
     const envs = {
-      [Env.GCP_QUEUE_HANDLER_PORT]: port.toString(),
+      [Env.SQS_QUEUE_SUFFIX]: this.queueSuffix,
       [Env.MONGODB_CONNECTION_URI]: mongoUri(this.databaseSuffix),
       ...this.envs,
     };
@@ -60,12 +63,14 @@ export class TestSetup {
     const app = moduleFixture.createNestApplication();
     app.setGlobalPrefix("api", { exclude: ["/health"] });
     app.use(raw({ type: "application/octet-stream" }));
+    await this.queues.setUp();
     await app.listen(port);
     const mongoConnection = await connect(this.databaseSuffix);
 
     await cb({ app, mongoConnection })
       .finally(() => app.close())
       .finally(() => mongoConnection.close())
-      .finally(() => dropDatabase(this.databaseSuffix));
+      .finally(() => dropDatabase(this.databaseSuffix))
+      .finally(() => this.queues.tearDown());
   }
 }

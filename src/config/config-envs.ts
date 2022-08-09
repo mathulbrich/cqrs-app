@@ -10,24 +10,19 @@ import {
 export const Env = {
   APP_NAME: "APP_NAME",
   APP_PORT: "APP_PORT",
-  GCP_QUEUE_HOST: "GCP_QUEUE_HOST",
-  GCP_QUEUE_PORT: "GCP_QUEUE_PORT",
-  GCP_QUEUE_PROJECT: "GCP_QUEUE_PROJECT",
-  GCP_QUEUE_REGION: "GCP_QUEUE_REGION",
-  GCP_QUEUE_HANDLER_HOST: "GCP_QUEUE_HANDLER_HOST",
-  GCP_QUEUE_HANDLER_PORT: "GCP_QUEUE_HANDLER_PORT",
-  GCP_QUEUE_HANDLER_ENDPOINT: "GCP_QUEUE_HANDLER_ENDPOINT",
   MONGODB_CONNECTION_URI: "MONGODB_CONNECTION_URI",
+  SQS_QUEUE_BASE_URL: "SQS_QUEUE_BASE_URL",
+  SQS_QUEUE_SUFFIX: "SQS_QUEUE_SUFFIX",
 } as const;
 export type Env = keyof typeof Env;
 
 export const OptionalEnv = {
-  GCP_QUEUE_HANDLER_PROTOCOL: "GCP_QUEUE_HANDLER_PROTOCOL",
   NODE_ENV: "NODE_ENV",
   LOGGING_ASYNC: "LOGGING_ASYNC",
   LOGGING_ASYNC_MIN_LENGTH: "LOGGING_ASYNC_MIN_LENGTH",
   LOGGING_LEVEL: "LOGGING_LEVEL",
   USE_IN_MEMORY_REPOSITORY: "USE_IN_MEMORY_REPOSITORY",
+  SQS_QUEUE_ENDPOINT: "SQS_QUEUE_ENDPOINT",
 } as const;
 export type OptionalEnv = keyof typeof OptionalEnv;
 
@@ -44,14 +39,9 @@ export const ConfigEnvs = z.object({
     level: z.string().default("trace"),
   }),
   queue: z.object({
-    queueHost: z.string(),
-    queuePort: stringToNumber(),
-    queueProject: z.string(),
-    queueRegion: z.string(),
-    queueHandlerProtocol: z.string().default("http"),
-    queueHandlerHost: z.string(),
-    queueHandlerPort: stringToNumberWithDefault("3000"),
-    queueHandlerEndpoint: z.string(),
+    sqsQueueBaseUrl: z.string().url(),
+    sqsQueueEndpoint: z.string().optional(),
+    sqsQueueSuffix: z.string().default(""),
   }),
   mongoDb: z.object({
     connectionUri: z.string().url(),
@@ -75,14 +65,9 @@ const configInput = (
     level: inputConfig[OptionalEnv.LOGGING_LEVEL],
   },
   queue: {
-    queueHost: inputConfig[Env.GCP_QUEUE_HOST]!,
-    queuePort: inputConfig[Env.GCP_QUEUE_PORT]!,
-    queueProject: inputConfig[Env.GCP_QUEUE_PROJECT]!,
-    queueRegion: inputConfig[Env.GCP_QUEUE_REGION]!,
-    queueHandlerProtocol: inputConfig[OptionalEnv.GCP_QUEUE_HANDLER_PROTOCOL]!,
-    queueHandlerHost: inputConfig[Env.GCP_QUEUE_HANDLER_HOST]!,
-    queueHandlerPort: inputConfig[Env.GCP_QUEUE_HANDLER_PORT],
-    queueHandlerEndpoint: inputConfig[Env.GCP_QUEUE_HANDLER_ENDPOINT]!,
+    sqsQueueBaseUrl: inputConfig[Env.SQS_QUEUE_BASE_URL]!,
+    sqsQueueEndpoint: inputConfig[OptionalEnv.SQS_QUEUE_ENDPOINT],
+    sqsQueueSuffix: inputConfig[Env.SQS_QUEUE_SUFFIX],
   },
   mongoDb: {
     connectionUri: inputConfig[Env.MONGODB_CONNECTION_URI]!,
