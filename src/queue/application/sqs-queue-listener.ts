@@ -9,6 +9,8 @@ import { QueueMapping } from "@app/queue/application/queue-mapper";
 import { QueueNames } from "@app/queue/application/queue-names";
 import { SQSQueueUrlBuilder } from "@app/queue/application/sqs-queue-url-builder";
 
+const maxNumberOfMessages = 10;
+
 @Injectable({ scope: Scope.DEFAULT })
 export class SQSQueueListener implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(SQSQueueListener.name);
@@ -26,14 +28,20 @@ export class SQSQueueListener implements OnModuleInit, OnModuleDestroy {
       const queueUrl = this.urlBuilder.build(queue);
       const consumer = Consumer.create({
         queueUrl,
-        handleMessage: async ({ Body }) =>
-          (
-            await this.moduleRef.resolve(
-              QueueMapping[queue as QueueNames],
-              undefined,
-              { strict: false },
-            )
-          ).execute(JSON.parse(Body ?? "")),
+        batchSize: maxNumberOfMessages,
+        handleMessageBatch: async (messages) => {
+          await Promise.all(
+            messages.map(async ({ Body }) =>
+              (
+                await this.moduleRef.resolve(
+                  QueueMapping[queue as QueueNames],
+                  undefined,
+                  { strict: false },
+                )
+              ).execute(JSON.parse(Body ?? "")),
+            ),
+          );
+        },
       });
 
       this.consumers.set(queue, consumer);
