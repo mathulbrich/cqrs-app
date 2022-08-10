@@ -7,9 +7,7 @@ import { Example } from "@app/example/domain/example";
 import { ExampleRepository } from "@app/example/domain/repositories/example.repository";
 
 @CommandHandler(CreateExampleCommand)
-export class CreateExampleCommandHandler
-  implements ICommandHandler<CreateExampleCommand>
-{
+export class CreateExampleCommandHandler implements ICommandHandler<CreateExampleCommand> {
   public constructor(
     private readonly repository: ExampleRepository,
     private readonly publisher: EventPublisher,

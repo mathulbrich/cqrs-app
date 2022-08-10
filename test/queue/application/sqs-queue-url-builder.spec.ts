@@ -10,7 +10,9 @@ class TestArguments {
       sqsQueueSuffix: "-test-suffix",
     },
   });
+
   public readonly config = new AppConfigService(this.service);
+
   public readonly urlBuilder = new SQSQueueUrlBuilder(this.config);
 }
 

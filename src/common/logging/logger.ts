@@ -39,20 +39,11 @@ export class Logger {
     this.callLog("error", message, ...optionalParams);
   }
 
-  private callLog(
-    level: LogLevel,
-    message: unknown,
-    ...optionalParams: [...any, string?]
-  ): void {
+  private callLog(level: LogLevel, message: unknown, ...optionalParams: [...any, string?]): void {
     if (optionalParams.length === 0) {
       this.internalLogger[level](message);
-    } else if (
-      optionalParams.length === 1 &&
-      typeof optionalParams[0] !== "string"
-    ) {
-      this.internalLogger[level](
-        this.buildLogObject(message, optionalParams[0]),
-      );
+    } else if (optionalParams.length === 1 && typeof optionalParams[0] !== "string") {
+      this.internalLogger[level](this.buildLogObject(message, optionalParams[0]));
     } else {
       this.internalLogger[level](message, ...optionalParams);
     }

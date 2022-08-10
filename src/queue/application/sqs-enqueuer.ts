@@ -11,21 +11,13 @@ export class SQSEnqueuer implements Enqueuer {
   private readonly logger = new Logger(SQSEnqueuer.name);
   private readonly client: SQSClient;
 
-  constructor(
-    private readonly sqsUrlBuilder: SQSQueueUrlBuilder,
-    config: AppConfigService,
-  ) {
+  constructor(private readonly sqsUrlBuilder: SQSQueueUrlBuilder, config: AppConfigService) {
     this.client = new SQSClient({
       endpoint: config.queue.sqsQueueEndpoint,
     });
   }
 
-  public async enqueue({
-    groupId,
-    messageId,
-    payload,
-    queue,
-  }: EnqueueArguments): Promise<void> {
+  public async enqueue({ groupId, messageId, payload, queue }: EnqueueArguments): Promise<void> {
     this.logger.log(`Sending message to ${queue}`, {
       groupId,
       messageId,

@@ -8,11 +8,7 @@ import { AppModule } from "@app/app.module";
 import { configureNest } from "@app/bootstrap";
 import { Env, validateConfig, OptionalEnv } from "@app/config/config-envs";
 import { Uuid } from "@app/lib/uuid";
-import {
-  connect,
-  dropDatabase,
-  mongoUri,
-} from "@test/integration/setup/mongodb";
+import { connect, dropDatabase, mongoUri } from "@test/integration/setup/mongodb";
 import { SQSTestQueues } from "@test/integration/setup/sqs";
 
 export type Envs = {
@@ -40,9 +36,7 @@ export class TestSetup {
     this.envs = args?.envs;
   }
 
-  public async run(
-    cb: (params: TestParameters) => Promise<void>,
-  ): Promise<void> {
+  public async run(cb: (params: TestParameters) => Promise<void>): Promise<void> {
     const port = await getPort();
     const envs = {
       [Env.SQS_QUEUE_SUFFIX]: this.queueSuffix,

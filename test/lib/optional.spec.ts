@@ -58,9 +58,7 @@ describe("Optional", () => {
 
     it("Should map async value", async () => {
       const optional = Option(1);
-      expect(
-        await optional.mapAsync((value) => Promise.resolve(value + 1)),
-      ).toEqual(Option(2));
+      expect(await optional.mapAsync((value) => Promise.resolve(value + 1))).toEqual(Option(2));
     });
 
     it("Should return None when value is undefined", () => {
@@ -70,9 +68,7 @@ describe("Optional", () => {
 
     it("Should return None when async value is undefined", async () => {
       const optional = None<number>();
-      expect(
-        await optional.mapAsync((value) => Promise.resolve(value + 1)),
-      ).toEqual(None());
+      expect(await optional.mapAsync((value) => Promise.resolve(value + 1))).toEqual(None());
     });
   });
 

@@ -9,6 +9,7 @@ import { Injectable } from "@app/lib/nest/injectable";
 @Injectable({ scope: Scope.DEFAULT })
 class DefaultCounter {
   private count = 0;
+
   increaseAndGet(): number {
     return ++this.count;
   }
@@ -23,6 +24,7 @@ class RequestCounter extends DefaultCounter {}
 @Controller("/counter")
 class CounterController {
   constructor(private readonly counter: DurableCounter) {}
+
   @Get()
   get() {
     return {
@@ -54,12 +56,7 @@ describe("durable-context", () => {
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
-      controllers: [
-        CounterController,
-        CounterController2,
-        CounterController3,
-        CounterController4,
-      ],
+      controllers: [CounterController, CounterController2, CounterController3, CounterController4],
       providers: [DefaultCounter, DurableCounter, RequestCounter],
     }).compile();
 
@@ -70,9 +67,7 @@ describe("durable-context", () => {
 
   it("should keep same instance for all gets regardless controller", async () => {
     await request(app.getHttpServer()).get("/counter").expect(200);
-    let response = await request(app.getHttpServer())
-      .get("/counter")
-      .expect(200);
+    let response = await request(app.getHttpServer()).get("/counter").expect(200);
     expect(response.body).toStrictEqual({
       counter: 2,
       ctor: "CounterController",
@@ -87,9 +82,7 @@ describe("durable-context", () => {
 
   it("should create different instance when default scope", async () => {
     await request(app.getHttpServer()).get("/counter").expect(200);
-    let response = await request(app.getHttpServer())
-      .get("/counter")
-      .expect(200);
+    let response = await request(app.getHttpServer()).get("/counter").expect(200);
     expect(response.body).toStrictEqual({
       counter: 2,
       ctor: "CounterController",
@@ -109,9 +102,7 @@ describe("durable-context", () => {
 
   it("should create different instances each time when not durable", async () => {
     await request(app.getHttpServer()).get("/counter").expect(200);
-    let response = await request(app.getHttpServer())
-      .get("/counter")
-      .expect(200);
+    let response = await request(app.getHttpServer()).get("/counter").expect(200);
     expect(response.body).toStrictEqual({
       counter: 2,
       ctor: "CounterController",
