@@ -2,13 +2,12 @@ import { INestApplication } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { Test } from "@nestjs/testing";
 import getPort from "get-port";
-import { Connection } from "mongoose";
 
 import { AppModule } from "@app/app.module";
 import { configureNest } from "@app/bootstrap";
 import { Env, validateConfig, OptionalEnv } from "@app/config/config-envs";
 import { Uuid } from "@app/lib/uuid";
-import { connect, dropDatabase, mongoUri } from "@test/integration/setup/mongodb";
+import { DynamoDBTestContainer } from "@test/integration/setup/dynamodb";
 import { SQSTestQueues } from "@test/integration/setup/sqs";
 
 export type Envs = {
@@ -17,7 +16,7 @@ export type Envs = {
 
 interface TestParameters {
   app: INestApplication;
-  mongoConnection: Connection;
+  dynamodb: DynamoDBTestContainer;
 }
 
 interface TestArguments {
@@ -27,9 +26,9 @@ interface TestArguments {
 export const INTEGRATION_DEFAULT_TIMEOUT = 300_000;
 
 export class TestSetup {
-  private readonly databaseSuffix = Uuid.generate().toString();
   private readonly queueSuffix = `${Uuid.generate().toString()}.fifo`;
   private readonly queues = new SQSTestQueues(this.queueSuffix);
+  private readonly dynamodb = new DynamoDBTestContainer();
   private readonly envs?: Envs;
 
   constructor(args?: TestArguments) {
@@ -40,7 +39,7 @@ export class TestSetup {
     const port = await getPort();
     const envs = {
       [Env.SQS_QUEUE_SUFFIX]: this.queueSuffix,
-      [Env.MONGODB_CONNECTION_URI]: mongoUri(this.databaseSuffix),
+      [Env.DYNAMO_DB_TABLE_NAME]: this.dynamodb.config.tableName,
       [OptionalEnv.SQS_QUEUE_WAIT_TIME_SECONDS]: "0",
       ...this.envs,
     };
@@ -58,13 +57,12 @@ export class TestSetup {
     const app = moduleFixture.createNestApplication();
     configureNest(app);
     await this.queues.setUp();
+    await this.dynamodb.setUp();
     await app.listen(port);
-    const mongoConnection = await connect(this.databaseSuffix);
 
-    await cb({ app, mongoConnection })
+    await cb({ app, dynamodb: this.dynamodb })
       .finally(() => app.close())
-      .finally(() => mongoConnection.close())
-      .finally(() => dropDatabase(this.databaseSuffix))
+      .finally(() => this.dynamodb.tearDown())
       .finally(() => this.queues.tearDown());
   }
 }

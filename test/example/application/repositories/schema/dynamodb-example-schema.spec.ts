@@ -1,10 +1,10 @@
 import {
   fromDomain,
   toDomain,
-} from "@app/example/application/repositories/schema/mongodb-example-schema";
+} from "@app/example/application/repositories/schema/dynamodb-example-schema";
 import { ExampleFixture } from "@test/resources/fixtures/example-fixture";
 
-describe("Mongodb Example Schema", () => {
+describe("DynamoDB Example Schema", () => {
   describe("#fromDomain", () => {
     it("Should parse from domain", () => {
       // Setup
@@ -17,6 +17,7 @@ describe("Mongodb Example Schema", () => {
       expect(parsed.id).toEqual(example.id.toString());
       expect(parsed.name).toEqual(example.name);
       expect(parsed.description).toEqual(example.description);
+      expect(parsed.createdAt).toEqual(example.createdAt.toISOString());
     });
   });
 
@@ -33,6 +34,7 @@ describe("Mongodb Example Schema", () => {
       expect(domain.id).toEqual(example.id);
       expect(domain.name).toEqual(example.name);
       expect(domain.description).toEqual(example.description);
+      expect(domain.createdAt).toEqual(example.createdAt);
     });
   });
 });

@@ -2,7 +2,7 @@ import { faker } from "@faker-js/faker";
 import { retry } from "async";
 import request from "supertest";
 
-import { MongoDBExampleRepository } from "@app/example/application/repositories/mongodb-example.repository";
+import { DynamoDBExampleRepository } from "@app/example/application/repositories/dynamodb-example.repository";
 import { Uuid } from "@app/lib/uuid";
 import { TestSetup, INTEGRATION_DEFAULT_TIMEOUT } from "@test/integration/setup/test-setup";
 
@@ -10,7 +10,7 @@ describe("Create Example API", () => {
   jest.setTimeout(INTEGRATION_DEFAULT_TIMEOUT);
 
   it("Should create and store the example", async () => {
-    await new TestSetup().run(async ({ app, mongoConnection }) => {
+    await new TestSetup().run(async ({ app, dynamodb }) => {
       const response = await request(app.getHttpServer())
         .post("/api/v1/create-example")
         .send({
@@ -23,7 +23,7 @@ describe("Create Example API", () => {
       expect(exampleId).toBeDefined();
 
       await retry({ interval: 100, times: 20 }, async () => {
-        const repository = new MongoDBExampleRepository(mongoConnection);
+        const repository = new DynamoDBExampleRepository(dynamodb.config);
         const example = await repository.findById(new Uuid(exampleId));
         expect(example.isDefined()).toBeTruthy();
       });

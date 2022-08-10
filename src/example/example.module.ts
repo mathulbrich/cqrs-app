@@ -1,15 +1,13 @@
 import { Module } from "@nestjs/common";
 import { CqrsModule } from "@nestjs/cqrs";
-import { getConnectionToken } from "@nestjs/mongoose";
-import { Connection } from "mongoose";
 
 import { AppConfigService } from "@app/config/app-config-service";
 import { CreateExampleController } from "@app/example/application/controllers/create-example.controller";
 import { GetExampleController } from "@app/example/application/controllers/get-example.controller";
 import { LogExampleCreatedEventHandler } from "@app/example/application/events/log-example-created-event.handler";
 import { CreateExampleQueueHandler } from "@app/example/application/queues/create-example-queue.handler";
+import { DynamoDBExampleRepository } from "@app/example/application/repositories/dynamodb-example.repository";
 import { InMemoryExampleRepository } from "@app/example/application/repositories/in-memory-example.repository";
-import { MongoDBExampleRepository } from "@app/example/application/repositories/mongodb-example.repository";
 import { CreateExampleCommandHandler } from "@app/example/domain/commands/handlers/create-example-command.handler";
 import { ExampleRepository } from "@app/example/domain/repositories/example.repository";
 
@@ -23,11 +21,11 @@ import { ExampleRepository } from "@app/example/domain/repositories/example.repo
     CreateExampleQueueHandler,
     {
       provide: ExampleRepository,
-      inject: [AppConfigService, getConnectionToken()],
-      useFactory: (service: AppConfigService, connection: Connection) =>
-        service.app.useInMemoryRepository
+      inject: [AppConfigService],
+      useFactory: (configService: AppConfigService) =>
+        configService.app.useInMemoryRepository
           ? new InMemoryExampleRepository()
-          : new MongoDBExampleRepository(connection),
+          : new DynamoDBExampleRepository(configService.dynamoDb),
     },
   ],
 })

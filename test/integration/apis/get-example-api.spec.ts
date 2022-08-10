@@ -3,7 +3,7 @@ import { retry } from "async";
 import request from "supertest";
 
 import { OptionalEnv } from "@app/config/config-envs";
-import { MongoDBExampleRepository } from "@app/example/application/repositories/mongodb-example.repository";
+import { DynamoDBExampleRepository } from "@app/example/application/repositories/dynamodb-example.repository";
 import { TestSetup, INTEGRATION_DEFAULT_TIMEOUT } from "@test/integration/setup/test-setup";
 import { ExampleFixture } from "@test/resources/fixtures/example-fixture";
 
@@ -11,9 +11,9 @@ describe("Get Example API", () => {
   jest.setTimeout(INTEGRATION_DEFAULT_TIMEOUT);
 
   it("Should store then get the example", async () => {
-    await new TestSetup().run(async ({ app, mongoConnection }) => {
+    await new TestSetup().run(async ({ app, dynamodb }) => {
       const example = new ExampleFixture().build();
-      const repository = new MongoDBExampleRepository(mongoConnection);
+      const repository = new DynamoDBExampleRepository(dynamodb.config);
       await repository.store(example);
 
       const response = await request(app.getHttpServer())
@@ -29,10 +29,10 @@ describe("Get Example API", () => {
   });
 
   it("Should get all examples", async () => {
-    await new TestSetup().run(async ({ app, mongoConnection }) => {
+    await new TestSetup().run(async ({ app, dynamodb }) => {
       const numberOfExamples = faker.datatype.number({ min: 2, max: 10 });
       const examples = new ExampleFixture().buildMany(numberOfExamples);
-      const repository = new MongoDBExampleRepository(mongoConnection);
+      const repository = new DynamoDBExampleRepository(dynamodb.config);
       for (const example of examples) {
         // eslint-disable-next-line no-await-in-loop
         await repository.store(example);

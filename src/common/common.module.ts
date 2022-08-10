@@ -4,7 +4,6 @@ import { APP_INTERCEPTOR } from "@nestjs/core";
 import { CqrsModule } from "@nestjs/cqrs";
 
 import { EventBusPublisher } from "@app/common/application/event-bus-publisher";
-import { MongooseModuleConfig } from "@app/common/application/mongoose";
 import { EventPublisher } from "@app/common/domain/event-publisher";
 import { LoggingModuleConfig } from "@app/common/logging/logging";
 import { LoggingInterceptor } from "@app/common/logging/logging.interceptor";
@@ -21,7 +20,6 @@ import { validateConfig } from "@app/config/config-envs";
     }),
     LoggingModuleConfig,
     CqrsModule,
-    MongooseModuleConfig,
   ],
   providers: [
     AppConfigService,

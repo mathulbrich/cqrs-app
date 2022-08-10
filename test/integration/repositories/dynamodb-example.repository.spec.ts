@@ -1,18 +1,20 @@
-import { MongoDBExampleRepository } from "@app/example/application/repositories/mongodb-example.repository";
+import { DynamoDBExampleRepository } from "@app/example/application/repositories/dynamodb-example.repository";
 import { Example } from "@app/example/domain/example";
 import { Uuid } from "@app/lib/uuid";
-import { runWithMongoConnection } from "@test/integration/setup/mongodb";
+import { runWithDynamoDB } from "@test/integration/setup/dynamodb";
 import { INTEGRATION_DEFAULT_TIMEOUT } from "@test/integration/setup/test-setup";
 import { ExampleFixture } from "@test/resources/fixtures/example-fixture";
 
-describe(MongoDBExampleRepository.name, () => {
+const sortFn = (a: Example, b: Example) => a.id.toString().localeCompare(b.id.toString());
+
+describe(DynamoDBExampleRepository.name, () => {
   jest.setTimeout(INTEGRATION_DEFAULT_TIMEOUT);
 
   describe("#findById", () => {
     it("Should find example by id", async () => {
-      await runWithMongoConnection(async (connection) => {
+      await runWithDynamoDB(async ({ config }) => {
         // Setup
-        const repository = new MongoDBExampleRepository(connection);
+        const repository = new DynamoDBExampleRepository(config);
         const example = new ExampleFixture().build();
 
         // Exercise
@@ -21,14 +23,14 @@ describe(MongoDBExampleRepository.name, () => {
         // Verify
         const result = await repository.findById(example.id);
         expect(result.isDefined()).toBeTruthy();
-        expect(result.get()).toStrictEqual(example);
+        expect(result.get()).toEqual(example);
       });
     });
 
     it("Should return None when example is not found", async () => {
-      await runWithMongoConnection(async (connection) => {
+      await runWithDynamoDB(async ({ config }) => {
         // Setup
-        const repository = new MongoDBExampleRepository(connection);
+        const repository = new DynamoDBExampleRepository(config);
         const example = new ExampleFixture().build();
         await repository.store(example);
 
@@ -43,9 +45,9 @@ describe(MongoDBExampleRepository.name, () => {
 
   describe("#findAll", () => {
     it("Should find all examples", async () => {
-      await runWithMongoConnection(async (connection) => {
+      await runWithDynamoDB(async ({ config }) => {
         // Setup
-        const repository = new MongoDBExampleRepository(connection);
+        const repository = new DynamoDBExampleRepository(config);
         const examples = new ExampleFixture().buildMany(3);
         for (const example of examples) {
           // eslint-disable-next-line no-await-in-loop
@@ -61,7 +63,7 @@ describe(MongoDBExampleRepository.name, () => {
 
         // Verify
         expect(resultExamples).toHaveLength(3);
-        expect(resultExamples).toStrictEqual(examples);
+        expect(resultExamples.sort(sortFn)).toEqual(examples.sort(sortFn));
       });
     });
   });
