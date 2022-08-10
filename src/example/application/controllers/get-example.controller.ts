@@ -1,6 +1,6 @@
 import { Controller, Get, Param, NotFoundException } from "@nestjs/common";
 
-import { ValidateSchema } from "@app/common/application/schema-validation-pipe";
+import { withValidation } from "@app/common/application/schema-validation-pipe";
 import {
   fromDomain,
   GetExampleResponse,
@@ -23,8 +23,9 @@ export class GetExampleController {
   }
 
   @Get(":id")
-  @ValidateSchema(UuidSchema)
-  public async get(@Param("id") id: string): Promise<GetExampleResponse> {
+  public async get(
+    @Param("id", withValidation(UuidSchema)) id: string,
+  ): Promise<GetExampleResponse> {
     return (await this.repository.findById(new Uuid(id)))
       .map(fromDomain)
       .orElseThrow(new NotFoundException());

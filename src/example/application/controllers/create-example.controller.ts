@@ -1,5 +1,5 @@
-import { Body, Controller, Post, Response } from "@nestjs/common";
-import { Response as Res } from "express";
+import { Body, Controller, Post, Res } from "@nestjs/common";
+import { Response } from "express";
 
 import { ValidateSchema } from "@app/common/application/schema-validation-pipe";
 import { CreateExamplePayload } from "@app/example/application/controllers/create-example.payload";
@@ -14,7 +14,7 @@ export class CreateExampleController {
   @ValidateSchema(CreateExamplePayload)
   public async accept(
     @Body() example: CreateExamplePayload,
-    @Response() res: Res,
+    @Res() res: Response,
   ): Promise<void> {
     const { description, name } = example;
     const id = Uuid.generate().toString();

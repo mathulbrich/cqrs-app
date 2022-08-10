@@ -35,10 +35,18 @@ describe("Create Example API", () => {
 
   it("Should return 400 when the example is invalid", async () => {
     await new TestSetup().run(async ({ app }) => {
-      await request(app.getHttpServer())
+      const response = await request(app.getHttpServer())
         .post("/api/v1/create-example")
         .send(faker.datatype.json())
         .expect(400);
+      expect(response.body).toEqual(
+        expect.objectContaining({
+          fieldErrors: {
+            name: ["Required"],
+            description: ["Required"],
+          },
+        }),
+      );
     });
   });
 });

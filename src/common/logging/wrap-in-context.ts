@@ -14,7 +14,7 @@ export const wrapInContext = async (
   params: WrapParams,
   fn: () => Promise<void>,
 ): Promise<void> =>
-  storage.run(new Store(PinoLogger.root), async () => {
+  storage.run(new Store(PinoLogger.root), () => {
     const contextName = isNil(params.executionContext)
       ? {}
       : { name: params.executionContext };

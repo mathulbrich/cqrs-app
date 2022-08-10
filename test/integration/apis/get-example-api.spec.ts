@@ -78,9 +78,14 @@ describe("Get Example API", () => {
   it("Should return 400 when Uuid is invalid", async () => {
     await new TestSetup().run(async ({ app }) => {
       const invalidUuid = faker.random.word();
-      await request(app.getHttpServer())
+      const response = await request(app.getHttpServer())
         .get(`/api/v1/example/${invalidUuid}`)
         .expect(400);
+      expect(response.body).toEqual(
+        expect.objectContaining({
+          formErrors: ["Invalid uuid"],
+        }),
+      );
     });
   });
 });
