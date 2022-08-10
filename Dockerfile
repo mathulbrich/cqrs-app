@@ -1,4 +1,4 @@
-FROM node:16.14.2 as dev
+FROM node:16 as dev
 USER node
 RUN yarn global add @nestjs/cli
 WORKDIR /usr/app
@@ -7,7 +7,7 @@ HEALTHCHECK --interval=5s --timeout=5s --retries=5 CMD ["curl", "http://localhos
 CMD [ "/usr/app/entrypoint.sh" ]
 
 
-FROM node:16.14.2-slim as prod
+FROM node:16-slim as prod
 USER node
 ARG NODE_ENV=production
 ENV NODE_ENV=${NODE_ENV}

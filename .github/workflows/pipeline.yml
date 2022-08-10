@@ -9,11 +9,11 @@ on:
       - "scripts/**"
 
 jobs:
-  lint:
-    name: Lint
+  build:
+    name: Build
     runs-on: ubuntu-latest
     container:
-      image: node:16.14.2
+      image: node:16-slim
     env:
       NODE_ENV: ci
     steps:
@@ -21,8 +21,30 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
       - name: Install NPM dependencies
-        run: |
-          yarn install --frozen-lockfile
+        run: yarn install --frozen-lockfile
+      - name: Cache node modules
+        uses: actions/cache@v2
+        env:
+          cache-name: node-modules
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
+      - name: Build
+        run: yarn build
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    container:
+      image: node:16-slim
+    env:
+      NODE_ENV: ci
+    steps:
+      - run: env
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Install NPM dependencies
+        run: yarn install --frozen-lockfile
       - name: Cache node modules
         uses: actions/cache@v2
         env:
@@ -31,15 +53,14 @@ jobs:
           path: '**/node_modules'
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
       - name: Run lint
-        run: |
-          yarn lint
+        run: yarn lint
 
   test:
     name: Unit and Integration Tests
     runs-on: ubuntu-latest
     environment: test
     container:
-      image: node:16.14.2
+      image: node:16-slim
       options: --name cqrs-app
     services:
       mongodb:
@@ -65,8 +86,7 @@ jobs:
           path: '**/node_modules'
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
       - name: Install NPM dependencies
-        run: |
-          yarn install --frozen-lockfile
+        run: yarn install --frozen-lockfile
       - name: Run Tests
         env:
           APP_NAME: cqrs-app
