@@ -25,9 +25,7 @@ export class Optional<T> {
   }
 
   public map<U>(fn: (value: T) => U): Optional<U> {
-    return this.value === undefined
-      ? new Optional<U>(undefined)
-      : new Optional<U>(fn(this.value));
+    return this.value === undefined ? new Optional<U>(undefined) : new Optional<U>(fn(this.value));
   }
 
   public async mapAsync<U>(fn: (value: T) => Promise<U>): Promise<Optional<U>> {
@@ -57,6 +55,7 @@ export class Optional<T> {
     if (this.value !== undefined) {
       return fn(this.value);
     }
+    return Promise.resolve();
   }
 
   public isEmpty(): boolean {

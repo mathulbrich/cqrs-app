@@ -9,8 +9,7 @@ import { loggerConfig as defaultLoggerConfig } from "@app/common/logging/logging
 import { LoggingInterceptor } from "@app/common/logging/logging.interceptor";
 import { wrapInContext } from "@app/common/logging/wrap-in-context";
 
-const UUID_REGEX =
-  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 
 @Controller("/fake")
 class FakeController {
@@ -179,30 +178,27 @@ describe("logger", () => {
 
   describe("wrapInContext", () => {
     it("should wrap in context with random UUID", async () => {
-      await wrapInContext(
-        { loggerConfig: loggerConfig, executionContext: "wrapped" },
-        async () => {
-          const logger = new Logger("test-context");
-          logger.info("A wrapped message");
-          expect(stream.getLast()).toEqual(
-            expect.objectContaining({
-              context: "test-context",
-              name: "wrapped",
-              level: "info",
-              msg: "A wrapped message",
-              reqId: {
-                requestId: expect.stringMatching(UUID_REGEX),
-              },
-            }),
-          );
-        },
-      );
+      await wrapInContext({ loggerConfig, executionContext: "wrapped" }, async () => {
+        const logger = new Logger("test-context");
+        logger.info("A wrapped message");
+        expect(stream.getLast()).toEqual(
+          expect.objectContaining({
+            context: "test-context",
+            name: "wrapped",
+            level: "info",
+            msg: "A wrapped message",
+            reqId: {
+              requestId: expect.stringMatching(UUID_REGEX),
+            },
+          }),
+        );
+      });
     });
 
     it("should wrap in context with given UUID", async () => {
       await wrapInContext(
         {
-          loggerConfig: loggerConfig,
+          loggerConfig,
           requestId: "fixed-request-id",
         },
         async () => {

@@ -1,7 +1,4 @@
-import {
-  useMiddlewareExceptFor,
-  useMiddlewareOnlyFor,
-} from "@app/lib/middleware/use-middleware";
+import { useMiddlewareExceptFor, useMiddlewareOnlyFor } from "@app/lib/middleware/use-middleware";
 import { FakeMiddlewareArguments } from "@test/resources/middleware-fake-arguments";
 
 const FAKE_URL = "/api/v1/test/abcd";
@@ -11,11 +8,7 @@ describe("use-middleware", () => {
     const { request, response, next, forwardMiddleware, forwardWasCalled } =
       new FakeMiddlewareArguments();
     request.url = FAKE_URL;
-    useMiddlewareExceptFor(["^/api/v1/test.*"], forwardMiddleware)(
-      request,
-      response,
-      next,
-    );
+    useMiddlewareExceptFor(["^/api/v1/test.*"], forwardMiddleware)(request, response, next);
     expect(forwardWasCalled()).toBe(false);
   });
 
@@ -23,11 +16,7 @@ describe("use-middleware", () => {
     const { request, response, next, forwardMiddleware, forwardWasCalled } =
       new FakeMiddlewareArguments();
     request.url = FAKE_URL;
-    useMiddlewareExceptFor(["^/api/v1/tests.*"], forwardMiddleware)(
-      request,
-      response,
-      next,
-    );
+    useMiddlewareExceptFor(["^/api/v1/tests.*"], forwardMiddleware)(request, response, next);
     expect(forwardWasCalled()).toBe(true);
   });
 
@@ -35,11 +24,7 @@ describe("use-middleware", () => {
     const { request, response, next, forwardMiddleware, forwardWasCalled } =
       new FakeMiddlewareArguments();
     request.url = FAKE_URL;
-    useMiddlewareOnlyFor(["^/api/v1/test.*"], forwardMiddleware)(
-      request,
-      response,
-      next,
-    );
+    useMiddlewareOnlyFor(["^/api/v1/test.*"], forwardMiddleware)(request, response, next);
     expect(forwardWasCalled()).toBe(true);
   });
 
@@ -47,11 +32,7 @@ describe("use-middleware", () => {
     const { request, response, next, forwardMiddleware, forwardWasCalled } =
       new FakeMiddlewareArguments();
     request.url = FAKE_URL;
-    useMiddlewareOnlyFor(["^/api/v2/test.*"], forwardMiddleware)(
-      request,
-      response,
-      next,
-    );
+    useMiddlewareOnlyFor(["^/api/v2/test.*"], forwardMiddleware)(request, response, next);
     expect(forwardWasCalled()).toBe(false);
   });
 });

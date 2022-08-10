@@ -2,8 +2,7 @@ import { faker } from "@faker-js/faker";
 
 import { Uuid } from "@app/lib/uuid";
 
-const UuidRegex =
-  /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
+const UuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
 
 describe(Uuid.name, () => {
   it("Should generate a valid uuid", () => {

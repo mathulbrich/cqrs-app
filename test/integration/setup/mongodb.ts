@@ -8,9 +8,7 @@ export const mongoUri = (suffix: string) => {
 
 export const dropDatabase = async (databaseSuffix: string) => {
   const mongo = await mongoose.connect(mongoUri(databaseSuffix));
-  await mongo.connection.db
-    .dropDatabase()
-    .finally(() => mongo.connection.close());
+  await mongo.connection.db.dropDatabase().finally(() => mongo.connection.close());
 };
 
 export const connect = async (databaseSuffix: string) =>

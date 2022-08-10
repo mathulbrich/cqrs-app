@@ -48,6 +48,7 @@ describe(MongoDBExampleRepository.name, () => {
         const repository = new MongoDBExampleRepository(connection);
         const examples = new ExampleFixture().buildMany(3);
         for (const example of examples) {
+          // eslint-disable-next-line no-await-in-loop
           await repository.store(example);
         }
 

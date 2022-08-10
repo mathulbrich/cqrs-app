@@ -6,6 +6,4 @@ export const CreateExampleQueuePayload = z.object({
   description: z.string().min(1),
 });
 
-export type CreateExampleQueuePayload = z.infer<
-  typeof CreateExampleQueuePayload
->;
+export type CreateExampleQueuePayload = z.infer<typeof CreateExampleQueuePayload>;

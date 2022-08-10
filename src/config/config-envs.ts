@@ -73,8 +73,7 @@ const configInput = (
     sqsQueueBatchConsumeSize: inputConfig[Env.SQS_QUEUE_BATCH_CONSUMER_SIZE],
     sqsQueueEndpoint: inputConfig[OptionalEnv.SQS_QUEUE_ENDPOINT],
     sqsQueueSuffix: inputConfig[Env.SQS_QUEUE_SUFFIX],
-    sqsQueueWaitTimeSeconds:
-      inputConfig[OptionalEnv.SQS_QUEUE_WAIT_TIME_SECONDS],
+    sqsQueueWaitTimeSeconds: inputConfig[OptionalEnv.SQS_QUEUE_WAIT_TIME_SECONDS],
   },
   mongoDb: {
     connectionUri: inputConfig[Env.MONGODB_CONNECTION_URI]!,

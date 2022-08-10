@@ -22,9 +22,7 @@ export class MongoDBExampleRepository implements ExampleRepository {
   ) {}
 
   public async store(example: Example): Promise<void> {
-    await this.connection.db
-      .collection(EXAMPLE_COLLECTION)
-      .insertOne(fromDomain(example));
+    await this.connection.db.collection(EXAMPLE_COLLECTION).insertOne(fromDomain(example));
   }
 
   public async *findAll(): AsyncGenerator<Example> {

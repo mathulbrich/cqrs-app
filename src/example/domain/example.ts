@@ -8,8 +8,7 @@ export interface ExampleAttributes {
   createdAt: Date;
 }
 
-type RequiredExampleAttributes = Partial<ExampleAttributes> &
-  Omit<ExampleAttributes, "createdAt">;
+type RequiredExampleAttributes = Partial<ExampleAttributes> & Omit<ExampleAttributes, "createdAt">;
 
 export class Example extends BaseClass<RequiredExampleAttributes>() {
   constructor(attributes: RequiredExampleAttributes) {

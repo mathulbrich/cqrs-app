@@ -4,10 +4,7 @@ import request from "supertest";
 
 import { MongoDBExampleRepository } from "@app/example/application/repositories/mongodb-example.repository";
 import { Uuid } from "@app/lib/uuid";
-import {
-  TestSetup,
-  INTEGRATION_DEFAULT_TIMEOUT,
-} from "@test/integration/setup/test-setup";
+import { TestSetup, INTEGRATION_DEFAULT_TIMEOUT } from "@test/integration/setup/test-setup";
 
 describe("Create Example API", () => {
   jest.setTimeout(INTEGRATION_DEFAULT_TIMEOUT);

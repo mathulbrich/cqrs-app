@@ -4,10 +4,7 @@ import request from "supertest";
 
 import { OptionalEnv } from "@app/config/config-envs";
 import { MongoDBExampleRepository } from "@app/example/application/repositories/mongodb-example.repository";
-import {
-  TestSetup,
-  INTEGRATION_DEFAULT_TIMEOUT,
-} from "@test/integration/setup/test-setup";
+import { TestSetup, INTEGRATION_DEFAULT_TIMEOUT } from "@test/integration/setup/test-setup";
 import { ExampleFixture } from "@test/resources/fixtures/example-fixture";
 
 describe("Get Example API", () => {
@@ -37,12 +34,11 @@ describe("Get Example API", () => {
       const examples = new ExampleFixture().buildMany(numberOfExamples);
       const repository = new MongoDBExampleRepository(mongoConnection);
       for (const example of examples) {
+        // eslint-disable-next-line no-await-in-loop
         await repository.store(example);
       }
 
-      const response = await request(app.getHttpServer())
-        .get("/api/v1/example")
-        .expect(200);
+      const response = await request(app.getHttpServer()).get("/api/v1/example").expect(200);
 
       expect(response.body).toHaveLength(numberOfExamples);
     });

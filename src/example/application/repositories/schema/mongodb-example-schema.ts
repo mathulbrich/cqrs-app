@@ -19,10 +19,7 @@ export const ExampleSchema = new Schema({
   createdAt: { type: Date, required: true },
 });
 
-export const ExampleModel = model<MongoDBExample>(
-  EXAMPLE_COLLECTION,
-  ExampleSchema,
-);
+export const ExampleModel = model<MongoDBExample>(EXAMPLE_COLLECTION, ExampleSchema);
 
 export const fromDomain = (example: Example) =>
   new ExampleModel({

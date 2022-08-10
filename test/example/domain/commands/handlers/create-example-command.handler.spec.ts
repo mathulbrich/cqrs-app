@@ -10,10 +10,7 @@ import { TestEventPublisher } from "@test/resources/test-event-publisher";
 class TestArguments {
   public readonly publisher = new TestEventPublisher();
   public readonly repository = new InMemoryExampleRepository();
-  public readonly handler = new CreateExampleCommandHandler(
-    this.repository,
-    this.publisher,
-  );
+  public readonly handler = new CreateExampleCommandHandler(this.repository, this.publisher);
 }
 
 describe(CreateExampleCommandHandler.name, () => {

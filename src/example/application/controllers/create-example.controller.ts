@@ -12,10 +12,7 @@ export class CreateExampleController {
 
   @Post()
   @ValidateSchema(CreateExamplePayload)
-  public async accept(
-    @Body() example: CreateExamplePayload,
-    @Res() res: Response,
-  ): Promise<void> {
+  public async accept(@Body() example: CreateExamplePayload, @Res() res: Response): Promise<void> {
     const { description, name } = example;
     const id = Uuid.generate().toString();
 

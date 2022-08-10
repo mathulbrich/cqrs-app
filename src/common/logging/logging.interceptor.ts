@@ -1,10 +1,4 @@
-import {
-  CallHandler,
-  ExecutionContext,
-  HttpStatus,
-  NestInterceptor,
-  Scope,
-} from "@nestjs/common";
+import { CallHandler, ExecutionContext, HttpStatus, NestInterceptor, Scope } from "@nestjs/common";
 import { catchError, Observable, tap, throwError } from "rxjs";
 
 import { Logger } from "@app/common/logging/logger";
@@ -17,10 +11,7 @@ const IGNORED_URLS = [HEALTH_ROUTE, SWAGGER_DOCS_ROUTE];
 export class LoggingInterceptor implements NestInterceptor {
   private readonly logger = new Logger(LoggingInterceptor.name);
 
-  async intercept(
-    context: ExecutionContext,
-    next: CallHandler,
-  ): Promise<Observable<unknown>> {
+  async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<unknown>> {
     /* istanbul ignore if */
     if (context.getType() !== "http") {
       return next.handle();
@@ -35,16 +26,13 @@ export class LoggingInterceptor implements NestInterceptor {
       return next.handle();
     }
 
-    this.logger.debug(
-      `Request ${context.getClass().name}#${context.getHandler().name}`,
-      {
-        originalUrl,
-        method,
-        params,
-        query,
-        body,
-      },
-    );
+    this.logger.debug(`Request ${context.getClass().name}#${context.getHandler().name}`, {
+      originalUrl,
+      method,
+      params,
+      query,
+      body,
+    });
 
     return next.handle().pipe(
       tap((data) => {
@@ -56,8 +44,7 @@ export class LoggingInterceptor implements NestInterceptor {
       catchError((err) => {
         const responseTimeMs = Date.now() - requestTime;
         this.logger.error("Response error", {
-          statusCode:
-            err.status ?? err.code ?? HttpStatus.INTERNAL_SERVER_ERROR,
+          statusCode: err.status ?? err.code ?? HttpStatus.INTERNAL_SERVER_ERROR,
           responseTimeMs,
           err,
         });
