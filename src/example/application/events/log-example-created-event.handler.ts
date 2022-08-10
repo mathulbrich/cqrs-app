@@ -10,6 +10,6 @@ export class LogExampleCreatedEventHandler
   private readonly logger = new Logger(LogExampleCreatedEventHandler.name);
 
   public async handle(event: ExampleCreatedEvent): Promise<void> {
-    this.logger.debug(`Example created: ${JSON.stringify(event)}`);
+    this.logger.debug("Example created", event);
   }
 }

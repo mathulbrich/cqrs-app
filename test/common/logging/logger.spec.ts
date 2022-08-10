@@ -1,12 +1,13 @@
 import { Controller, Get, INestApplication } from "@nestjs/common";
 import { APP_INTERCEPTOR } from "@nestjs/core";
 import { Test } from "@nestjs/testing";
-import { Logger as PinoLogger, LoggerModule } from "nestjs-pino";
+import { Logger as PinoLogger, LoggerModule, Params } from "nestjs-pino";
 import request from "supertest";
 
 import { Logger } from "@app/common/logging/logger";
 import { loggerConfig as defaultLoggerConfig } from "@app/common/logging/logging";
 import { LoggingInterceptor } from "@app/common/logging/logging.interceptor";
+import { wrapInContext } from "@app/common/logging/wrap-in-context";
 
 const UUID_REGEX =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
@@ -51,9 +52,10 @@ class FakeStream {
 describe("logger", () => {
   const stream = new FakeStream();
   let app: INestApplication;
+  let loggerConfig: Params;
 
   beforeEach(async () => {
-    const loggerConfig = defaultLoggerConfig({
+    loggerConfig = defaultLoggerConfig({
       app: {
         name: "test",
       },
@@ -91,7 +93,6 @@ describe("logger", () => {
   it("should trace when verbose", async () => {
     const logger = new Logger("test-context");
     logger.verbose("A simple verbose message");
-    console.log(stream.getAll());
     expect(stream.getLast()).toEqual(
       expect.objectContaining({
         context: "test-context",
@@ -174,6 +175,53 @@ describe("logger", () => {
         test: "custom object",
       }),
     );
+  });
+
+  describe("wrapInContext", () => {
+    it("should wrap in context with random UUID", async () => {
+      await wrapInContext(
+        { loggerConfig: loggerConfig, executionContext: "wrapped" },
+        async () => {
+          const logger = new Logger("test-context");
+          logger.info("A wrapped message");
+          expect(stream.getLast()).toEqual(
+            expect.objectContaining({
+              context: "test-context",
+              name: "wrapped",
+              level: "info",
+              msg: "A wrapped message",
+              reqId: {
+                requestId: expect.stringMatching(UUID_REGEX),
+              },
+            }),
+          );
+        },
+      );
+    });
+
+    it("should wrap in context with given UUID", async () => {
+      await wrapInContext(
+        {
+          loggerConfig: loggerConfig,
+          requestId: "fixed-request-id",
+        },
+        async () => {
+          const logger = new Logger("test-context");
+          logger.info("A wrapped message");
+          expect(stream.getLast()).toEqual(
+            expect.objectContaining({
+              context: "test-context",
+              name: "test",
+              level: "info",
+              msg: "A wrapped message",
+              reqId: {
+                requestId: "fixed-request-id",
+              },
+            }),
+          );
+        },
+      );
+    });
   });
 
   describe("http calls", () => {
