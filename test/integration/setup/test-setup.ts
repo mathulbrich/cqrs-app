@@ -5,8 +5,8 @@ import getPort from "get-port";
 import { Connection } from "mongoose";
 
 import { AppModule } from "@app/app.module";
+import { configureNest } from "@app/bootstrap";
 import { Env, validateConfig, OptionalEnv } from "@app/config/config-envs";
-import { HEALTH_ROUTE } from "@app/constants";
 import { Uuid } from "@app/lib/uuid";
 import {
   connect,
@@ -62,7 +62,7 @@ export class TestSetup {
     }).compile();
 
     const app = moduleFixture.createNestApplication();
-    app.setGlobalPrefix("api", { exclude: [HEALTH_ROUTE] });
+    configureNest(app);
     await this.queues.setUp();
     await app.listen(port);
     const mongoConnection = await connect(this.databaseSuffix);
