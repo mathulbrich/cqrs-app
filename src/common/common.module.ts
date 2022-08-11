@@ -8,15 +8,16 @@ import { EventPublisher } from "@app/common/domain/event-publisher";
 import { LoggingModuleConfig } from "@app/common/logging/logging";
 import { LoggingInterceptor } from "@app/common/logging/logging.interceptor";
 import { AppConfigService } from "@app/config/app-config-service";
-import { validateConfig } from "@app/config/config-envs";
+import { OptionalEnv, validateConfig } from "@app/config/config-envs";
 
 @Global()
 @Module({
   imports: [
     ConfigModule.forRoot({
+      envFilePath: [`env/${process.env[OptionalEnv.NODE_ENV]}.env`],
+      expandVariables: true,
       isGlobal: true,
       validate: validateConfig,
-      expandVariables: true,
     }),
     LoggingModuleConfig,
     CqrsModule,

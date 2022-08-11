@@ -13,6 +13,8 @@ services:
       target: dev
     depends_on:
       - dynamodb
+    environment:
+      NODE_ENV: dev
     ports:
       - "3000:3000"
       - "9229:9229"
