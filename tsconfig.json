@@ -22,6 +22,7 @@
     "paths": {
       "@app/*": ["*"],
       "@test/*": ["../test/*"],
+      "envs/load": ["../scripts/load-envs"],
     }
   }
 }
