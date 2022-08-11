@@ -8,6 +8,6 @@ export class LogExampleCreatedEventHandler implements IEventHandler<ExampleCreat
   private readonly logger = new Logger(LogExampleCreatedEventHandler.name);
 
   public async handle(event: ExampleCreatedEvent): Promise<void> {
-    this.logger.debug("Example created", event);
+    this.logger.info("Example created", event);
   }
 }

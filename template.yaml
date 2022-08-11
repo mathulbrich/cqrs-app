@@ -4,7 +4,7 @@ Description: >
   Lambda testing
 
 Resources:
-  LambdaTest:
+  LambdaApp:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./

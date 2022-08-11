@@ -42,10 +42,12 @@ export class SQSQueueListener implements OnModuleInit, OnModuleDestroy {
           await Promise.all(
             messages.map(async ({ Body }) =>
               wrapInContext(wrapParams, async () => {
+                const message = JSON.parse(Body ?? "{}");
+                this.logger.info(`Processing queue ${queue} message`, { message });
                 const queueHandler = await this.moduleRef.resolve(QueueMapping[queue], undefined, {
                   strict: false,
                 });
-                return queueHandler.execute(JSON.parse(Body ?? "{}"));
+                return queueHandler.execute(message);
               }),
             ),
           );
