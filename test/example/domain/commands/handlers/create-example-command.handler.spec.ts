@@ -4,11 +4,12 @@ import { omit } from "lodash";
 import { InMemoryExampleRepository } from "@app/example/application/repositories/in-memory-example.repository";
 import { CreateExampleCommand } from "@app/example/domain/commands/create-example.command";
 import { CreateExampleCommandHandler } from "@app/example/domain/commands/handlers/create-example-command.handler";
+import { ExampleCreatedEvent } from "@app/example/domain/events/example-created.event";
 import { Uuid } from "@app/lib/uuid";
-import { TestEventPublisher } from "@test/resources/test-event-publisher";
+import { InMemoryPublisher } from "@test/resources/in-memory-publisher";
 
 class TestArguments {
-  public readonly publisher = new TestEventPublisher();
+  public readonly publisher = new InMemoryPublisher();
   public readonly repository = new InMemoryExampleRepository();
   public readonly handler = new CreateExampleCommandHandler(this.repository, this.publisher);
 }
@@ -27,7 +28,8 @@ describe(CreateExampleCommandHandler.name, () => {
     await handler.execute(command);
 
     // Verify
-    expect(publisher.publishedEvents).toHaveLength(1);
+    const event = publisher.singleOfType(ExampleCreatedEvent);
+    expect(event.example.createdAt?.getTime()).toBeLessThanOrEqual(Date.now());
     const example = await repository.findById(command.id);
     expect(example).toBeDefined();
     expect(omit(example.get(), "createdAt")).toStrictEqual({
