@@ -8,7 +8,7 @@ import { Injectable } from "@app/lib/nest/injectable";
 export class EventBusPublisher implements EventPublisher {
   constructor(private readonly eventBus: EventBus) {}
 
-  public async publish<T extends Event>(event: T): Promise<void> {
+  publish<T extends Event>(event: T): Promise<void> {
     return this.eventBus.publish(event);
   }
 }
