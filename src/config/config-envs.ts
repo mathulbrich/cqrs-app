@@ -10,7 +10,7 @@ import {
 export const Env = {
   APP_NAME: "APP_NAME",
   APP_PORT: "APP_PORT",
-  MONGODB_CONNECTION_URI: "MONGODB_CONNECTION_URI",
+  DYNAMO_DB_TABLE_NAME: "DYNAMO_DB_TABLE_NAME",
   SQS_QUEUE_BASE_URL: "SQS_QUEUE_BASE_URL",
   SQS_QUEUE_BATCH_CONSUMER_SIZE: "SQS_QUEUE_BATCH_CONSUMER_SIZE",
   SQS_QUEUE_SUFFIX: "SQS_QUEUE_SUFFIX",
@@ -18,6 +18,7 @@ export const Env = {
 export type Env = keyof typeof Env;
 
 export const OptionalEnv = {
+  DYNAMO_DB_ENDPOINT: "DYNAMO_DB_ENDPOINT",
   LOGGING_ASYNC_MIN_LENGTH: "LOGGING_ASYNC_MIN_LENGTH",
   LOGGING_ASYNC: "LOGGING_ASYNC",
   LOGGING_LEVEL: "LOGGING_LEVEL",
@@ -47,8 +48,9 @@ export const ConfigEnvs = z.object({
     sqsQueueSuffix: z.string().default(""),
     sqsQueueWaitTimeSeconds: stringToNumber().optional(),
   }),
-  mongoDb: z.object({
-    connectionUri: z.string().url(),
+  dynamoDb: z.object({
+    endpoint: z.string().optional(),
+    tableName: z.string().default("example"),
   }),
 });
 export type ConfigEnvs = z.infer<typeof ConfigEnvs>;
@@ -75,8 +77,9 @@ const configInput = (
     sqsQueueSuffix: inputConfig[Env.SQS_QUEUE_SUFFIX],
     sqsQueueWaitTimeSeconds: inputConfig[OptionalEnv.SQS_QUEUE_WAIT_TIME_SECONDS],
   },
-  mongoDb: {
-    connectionUri: inputConfig[Env.MONGODB_CONNECTION_URI]!,
+  dynamoDb: {
+    endpoint: inputConfig[OptionalEnv.DYNAMO_DB_ENDPOINT],
+    tableName: inputConfig[Env.DYNAMO_DB_TABLE_NAME],
   },
 });
 
