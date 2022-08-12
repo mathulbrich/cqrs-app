@@ -35,7 +35,7 @@ export class TestSetup {
     this.envs = args?.envs;
   }
 
-  public async run(cb: (params: TestParameters) => Promise<void>): Promise<void> {
+  async run(cb: (params: TestParameters) => Promise<void>): Promise<void> {
     const port = await getPort();
     const envs = {
       [Env.SQS_QUEUE_SUFFIX]: this.queueSuffix,

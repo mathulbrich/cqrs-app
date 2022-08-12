@@ -5,19 +5,19 @@ export class FakeMiddlewareArguments {
 
   private _forwardWasCalled = false;
 
-  public readonly request: Request = {
+  readonly request: Request = {
     headers: {},
     params: {},
     body: {},
   } as Request;
 
-  public readonly response: Response = {} as Response;
+  readonly response: Response = {} as Response;
 
-  public readonly next: NextFunction = () => {
+  readonly next: NextFunction = () => {
     this._nextWasCalled = true;
   };
 
-  public readonly forwardMiddleware: RequestHandler = (
+  readonly forwardMiddleware: RequestHandler = (
     _req: Request,
     _res: Response,
     next: NextFunction,
@@ -26,7 +26,7 @@ export class FakeMiddlewareArguments {
     next();
   };
 
-  public readonly nextWasCalled = () => this._nextWasCalled;
+  readonly nextWasCalled = () => this._nextWasCalled;
 
-  public readonly forwardWasCalled = () => this._forwardWasCalled;
+  readonly forwardWasCalled = () => this._forwardWasCalled;
 }

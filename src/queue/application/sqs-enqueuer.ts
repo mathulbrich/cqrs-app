@@ -17,7 +17,7 @@ export class SQSEnqueuer implements Enqueuer {
     });
   }
 
-  public async enqueue({ groupId, messageId, payload, queue }: EnqueueArguments): Promise<void> {
+  async enqueue({ groupId, messageId, payload, queue }: EnqueueArguments): Promise<void> {
     this.logger.log(`Sending message to ${queue}`, {
       groupId,
       messageId,

@@ -7,9 +7,9 @@ import { Uuid } from "@app/lib/uuid";
 
 @Injectable()
 export class CreateExampleQueueHandler {
-  public constructor(private readonly commandExecutor: CommandBus) {}
+  constructor(private readonly commandExecutor: CommandBus) {}
 
-  public async execute(data: unknown): Promise<void> {
+  async execute(data: unknown): Promise<void> {
     const { description, id, name } = CreateExampleQueuePayload.parse(data);
     await this.commandExecutor.execute(
       new CreateExampleCommand({

@@ -8,7 +8,7 @@ export interface CreateExampleCommandAttributes {
 }
 
 export class CreateExampleCommand extends BaseClass<CreateExampleCommandAttributes>() {
-  public constructor(attributes: CreateExampleCommandAttributes) {
+  constructor(attributes: CreateExampleCommandAttributes) {
     super(attributes);
   }
 }

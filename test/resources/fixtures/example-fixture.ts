@@ -7,7 +7,7 @@ import { Uuid } from "@app/lib/uuid";
 type PartialExample = Partial<ExampleAttributes>;
 
 export class ExampleFixture {
-  public build(attributes?: PartialExample): Example {
+  build(attributes?: PartialExample): Example {
     return new Example({
       id: attributes?.id ?? Uuid.generate(),
       name: attributes?.name ?? faker.lorem.word(),
@@ -15,7 +15,7 @@ export class ExampleFixture {
     });
   }
 
-  public buildMany(count = 5, attributes?: PartialExample): Example[] {
+  buildMany(count = 5, attributes?: PartialExample): Example[] {
     return times(count, () => this.build(attributes));
   }
 }

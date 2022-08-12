@@ -8,12 +8,12 @@ import { ExampleRepository } from "@app/example/domain/repositories/example.repo
 
 @CommandHandler(CreateExampleCommand)
 export class CreateExampleCommandHandler implements ICommandHandler<CreateExampleCommand> {
-  public constructor(
+  constructor(
     private readonly repository: ExampleRepository,
     private readonly publisher: EventPublisher,
   ) {}
 
-  public async execute(command: CreateExampleCommand): Promise<void> {
+  async execute(command: CreateExampleCommand): Promise<void> {
     const example = new Example(command);
     await this.repository.store(example);
     await this.publisher.publish(new ExampleCreatedEvent(example));

@@ -10,10 +10,10 @@ import { UuidSchema, Uuid } from "@app/lib/uuid";
 
 @Controller("v1/example")
 export class GetExampleController {
-  public constructor(private readonly repository: ExampleRepository) {}
+  constructor(private readonly repository: ExampleRepository) {}
 
   @Get()
-  public async all(): Promise<GetExampleResponse[]> {
+  async all(): Promise<GetExampleResponse[]> {
     const examples = new Array<GetExampleResponse>();
     for await (const example of this.repository.findAll()) {
       examples.push(fromDomain(example));
@@ -23,9 +23,7 @@ export class GetExampleController {
   }
 
   @Get(":id")
-  public async get(
-    @Param("id", withValidation(UuidSchema)) id: string,
-  ): Promise<GetExampleResponse> {
+  async get(@Param("id", withValidation(UuidSchema)) id: string): Promise<GetExampleResponse> {
     return (await this.repository.findById(new Uuid(id)))
       .map(fromDomain)
       .orElseThrow(new NotFoundException());

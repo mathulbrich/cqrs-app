@@ -7,7 +7,7 @@ interface HealthResponse {
 @Controller("health")
 export class AppController {
   @Get()
-  public healthCheck(): HealthResponse {
+  healthCheck(): HealthResponse {
     return { status: "OK" };
   }
 }

@@ -14,7 +14,7 @@ export class SQSTestQueues {
 
   constructor(private readonly suffix: string) {}
 
-  public async setUp(): Promise<void> {
+  async setUp(): Promise<void> {
     const client = new SQSClient({
       endpoint: process.env[OptionalEnv.SQS_QUEUE_ENDPOINT],
     });
@@ -43,7 +43,7 @@ export class SQSTestQueues {
     });
   }
 
-  public async tearDown(): Promise<void> {
+  async tearDown(): Promise<void> {
     const client = new SQSClient({
       endpoint: process.env[OptionalEnv.SQS_QUEUE_ENDPOINT],
     });

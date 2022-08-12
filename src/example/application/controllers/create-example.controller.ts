@@ -8,11 +8,11 @@ import { Enqueuer } from "@app/queue/application/enqueuer";
 
 @Controller("v1/create-example")
 export class CreateExampleController {
-  public constructor(private readonly enqueuer: Enqueuer) {}
+  constructor(private readonly enqueuer: Enqueuer) {}
 
   @Post()
   @ValidateSchema(CreateExamplePayload)
-  public async accept(@Body() example: CreateExamplePayload, @Res() res: Response): Promise<void> {
+  async accept(@Body() example: CreateExamplePayload, @Res() res: Response): Promise<void> {
     const { description, name } = example;
     const id = Uuid.generate().toString();
 

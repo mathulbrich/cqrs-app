@@ -4,16 +4,14 @@ import { AppConfigService } from "@app/config/app-config-service";
 import { SQSQueueUrlBuilder } from "@app/queue/application/sqs-queue-url-builder";
 
 class TestArguments {
-  public readonly service = new ConfigService({
+  readonly service = new ConfigService({
     queue: {
       sqsQueueBaseUrl: "http://queue/",
       sqsQueueSuffix: "-test-suffix",
     },
   });
-
-  public readonly config = new AppConfigService(this.service);
-
-  public readonly urlBuilder = new SQSQueueUrlBuilder(this.config);
+  readonly config = new AppConfigService(this.service);
+  readonly urlBuilder = new SQSQueueUrlBuilder(this.config);
 }
 
 describe(SQSQueueUrlBuilder.name, () => {
