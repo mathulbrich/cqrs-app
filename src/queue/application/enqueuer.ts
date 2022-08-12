@@ -8,5 +8,5 @@ export interface EnqueueArguments {
 }
 
 export abstract class Enqueuer {
-  public abstract enqueue(args: EnqueueArguments): Promise<void>;
+  abstract enqueue(args: EnqueueArguments): Promise<void>;
 }

@@ -7,7 +7,7 @@ import { ExampleCreatedEvent } from "@app/example/domain/events/example-created.
 export class LogExampleCreatedEventHandler implements IEventHandler<ExampleCreatedEvent> {
   private readonly logger = new Logger(LogExampleCreatedEventHandler.name);
 
-  public async handle(event: ExampleCreatedEvent): Promise<void> {
+  async handle(event: ExampleCreatedEvent): Promise<void> {
     this.logger.info("Example created", event);
   }
 }

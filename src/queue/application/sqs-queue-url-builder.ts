@@ -7,7 +7,7 @@ import { Injectable } from "@app/lib/nest/injectable";
 export class SQSQueueUrlBuilder {
   constructor(private readonly config: AppConfigService) {}
 
-  public build(queue: string): string {
+  build(queue: string): string {
     const { sqsQueueBaseUrl, sqsQueueSuffix } = this.config.queue;
     return `${sqsQueueBaseUrl}${queue}${sqsQueueSuffix}`;
   }

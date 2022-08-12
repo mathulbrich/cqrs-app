@@ -9,9 +9,9 @@ import { Uuid } from "@app/lib/uuid";
 import { InMemoryPublisher } from "@test/resources/in-memory-publisher";
 
 class TestArguments {
-  public readonly publisher = new InMemoryPublisher();
-  public readonly repository = new InMemoryExampleRepository();
-  public readonly handler = new CreateExampleCommandHandler(this.repository, this.publisher);
+  readonly publisher = new InMemoryPublisher();
+  readonly repository = new InMemoryExampleRepository();
+  readonly handler = new CreateExampleCommandHandler(this.repository, this.publisher);
 }
 
 describe(CreateExampleCommandHandler.name, () => {

@@ -25,7 +25,7 @@ export class SQSQueueListener implements OnModuleInit, OnModuleDestroy {
     private readonly params: Params,
   ) {}
 
-  public onModuleInit(): void {
+  onModuleInit(): void {
     const wrapParams: WrapParams = {
       loggerConfig: this.params,
       executionContext: "SQS-QUEUE",
@@ -68,7 +68,7 @@ export class SQSQueueListener implements OnModuleInit, OnModuleDestroy {
     }
   }
 
-  public onModuleDestroy(): void {
+  onModuleDestroy(): void {
     for (const consumer of this.consumers.values()) {
       consumer.stop();
     }

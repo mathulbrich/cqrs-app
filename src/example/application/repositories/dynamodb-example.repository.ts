@@ -26,11 +26,11 @@ export class DynamoDBExampleRepository extends DynamoDBRepository implements Exa
     super(config);
   }
 
-  public async store(example: Example): Promise<void> {
+  async store(example: Example): Promise<void> {
     await this.storeItem(fromDomain(example));
   }
 
-  public async findById(id: Uuid): Promise<Optional<Example>> {
+  async findById(id: Uuid): Promise<Optional<Example>> {
     const items = await this.queryAsList({
       ConsistentRead: true,
       ExpressionAttributeValues: marshall({
@@ -43,7 +43,7 @@ export class DynamoDBExampleRepository extends DynamoDBRepository implements Exa
     return Option(items[0]).map(this.fromDatabase.bind(this));
   }
 
-  public async *findAll(): AsyncGenerator<Example> {
+  async *findAll(): AsyncGenerator<Example> {
     const query = this.query({
       ConsistentRead: true,
       ExpressionAttributeValues: marshall({

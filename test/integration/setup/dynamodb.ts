@@ -24,14 +24,14 @@ export class DynamoDBTestContainer {
     private readonly client = new DynamoDBClient({ endpoint }),
   ) {}
 
-  public get config(): DynamoDBConfig {
+  get config(): DynamoDBConfig {
     return {
       tableName: this.tableName,
       endpoint: this.endpoint,
     };
   }
 
-  public async setUp(): Promise<void> {
+  async setUp(): Promise<void> {
     await this.client.send(
       new CreateTableCommand({
         TableName: this.tableName,
@@ -51,7 +51,7 @@ export class DynamoDBTestContainer {
     );
   }
 
-  public async tearDown(): Promise<void> {
+  async tearDown(): Promise<void> {
     await this.client.send(
       new DeleteTableCommand({
         TableName: this.tableName,
@@ -59,7 +59,7 @@ export class DynamoDBTestContainer {
     );
   }
 
-  public async tableExists(): Promise<boolean> {
+  async tableExists(): Promise<boolean> {
     const command = new DescribeTableCommand({
       TableName: this.tableName,
     });
