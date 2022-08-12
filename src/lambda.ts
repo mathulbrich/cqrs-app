@@ -1,6 +1,6 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import serverlessExpress from "@vendia/serverless-express";
-import { Context, Handler } from "aws-lambda";
+import { Callback, Context, Handler } from "aws-lambda";
+import { get } from "lodash";
 
 import { bootstrap } from "@app/bootstrap";
 import { SWAGGER_DOCS_ROUTE } from "@app/constants";
@@ -19,11 +19,10 @@ const getServer = async (): Promise<Handler> => {
   return cachedServer;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const handler = async (event: any, context: Context, callback: any) => {
+export const handler = async (event: unknown, context: Context, callback: Callback) => {
   const server = await getServer();
 
-  if (event.path === `${SWAGGER_DOCS_ROUTE}/`) {
+  if (get(event, "path") === `${SWAGGER_DOCS_ROUTE}/`) {
     return redirectTo(`${SWAGGER_DOCS_ROUTE}/swagger-ui`);
   }
 
