@@ -39,7 +39,7 @@ class FakeStream {
     this.messages = [];
   }
 
-  getLast(): { reqId: { requestId: string } } {
+  getLast(): { requestId: string } {
     return JSON.parse(this.messages[this.messages.length - 1]);
   }
 
@@ -187,9 +187,7 @@ describe("logger", () => {
             name: "wrapped",
             level: "info",
             msg: "A wrapped message",
-            reqId: {
-              requestId: expect.stringMatching(UUID_REGEX),
-            },
+            requestId: expect.stringMatching(UUID_REGEX),
           }),
         );
       });
@@ -210,9 +208,7 @@ describe("logger", () => {
               name: "test",
               level: "info",
               msg: "A wrapped message",
-              reqId: {
-                requestId: "fixed-request-id",
-              },
+              requestId: "fixed-request-id",
             }),
           );
         },
@@ -232,9 +228,7 @@ describe("logger", () => {
             context: "FakeController",
             level: "info",
             msg: "Get called",
-            reqId: {
-              requestId: "custom-correlation-id",
-            },
+            requestId: "custom-correlation-id",
           }),
         ]),
       );
@@ -248,9 +242,7 @@ describe("logger", () => {
             context: "FakeController",
             level: "info",
             msg: "Get called",
-            reqId: {
-              requestId: expect.stringMatching(UUID_REGEX),
-            },
+            requestId: expect.stringMatching(UUID_REGEX),
           }),
         ]),
       );
@@ -258,7 +250,7 @@ describe("logger", () => {
 
     it("should intercept and log errors when request fails", async () => {
       await request(app.getHttpServer()).get("/fake/error").expect(500);
-      const requestId = stream.getLast().reqId.requestId;
+      const requestId = stream.getLast().requestId;
       expect(requestId).toMatch(UUID_REGEX);
       expect(stream.getAll()).toEqual(
         expect.arrayContaining([
@@ -267,17 +259,13 @@ describe("logger", () => {
             level: "debug",
             msg: "Request FakeController#fail",
             originalUrl: "/fake/error",
-            reqId: {
-              requestId,
-            },
+            requestId,
           }),
           expect.objectContaining({
             context: "FakeController",
             level: "warn",
             msg: "Fail called",
-            reqId: {
-              requestId,
-            },
+            requestId,
           }),
         ]),
       );
