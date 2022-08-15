@@ -18,9 +18,10 @@ export const loggerConfig = (data: LoggerData): Params => ({
     name: data.app.name,
     formatters: { level: (level: string) => ({ level }) },
     level: data.logging.level,
-    genReqId: (req) => ({
-      requestId: req?.headers["x-request-id"] ?? randomUUID(),
-    }),
+    genReqId: (req) => req?.headers["x-request-id"] ?? randomUUID(),
+    customAttributeKeys: {
+      reqId: "requestId",
+    },
     stream:
       /* istanbul ignore next */
       data.logging.async
@@ -37,9 +38,9 @@ export const loggerConfig = (data: LoggerData): Params => ({
             options: {
               colorize: true,
               errorLikeObjectKeys: ["err", "error"],
-              ignore: "pid,hostname,req,res,responseTime,context,reqId",
+              ignore: "pid,hostname,req,res,responseTime,context,requestId",
               levelFirst: false,
-              messageFormat: "\t{reqId.requestId} [{context}] {msg}",
+              messageFormat: "\t{requestId} [{context}] {msg}",
               singleLine: true,
               translateTime: "SYS:yyyy-mm-dd'T'HH:MM:ss.l'Z'",
             },
