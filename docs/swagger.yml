@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  title: CQRS App Documentation
+  title: CQRS App Documentation (Changed)
   version: 1.0.0
 
 servers:
