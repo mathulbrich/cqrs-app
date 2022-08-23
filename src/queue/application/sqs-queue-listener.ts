@@ -47,7 +47,10 @@ export class SQSQueueListener implements OnModuleInit, OnModuleDestroy {
                 const queueHandler = await this.moduleRef.resolve(QueueMapping[queue], undefined, {
                   strict: false,
                 });
-                return queueHandler.execute(message);
+                return queueHandler.execute(message).catch((error) => {
+                  this.logger.error(`Error processing queue ${queue} message`, { error });
+                  throw error;
+                });
               }),
             ),
           );

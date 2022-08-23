@@ -16,6 +16,7 @@ export type Envs = {
 interface TestParameters {
   app: INestApplication;
   dynamodb: DynamoDBTestContainer;
+  queues: SQSTestQueues;
 }
 
 interface TestArguments {
@@ -46,7 +47,6 @@ export class TestSetup {
       imports: [
         ConfigModule.forRoot({
           validate: (config) => validateConfig({ ...config, ...envs }),
-          expandVariables: true,
         }),
         AppModule,
       ],
@@ -58,7 +58,7 @@ export class TestSetup {
     await this.dynamodb.setUp();
     await app.init();
 
-    await cb({ app, dynamodb: this.dynamodb })
+    await cb({ app, dynamodb: this.dynamodb, queues: this.queues })
       .finally(() => app.close())
       .finally(() => this.dynamodb.tearDown())
       .finally(() => this.queues.tearDown());

@@ -33,7 +33,7 @@ export const ConfigEnvs = z.object({
   app: z.object({
     env: z.string().optional(),
     name: z.string().trim().min(1),
-    port: stringToNumber(),
+    port: stringToNumberWithDefault("3000"),
     useInMemoryRepository: stringToBooleanDisabledByDefault(),
   }),
   logging: z.object({

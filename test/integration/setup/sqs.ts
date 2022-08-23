@@ -3,25 +3,48 @@ import {
   CreateQueueCommandOutput,
   DeleteQueueCommand,
   SQSClient,
+  SendMessageCommand,
 } from "@aws-sdk/client-sqs";
 import { isError, keys } from "lodash";
 
 import { OptionalEnv } from "@app/config/config-envs";
 import { QueueMapping } from "@app/queue/application/queue-mapper";
+import { QueueNames } from "@app/queue/application/queue-names";
+
+interface Message {
+  queue: QueueNames;
+  content: string;
+  groupId?: string;
+  messageId: string;
+}
 
 export class SQSTestQueues {
+  private readonly sqsBaseUrl?: string;
   private readonly queueUrls: string[] = [];
+  private readonly client: SQSClient;
 
-  constructor(private readonly suffix: string) {}
+  constructor(private readonly suffix: string) {
+    this.sqsBaseUrl = process.env[OptionalEnv.SQS_QUEUE_ENDPOINT];
+    this.client = new SQSClient({
+      endpoint: this.sqsBaseUrl,
+    });
+  }
+
+  async sendMessage({ content, messageId, queue, groupId }: Message): Promise<void> {
+    await this.client.send(
+      new SendMessageCommand({
+        MessageBody: content,
+        MessageGroupId: groupId ?? messageId,
+        MessageDeduplicationId: messageId,
+        QueueUrl: `${this.sqsBaseUrl}${queue}${this.suffix}`,
+      }),
+    );
+  }
 
   async setUp(): Promise<void> {
-    const client = new SQSClient({
-      endpoint: process.env[OptionalEnv.SQS_QUEUE_ENDPOINT],
-    });
-
     const results = await Promise.all(
       keys(QueueMapping).map((queue) =>
-        client.send(
+        this.client.send(
           new CreateQueueCommand({
             Attributes: {
               FifoQueue: "true",
