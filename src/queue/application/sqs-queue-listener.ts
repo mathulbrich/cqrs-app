@@ -47,7 +47,10 @@ export class SQSQueueListener implements OnModuleInit, OnModuleDestroy {
                 const queueHandler = await this.moduleRef.resolve(QueueMapping[queue], undefined, {
                   strict: false,
                 });
-                return queueHandler.execute(message);
+                return queueHandler.execute(message).catch((error) => {
+                  this.logger.error(`Error processing queue ${queue} message`, { error });
+                  throw error;
+                });
               }),
             ),
           );
@@ -55,14 +58,6 @@ export class SQSQueueListener implements OnModuleInit, OnModuleDestroy {
       });
 
       this.consumers.set(queue, consumer);
-
-      consumer.on("error", (err) => {
-        this.logger.error(`Error while consuming queue ${queueUrl}`, err);
-      });
-
-      consumer.on("processing_error", (err) => {
-        this.logger.error(`Error while processing queue ${queueUrl}`, err);
-      });
 
       consumer.start();
     }

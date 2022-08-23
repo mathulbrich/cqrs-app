@@ -2,8 +2,9 @@ import { Module, Global } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { APP_INTERCEPTOR } from "@nestjs/core";
 import { CqrsModule } from "@nestjs/cqrs";
+import { EventEmitterModule } from "@nestjs/event-emitter";
 
-import { EventBusPublisher } from "@app/common/application/event-bus-publisher";
+import { EventEmitterPublisher } from "@app/common/application/event-emitter-publisher";
 import { EventPublisher } from "@app/common/domain/event-publisher";
 import { LoggingModuleConfig } from "@app/common/logging/logging";
 import { LoggingInterceptor } from "@app/common/logging/logging.interceptor";
@@ -19,6 +20,7 @@ import { OptionalEnv, validateConfig } from "@app/config/config-envs";
       isGlobal: true,
       validate: validateConfig,
     }),
+    EventEmitterModule.forRoot(),
     LoggingModuleConfig,
     CqrsModule,
   ],
@@ -26,7 +28,7 @@ import { OptionalEnv, validateConfig } from "@app/config/config-envs";
     AppConfigService,
     {
       provide: EventPublisher,
-      useClass: EventBusPublisher,
+      useClass: EventEmitterPublisher,
     },
     {
       provide: APP_INTERCEPTOR,
