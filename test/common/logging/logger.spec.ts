@@ -1,24 +1,37 @@
-import { Controller, Get, INestApplication } from "@nestjs/common";
-import { APP_INTERCEPTOR } from "@nestjs/core";
+import {
+  Controller,
+  Get,
+  INestApplication,
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+} from "@nestjs/common";
 import { Test } from "@nestjs/testing";
 import { Logger as PinoLogger, LoggerModule, Params } from "nestjs-pino";
 import request from "supertest";
 
 import { Logger } from "@app/common/logging/logger";
 import { loggerConfig as defaultLoggerConfig } from "@app/common/logging/logging";
-import { LoggingInterceptor } from "@app/common/logging/logging.interceptor";
 import { wrapInContext } from "@app/common/logging/wrap-in-context";
+import { LoggingMiddleware } from "@app/common/middleware/logging.middleware";
 
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+
+@Module({})
+class TestLoggingModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggingMiddleware).forRoutes("*");
+  }
+}
 
 @Controller("/fake")
 class FakeController {
   private readonly logger = new Logger(FakeController.name);
 
   @Get()
-  get(): string {
+  get() {
     this.logger.log("Get called");
-    return "ok";
+    return { message: "ok" };
   }
 
   @Get("error")
@@ -60,7 +73,7 @@ describe("logger", () => {
       },
       logging: {
         level: "trace",
-        async: false,
+        type: "sync",
       },
     });
     const module = await Test.createTestingModule({
@@ -74,12 +87,7 @@ describe("logger", () => {
             stream,
           },
         }),
-      ],
-      providers: [
-        {
-          provide: APP_INTERCEPTOR,
-          useClass: LoggingInterceptor,
-        },
+        TestLoggingModule,
       ],
     }).compile();
 
@@ -140,11 +148,11 @@ describe("logger", () => {
 
   it("should log with two params as objects", () => {
     const logger = new Logger("test-context");
-    logger.info({ test: "custom object" }, { another: true });
+    logger.error({ test: "custom object" }, { another: true });
     expect(stream.getLast()).toEqual(
       expect.objectContaining({
         context: "test-context",
-        level: "info",
+        level: "error",
         test: "custom object",
         another: true,
       }),
@@ -234,15 +242,43 @@ describe("logger", () => {
       );
     });
 
-    it("should generate a new correlationId on empty header", async () => {
+    it("should generate a new requestId on empty header", async () => {
       await request(app.getHttpServer()).get("/fake").expect(200);
+      const requestId = stream.getLast().requestId;
       expect(stream.getAll()).toEqual(
         expect.arrayContaining([
           expect.objectContaining({
             context: "FakeController",
             level: "info",
             msg: "Get called",
-            requestId: expect.stringMatching(UUID_REGEX),
+            requestId,
+          }),
+          expect.objectContaining({
+            context: "HTTP",
+            level: "debug",
+            msg: "Request received",
+            httpData: {
+              method: "GET",
+              url: "/fake",
+              headers: expect.anything(),
+              body: {},
+            },
+            requestId,
+          }),
+          expect.objectContaining({
+            context: "HTTP",
+            level: "debug",
+            msg: "Response sent",
+            requestId,
+            httpData: {
+              statusCode: 200,
+              headers: expect.anything(),
+              body: {
+                message: "ok",
+              },
+              url: "/fake",
+              responseTime: expect.any(Number),
+            },
           }),
         ]),
       );
@@ -255,16 +291,37 @@ describe("logger", () => {
       expect(stream.getAll()).toEqual(
         expect.arrayContaining([
           expect.objectContaining({
-            context: "LoggingInterceptor",
+            context: "HTTP",
             level: "debug",
-            msg: "Request FakeController#fail",
-            originalUrl: "/fake/error",
+            msg: "Request received",
+            httpData: {
+              method: "GET",
+              headers: expect.anything(),
+              url: "/fake/error",
+              body: {},
+            },
             requestId,
           }),
           expect.objectContaining({
             context: "FakeController",
             level: "warn",
             msg: "Fail called",
+            requestId,
+          }),
+          expect.objectContaining({
+            context: "HTTP",
+            level: "debug",
+            msg: "Response sent",
+            httpData: {
+              headers: expect.anything(),
+              statusCode: 500,
+              responseTime: expect.any(Number),
+              body: {
+                message: "Internal server error",
+                statusCode: 500,
+              },
+              url: "/fake/error",
+            },
             requestId,
           }),
         ]),

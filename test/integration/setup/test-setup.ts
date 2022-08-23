@@ -1,7 +1,6 @@
 import { INestApplication } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { Test } from "@nestjs/testing";
-import getPort from "get-port";
 
 import { AppModule } from "@app/app.module";
 import { configureNest } from "@app/bootstrap";
@@ -36,7 +35,6 @@ export class TestSetup {
   }
 
   async run(cb: (params: TestParameters) => Promise<void>): Promise<void> {
-    const port = await getPort();
     const envs = {
       [Env.SQS_QUEUE_SUFFIX]: this.queueSuffix,
       [Env.DYNAMO_DB_TABLE_NAME]: this.dynamodb.config.tableName,
@@ -58,7 +56,7 @@ export class TestSetup {
     configureNest(app);
     await this.queues.setUp();
     await this.dynamodb.setUp();
-    await app.listen(port);
+    await app.init();
 
     await cb({ app, dynamodb: this.dynamodb })
       .finally(() => app.close())

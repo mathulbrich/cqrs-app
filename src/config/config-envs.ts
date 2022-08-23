@@ -20,7 +20,7 @@ export type Env = keyof typeof Env;
 export const OptionalEnv = {
   DYNAMO_DB_ENDPOINT: "DYNAMO_DB_ENDPOINT",
   LOGGING_ASYNC_MIN_LENGTH: "LOGGING_ASYNC_MIN_LENGTH",
-  LOGGING_ASYNC: "LOGGING_ASYNC",
+  LOGGING_TYPE: "LOGGING_TYPE",
   LOGGING_LEVEL: "LOGGING_LEVEL",
   NODE_ENV: "NODE_ENV",
   SQS_QUEUE_ENDPOINT: "SQS_QUEUE_ENDPOINT",
@@ -37,7 +37,10 @@ export const ConfigEnvs = z.object({
     useInMemoryRepository: stringToBooleanDisabledByDefault(),
   }),
   logging: z.object({
-    async: stringToBooleanDisabledByDefault(),
+    type: z
+      .string()
+      .default("sync")
+      .refine((type) => ["async", "sync", "lambda"].includes(type)),
     minLength: stringToNumberWithDefault("4096").optional(),
     level: z.string().default("trace"),
   }),
@@ -66,7 +69,7 @@ const configInput = (
     useInMemoryRepository: inputConfig[OptionalEnv.USE_IN_MEMORY_REPOSITORY],
   },
   logging: {
-    async: inputConfig[OptionalEnv.LOGGING_ASYNC],
+    type: inputConfig[OptionalEnv.LOGGING_TYPE],
     minLength: inputConfig[OptionalEnv.LOGGING_ASYNC_MIN_LENGTH],
     level: inputConfig[OptionalEnv.LOGGING_LEVEL],
   },

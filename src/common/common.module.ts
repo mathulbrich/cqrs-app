@@ -1,25 +1,23 @@
-import { Module, Global } from "@nestjs/common";
+import { Module, Global, NestModule, MiddlewareConsumer } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
-import { APP_INTERCEPTOR } from "@nestjs/core";
 import { CqrsModule } from "@nestjs/cqrs";
 
 import { EventBusPublisher } from "@app/common/application/event-bus-publisher";
 import { EventPublisher } from "@app/common/domain/event-publisher";
-import { LoggingModuleConfig } from "@app/common/logging/logging";
-import { LoggingInterceptor } from "@app/common/logging/logging.interceptor";
+import { LoggingMiddleware } from "@app/common/middleware/logging.middleware";
 import { AppConfigService } from "@app/config/app-config-service";
 import { OptionalEnv, validateConfig } from "@app/config/config-envs";
+import { IGNORED_ROUTES } from "@app/constants";
 
 @Global()
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: [`env/${process.env[OptionalEnv.NODE_ENV]}.env`],
+      envFilePath: [`env/${process.env[OptionalEnv.NODE_ENV]}.env`, ".env"],
       expandVariables: true,
       isGlobal: true,
       validate: validateConfig,
     }),
-    LoggingModuleConfig,
     CqrsModule,
   ],
   providers: [
@@ -28,11 +26,14 @@ import { OptionalEnv, validateConfig } from "@app/config/config-envs";
       provide: EventPublisher,
       useClass: EventBusPublisher,
     },
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: LoggingInterceptor,
-    },
   ],
   exports: [AppConfigService, EventPublisher],
 })
-export class CommonModule {}
+export class CommonModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(LoggingMiddleware)
+      .exclude(...IGNORED_ROUTES)
+      .forRoutes("*");
+  }
+}
