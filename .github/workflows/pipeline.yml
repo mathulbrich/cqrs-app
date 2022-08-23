@@ -30,7 +30,7 @@ jobs:
       - name: Install NPM dependencies
         run: yarn install --frozen-lockfile
       - name: Build
-        run: yarn build
+        run: yarn build:prod
 
   lint:
     name: Lint

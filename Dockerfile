@@ -1,9 +1,9 @@
-FROM node:16 as dev
+FROM node:16-slim as dev
 USER node
 RUN yarn global add @nestjs/cli
 WORKDIR /usr/app
 EXPOSE 3000
-HEALTHCHECK --interval=5s --timeout=5s --retries=5 CMD ["curl", "http://localhost:3000/health"]
+HEALTHCHECK --interval=5s --timeout=5s --retries=5 CMD curl -f "http://localhost:3000/health"
 CMD [ "/usr/app/entrypoint.sh" ]
 
 
