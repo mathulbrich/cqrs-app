@@ -10,12 +10,15 @@ export type WrapParams = {
   requestId?: string;
 };
 
-export const wrapInContext = async (params: WrapParams, fn: () => Promise<void>): Promise<void> =>
-  storage.run(new Store(PinoLogger.root), () => {
-    const contextName = isNil(params.executionContext) ? {} : { name: params.executionContext };
-    new PinoLogger(params.loggerConfig).assign({
+export const wrapInContext = async (params: WrapParams, fn: () => Promise<void>): Promise<void> => {
+  const contextName = isNil(params.executionContext) ? {} : { name: params.executionContext };
+  const pinoLogger = new PinoLogger(params.loggerConfig);
+
+  return storage.run(new Store(pinoLogger.logger), () => {
+    pinoLogger.assign({
       requestId: params.requestId ?? randomUUID(),
       ...contextName,
     });
     return fn();
   });
+};

@@ -16,6 +16,7 @@ export type Envs = {
 interface TestParameters {
   app: INestApplication;
   dynamodb: DynamoDBTestContainer;
+  queues: SQSTestQueues;
 }
 
 interface TestArguments {
@@ -39,6 +40,7 @@ export class TestSetup {
       [Env.SQS_QUEUE_SUFFIX]: this.queueSuffix,
       [Env.DYNAMO_DB_TABLE_NAME]: this.dynamodb.config.tableName,
       [OptionalEnv.SQS_QUEUE_WAIT_TIME_SECONDS]: "0",
+      [OptionalEnv.SQS_QUEUE_POLLING_INTERVAL_MILLIS]: "0",
       ...this.envs,
     };
 
@@ -46,7 +48,6 @@ export class TestSetup {
       imports: [
         ConfigModule.forRoot({
           validate: (config) => validateConfig({ ...config, ...envs }),
-          expandVariables: true,
         }),
         AppModule,
       ],
@@ -54,11 +55,11 @@ export class TestSetup {
 
     const app = moduleFixture.createNestApplication();
     configureNest(app);
-    await this.queues.setUp();
+    await this.queues.setUp(app);
     await this.dynamodb.setUp();
     await app.init();
 
-    await cb({ app, dynamodb: this.dynamodb })
+    await cb({ app, dynamodb: this.dynamodb, queues: this.queues })
       .finally(() => app.close())
       .finally(() => this.dynamodb.tearDown())
       .finally(() => this.queues.tearDown());
