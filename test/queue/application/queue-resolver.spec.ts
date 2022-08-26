@@ -48,7 +48,7 @@ describe(QueueResolver.name, () => {
         resolves: [ResolvedEvent2],
         rejects: [],
       }),
-    ).rejects.toThrow("Queue execution was rejected");
+    ).rejects.toThrow("Queue execution resolves or rejects conditions were not met");
 
     subscriber.singleOfType(ResolvedEvent);
     expect(subscriber.totalOfListenersFor(ResolvedEvent)).toBe(0);
@@ -67,7 +67,7 @@ describe(QueueResolver.name, () => {
         resolves: [],
         rejects: [],
       }),
-    ).rejects.toThrow("Queue execution was rejected");
+    ).rejects.toThrow("Queue execution resolves or rejects conditions were not met");
 
     subscriber.ofTypes(ResolvedEvent, ResolvedEvent2);
     expect(subscriber.totalOfListenersFor(ResolvedEvent)).toBe(0);
@@ -83,7 +83,7 @@ describe(QueueResolver.name, () => {
         resolves: [],
         rejects: [ResolvedEvent],
       }),
-    ).rejects.toThrow("Queue execution was rejected");
+    ).rejects.toThrow("Queue execution resolves or rejects conditions were not met");
 
     subscriber.singleOfType(ResolvedEvent);
     expect(subscriber.totalOfListenersFor(ResolvedEvent)).toBe(0);
@@ -99,7 +99,7 @@ describe(QueueResolver.name, () => {
         resolves: [],
         rejects: [ResolvedEvent, ResolvedEvent2],
       }),
-    ).rejects.toThrow("Queue execution was rejected");
+    ).rejects.toThrow("Queue execution resolves or rejects conditions were not met");
 
     subscriber.singleOfType(ResolvedEvent2);
     expect(subscriber.totalOfListenersFor(ResolvedEvent)).toBe(0);

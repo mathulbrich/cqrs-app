@@ -40,7 +40,7 @@ export class QueueResolver {
     });
 
     if (rejected || !resolved) {
-      throw new Error("Queue execution was rejected");
+      throw new Error("Queue execution resolves or rejects conditions were not met");
     }
   }
 }

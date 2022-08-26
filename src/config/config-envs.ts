@@ -25,6 +25,7 @@ export const OptionalEnv = {
   NODE_ENV: "NODE_ENV",
   SQS_QUEUE_ENDPOINT: "SQS_QUEUE_ENDPOINT",
   SQS_QUEUE_WAIT_TIME_SECONDS: "SQS_QUEUE_WAIT_TIME_SECONDS",
+  SQS_QUEUE_POLLING_INTERVAL_MILLIS: "SQS_QUEUE_POLLING_INTERVAL_MILLIS",
   USE_IN_MEMORY_REPOSITORY: "USE_IN_MEMORY_REPOSITORY",
 } as const;
 export type OptionalEnv = keyof typeof OptionalEnv;
@@ -50,6 +51,7 @@ export const ConfigEnvs = z.object({
     sqsQueueEndpoint: z.string().optional(),
     sqsQueueSuffix: z.string().default(""),
     sqsQueueWaitTimeSeconds: stringToNumber().optional(),
+    sqsPollingIntervalMillis: stringToNumber().default("0"),
   }),
   dynamoDb: z.object({
     endpoint: z.string().optional(),
@@ -79,6 +81,7 @@ const configInput = (
     sqsQueueEndpoint: inputConfig[OptionalEnv.SQS_QUEUE_ENDPOINT],
     sqsQueueSuffix: inputConfig[Env.SQS_QUEUE_SUFFIX],
     sqsQueueWaitTimeSeconds: inputConfig[OptionalEnv.SQS_QUEUE_WAIT_TIME_SECONDS],
+    sqsPollingIntervalMillis: inputConfig[OptionalEnv.SQS_QUEUE_POLLING_INTERVAL_MILLIS],
   },
   dynamoDb: {
     endpoint: inputConfig[OptionalEnv.DYNAMO_DB_ENDPOINT],

@@ -4,4 +4,4 @@ yarn --frozen-lockfile
 
 yarn setup
 
-yarn start:debug
+yarn start:dev

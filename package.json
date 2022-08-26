@@ -14,8 +14,9 @@
     "repl": "nest start --entryFile repl",
     "setup": "node dist/scripts/setup",
     "start": "nest start",
-    "start:dev": "nest start --watch",
-    "start:debug": "nest start --debug 0.0.0.0:9229 --watch",
+    "start:dev": "concurrently yarn:start:dev-*",
+    "start:dev-app": "nest start --debug 0.0.0.0:9229 --watch",
+    "start:dev-job": "nest start --entryFile src/queue --watch",
     "start:prod": "node dist/src/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\"",
     "lint:fix": "yarn lint --fix",
@@ -37,6 +38,7 @@
     "@nestjs/serve-static": "^3.0.0",
     "@vendia/serverless-express": "^4.10.1",
     "aws-lambda": "^1.0.7",
+    "concurrently": "^7.3.0",
     "helmet": "^5.1.1",
     "lodash": "^4.17.21",
     "nestjs-pino": "^3.1.1",
@@ -46,7 +48,6 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.5.6",
-    "sqs-consumer": "^5.7.0",
     "validator": "^13.7.0",
     "zod": "^3.18.0"
   },
@@ -110,7 +111,8 @@
       "<rootDir>/src/bootstrap.ts",
       "<rootDir>/src/lambda.ts",
       "<rootDir>/src/main.ts",
-      "<rootDir>/src/queue/application/sqs-queue-listener.ts"
+      "<rootDir>/src/queue.ts",
+      "<rootDir>/src/queue/application/sqs-listener.ts"
     ],
     "moduleNameMapper": {
       "^@app/(.*)$": "<rootDir>/src/$1",
