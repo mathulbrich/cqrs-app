@@ -1,5 +1,4 @@
 import { Module } from "@nestjs/common";
-import { CqrsModule } from "@nestjs/cqrs";
 
 import { AppConfigService } from "@app/config/app-config-service";
 import { CreateExampleController } from "@app/example/application/controllers/create-example.controller";
@@ -12,7 +11,6 @@ import { CreateExampleCommandHandler } from "@app/example/domain/commands/handle
 import { ExampleRepository } from "@app/example/domain/repositories/example.repository";
 
 @Module({
-  imports: [CqrsModule],
   exports: [CreateExampleQueueHandler],
   controllers: [CreateExampleController, GetExampleController],
   providers: [

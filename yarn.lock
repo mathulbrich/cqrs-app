@@ -1458,13 +1458,6 @@
     tslib "2.4.0"
     uuid "8.3.2"
 
-"@nestjs/cqrs@^9.0.1":
-  version "9.0.1"
-  resolved "https://registry.yarnpkg.com/@nestjs/cqrs/-/cqrs-9.0.1.tgz#3aaa5dbee37d5ac3670e320d6a241a076e189082"
-  integrity sha512-DsqkAaIHy9+Ot4FJybmlDQk0HBDTGztz0F3LcMnatFDQv1X56W0Y2+R/7jjwHsmHzQfbffT2FGyCOx2/9apFCg==
-  dependencies:
-    uuid "8.3.2"
-
 "@nestjs/event-emitter@^1.3.1":
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/@nestjs/event-emitter/-/event-emitter-1.3.1.tgz#20ec79a5c075af7d52af2a4adc06df7aec3d6246"

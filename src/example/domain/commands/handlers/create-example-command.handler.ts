@@ -1,13 +1,12 @@
-import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
-
 import { EventPublisher } from "@app/common/domain/event-publisher";
 import { CreateExampleCommand } from "@app/example/domain/commands/create-example.command";
 import { ExampleCreatedEvent } from "@app/example/domain/events/example-created.event";
 import { Example } from "@app/example/domain/example";
 import { ExampleRepository } from "@app/example/domain/repositories/example.repository";
+import { Injectable } from "@app/lib/nest/injectable";
 
-@CommandHandler(CreateExampleCommand)
-export class CreateExampleCommandHandler implements ICommandHandler<CreateExampleCommand> {
+@Injectable()
+export class CreateExampleCommandHandler {
   constructor(
     private readonly repository: ExampleRepository,
     private readonly publisher: EventPublisher,

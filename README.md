@@ -10,6 +10,7 @@ This is a template project to CQRS application using [NestJS](https://nestjs.com
 
 ## :link: Dependencies
 
+* [Tilt](https://docs.tilt.dev/install.html/)
 * [Yarn](https://yarnpkg.com/)
 * [NodeJS (v16.14.2)](https://nodejs.org/en/)
 * [Docker + Compose](https://www.docker.com/)
@@ -28,7 +29,7 @@ $ yarn build
 
 ```bash
 # start app and its dependencies
-$ docker-compose up -d
+$ tilt up
 ```
 
 ## :triangular_flag_on_post: Running tests
