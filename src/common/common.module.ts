@@ -1,6 +1,5 @@
 import { Module, Global, NestModule, MiddlewareConsumer } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
-import { CqrsModule } from "@nestjs/cqrs";
 import { EventEmitterModule } from "@nestjs/event-emitter";
 
 import { EventEmitterPublisher } from "@app/common/application/event-emitter-publisher";
@@ -21,7 +20,6 @@ import { IGNORED_ROUTES } from "@app/constants";
       validate: validateConfig,
     }),
     EventEmitterModule.forRoot(),
-    CqrsModule,
   ],
   providers: [
     AppConfigService,
