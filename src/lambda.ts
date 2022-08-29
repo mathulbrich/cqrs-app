@@ -8,8 +8,8 @@ import { lambdaRequestTracker, LambdaEvent } from "pino-lambda";
 import { bootstrapHttpApp } from "@app/bootstrap";
 import { SWAGGER_DOCS_ROUTE } from "@app/constants";
 import { generateRequestId } from "@app/lib/request-id";
-import { SQSMessageEvent } from "@app/queue/application/lambda/sqs-event";
-import { SQSLambda } from "@app/queue/application/lambda/sqs-lambda";
+import { SQSMessageEvent } from "@app/queue/lambda/sqs-event";
+import { SQSLambda } from "@app/queue/lambda/sqs-lambda";
 
 let cachedServer: Handler;
 let cachedApp: INestApplication;
