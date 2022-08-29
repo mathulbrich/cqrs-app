@@ -3,11 +3,11 @@ import { join } from "path";
 import { Module } from "@nestjs/common";
 import { ServeStaticModule } from "@nestjs/serve-static";
 
-import { AppController } from "@app/app.controller";
 import { CommonModule } from "@app/common/common.module";
+import { DomainsModule } from "@app/common/domains.module";
 import { LoggingModuleConfig } from "@app/common/logging/logging";
 import { SWAGGER_DOCS_ROUTE } from "@app/constants";
-import { ExampleModule } from "@app/example/example.module";
+import { HttpAppController } from "@app/http-app.controller";
 import { QueueModule } from "@app/queue/queue.module";
 
 @Module({
@@ -15,12 +15,12 @@ import { QueueModule } from "@app/queue/queue.module";
     LoggingModuleConfig,
     CommonModule,
     QueueModule,
-    ExampleModule,
+    DomainsModule,
     ServeStaticModule.forRoot({
       serveRoot: SWAGGER_DOCS_ROUTE,
       rootPath: join(__dirname, "../../docs"),
     }),
   ],
-  controllers: [AppController],
+  controllers: [HttpAppController],
 })
-export class AppModule {}
+export class HttpAppModule {}

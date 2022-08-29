@@ -5,7 +5,7 @@ interface HealthResponse {
 }
 
 @Controller("health")
-export class AppController {
+export class HttpAppController {
   @Get()
   healthCheck(): HealthResponse {
     return { status: "OK" };

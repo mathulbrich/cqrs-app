@@ -3,11 +3,11 @@ import "source-map-support/register";
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 
-import { AppModule } from "@app/app.module";
 import { bootstrapStandaloneApp } from "@app/bootstrap";
 import { validateConfig, Env } from "@app/common/config/config-envs";
 import { SQS_QUEUE_CONTEXT } from "@app/constants";
 import { SQSListener } from "@app/queue/application/sqs-listener";
+import { StandaloneModule } from "@app/standalone.module";
 
 @Module({
   imports: [
@@ -18,7 +18,7 @@ import { SQSListener } from "@app/queue/application/sqs-listener";
           [Env.APP_NAME]: SQS_QUEUE_CONTEXT,
         }),
     }),
-    AppModule,
+    StandaloneModule,
   ],
 })
 class ListenQueueModule {}

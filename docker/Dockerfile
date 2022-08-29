@@ -1,5 +1,5 @@
 FROM node:16-slim as dev
-RUN apt update && apt install procps -y
+RUN apt update && apt install git procps -y
 USER node
 RUN yarn global add @nestjs/cli
 WORKDIR /usr/app

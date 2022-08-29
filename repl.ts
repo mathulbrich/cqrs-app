@@ -1,9 +1,9 @@
 import { repl } from "@nestjs/core";
 
-import { AppModule } from "@app/app.module";
+import { StandaloneModule } from "@app/standalone.module";
 
 async function bootstrap() {
-  await repl(AppModule);
+  await repl(StandaloneModule);
 }
 // eslint-disable-next-line @typescript-eslint/no-floating-promises
 bootstrap();
