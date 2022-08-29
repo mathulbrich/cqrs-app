@@ -3,7 +3,7 @@ import { ConfigModule } from "@nestjs/config";
 import { Test } from "@nestjs/testing";
 
 import { AppModule } from "@app/app.module";
-import { configureNest } from "@app/bootstrap";
+import { bootstrapHttpApp } from "@app/bootstrap";
 import { Env, validateConfig, OptionalEnv } from "@app/common/config/config-envs";
 import { Uuid } from "@app/lib/uuid";
 import { DynamoDBTestContainer } from "@test/integration/setup/dynamodb";
@@ -53,8 +53,7 @@ export class TestSetup {
       ],
     }).compile();
 
-    const app = moduleFixture.createNestApplication();
-    configureNest(app);
+    const app = await bootstrapHttpApp(moduleFixture.createNestApplication());
     await this.queues.setUp(app);
     await this.dynamodb.setUp();
     await app.init();
