@@ -1,7 +1,7 @@
 import { SendMessageCommand, SQSClient } from "@aws-sdk/client-sqs";
 
+import { AppConfigService } from "@app/common/config/app-config-service";
 import { Logger } from "@app/common/logging/logger";
-import { AppConfigService } from "@app/config/app-config-service";
 import { Injectable } from "@app/lib/nest/injectable";
 import { EnqueueArguments, Enqueuer } from "@app/queue/application/enqueuer";
 import { SQSQueueUtil } from "@app/queue/application/sqs-queue-util";

@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 
-import { AppConfigService } from "@app/config/app-config-service";
+import { AppConfigService } from "@app/common/config/app-config-service";
 import { CreateExampleController } from "@app/example/application/controllers/create-example.controller";
 import { GetExampleController } from "@app/example/application/controllers/get-example.controller";
 import { LogExampleCreatedEventHandler } from "@app/example/application/events/log-example-created-event.handler";

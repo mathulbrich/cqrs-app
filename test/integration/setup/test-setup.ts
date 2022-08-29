@@ -4,7 +4,7 @@ import { Test } from "@nestjs/testing";
 
 import { AppModule } from "@app/app.module";
 import { configureNest } from "@app/bootstrap";
-import { Env, validateConfig, OptionalEnv } from "@app/config/config-envs";
+import { Env, validateConfig, OptionalEnv } from "@app/common/config/config-envs";
 import { Uuid } from "@app/lib/uuid";
 import { DynamoDBTestContainer } from "@test/integration/setup/dynamodb";
 import { SQSTestQueues } from "@test/integration/setup/sqs";

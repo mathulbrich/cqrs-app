@@ -3,11 +3,11 @@ import { ConfigModule } from "@nestjs/config";
 import { EventEmitterModule } from "@nestjs/event-emitter";
 
 import { EventEmitterPublisher } from "@app/common/application/event-emitter-publisher";
+import { AppConfigService } from "@app/common/config/app-config-service";
+import { OptionalEnv, validateConfig } from "@app/common/config/config-envs";
 import { EventPublisher } from "@app/common/domain/event-publisher";
 import { EventSubscriber } from "@app/common/domain/event-subscriber";
 import { LoggingMiddleware } from "@app/common/middleware/logging.middleware";
-import { AppConfigService } from "@app/config/app-config-service";
-import { OptionalEnv, validateConfig } from "@app/config/config-envs";
 import { IGNORED_ROUTES } from "@app/constants";
 
 @Global()

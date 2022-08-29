@@ -2,7 +2,7 @@ import { faker } from "@faker-js/faker";
 import { retry } from "async";
 import request from "supertest";
 
-import { OptionalEnv } from "@app/config/config-envs";
+import { OptionalEnv } from "@app/common/config/config-envs";
 import { DynamoDBExampleRepository } from "@app/example/application/repositories/dynamodb-example.repository";
 import { TestSetup, INTEGRATION_DEFAULT_TIMEOUT } from "@test/integration/setup/test-setup";
 import { ExampleFixture } from "@test/resources/fixtures/example-fixture";

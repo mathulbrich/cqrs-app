@@ -1,7 +1,7 @@
 import { Scope } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 
-import { ConfigEnvs } from "@app/config/config-envs";
+import { ConfigEnvs } from "@app/common/config/config-envs";
 import { BaseClass } from "@app/lib/baseclass";
 import { Injectable } from "@app/lib/nest/injectable";
 
