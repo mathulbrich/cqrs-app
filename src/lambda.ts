@@ -8,6 +8,8 @@ import { lambdaRequestTracker, LambdaEvent } from "pino-lambda";
 import { bootstrap } from "@app/bootstrap";
 import { SWAGGER_DOCS_ROUTE } from "@app/constants";
 import { generateRequestId } from "@app/lib/request-id";
+import { SQSMessageEvent } from "@app/queue/application/lambda/sqs-event";
+import { SQSLambda } from "@app/queue/application/lambda/sqs-lambda";
 
 let cachedServer: Handler;
 let cachedApp: INestApplication;
@@ -50,8 +52,13 @@ export const handler = async (event: LambdaEvent, context: Context, callback: Ca
   }
 
   try {
-    const response = await server(event, context, callback);
-    return response;
+    const sqsEvent = SQSMessageEvent.safeParse(event);
+    if (sqsEvent.success) {
+      const sqsLambda = await cachedApp.resolve(SQSLambda);
+      return await sqsLambda.handle(sqsEvent.data);
+    }
+
+    return await server(event, context, callback);
   } finally {
     cachedApp.flushLogs();
   }
