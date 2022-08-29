@@ -2,7 +2,7 @@ import { LoggerModule, Params } from "nestjs-pino";
 import pino from "pino";
 import { pinoLambdaDestination, PinoLogFormatter } from "pino-lambda";
 
-import { AppConfigService } from "@app/config/app-config-service";
+import { AppConfigService } from "@app/common/config/app-config-service";
 import { generateRequestId } from "@app/lib/request-id";
 
 type LoggerData = {

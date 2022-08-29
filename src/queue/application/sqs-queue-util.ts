@@ -1,7 +1,7 @@
 import { Scope } from "@nestjs/common";
 import { findLastIndex } from "lodash";
 
-import { AppConfigService } from "@app/config/app-config-service";
+import { AppConfigService } from "@app/common/config/app-config-service";
 import { assert } from "@app/lib/assert";
 import { Injectable } from "@app/lib/nest/injectable";
 import { isValidQueue } from "@app/queue/application/queue-mapper";

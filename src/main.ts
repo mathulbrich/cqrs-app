@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
 import "source-map-support/register";
 import { bootstrap } from "@app/bootstrap";
-import { AppConfigService } from "@app/config/app-config-service";
+import { AppConfigService } from "@app/common/config/app-config-service";
 
 (async () => {
   const app = await bootstrap();

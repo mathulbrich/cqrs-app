@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-floating-promises */
 import "envs/load";
-import { Env } from "@app/config/config-envs";
+import { Env } from "@app/common/config/config-envs";
 import { DynamoDBTestContainer } from "@test/integration/setup/dynamodb";
 
 (async () => {

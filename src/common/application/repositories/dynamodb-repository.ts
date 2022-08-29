@@ -14,7 +14,7 @@ import {
 } from "@aws-sdk/util-dynamodb";
 import { defaultTo } from "lodash";
 
-import { AppConfigService } from "@app/config/app-config-service";
+import { AppConfigService } from "@app/common/config/app-config-service";
 
 export interface DynamoDBItem {
   [key: string]: AttributeValue;

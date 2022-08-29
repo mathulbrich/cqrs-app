@@ -6,7 +6,7 @@ import {
 } from "@aws-sdk/client-dynamodb";
 
 import { DynamoDBConfig } from "@app/common/application/repositories/dynamodb-repository";
-import { OptionalEnv } from "@app/config/config-envs";
+import { OptionalEnv } from "@app/common/config/config-envs";
 import { Uuid } from "@app/lib/uuid";
 
 type ManagedDynamoDB = Omit<DynamoDBTestContainer, "setUp" | "tearDown" | "tableExists">;

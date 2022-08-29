@@ -10,9 +10,9 @@ import { ModuleRef } from "@nestjs/core";
 import { forOwn } from "lodash";
 import { PARAMS_PROVIDER_TOKEN, Params } from "nestjs-pino";
 
+import { AppConfigService } from "@app/common/config/app-config-service";
 import { Logger } from "@app/common/logging/logger";
 import { wrapInContext, WrapParams } from "@app/common/logging/wrap-in-context";
-import { AppConfigService } from "@app/config/app-config-service";
 import { SQS_QUEUE_CONTEXT } from "@app/constants";
 import { Injectable } from "@app/lib/nest/injectable";
 import { QueueMapping } from "@app/queue/application/queue-mapper";

@@ -1,6 +1,6 @@
 import { ConfigService } from "@nestjs/config";
 
-import { AppConfigService } from "@app/config/app-config-service";
+import { AppConfigService } from "@app/common/config/app-config-service";
 import { SQSQueueUtil } from "@app/queue/application/sqs-queue-util";
 
 class TestArguments {

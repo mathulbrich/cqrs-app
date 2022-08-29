@@ -8,7 +8,7 @@ import {
 import { INestApplication } from "@nestjs/common";
 import { isError, keys } from "lodash";
 
-import { OptionalEnv } from "@app/config/config-envs";
+import { OptionalEnv } from "@app/common/config/config-envs";
 import { QueueMapping } from "@app/queue/application/queue-mapper";
 import { QueueNames } from "@app/queue/application/queue-names";
 import { SQSListener } from "@app/queue/application/sqs-listener";
