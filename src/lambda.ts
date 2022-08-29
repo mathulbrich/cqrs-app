@@ -5,7 +5,7 @@ import { Callback, Context, Handler } from "aws-lambda";
 import { get } from "lodash";
 import { lambdaRequestTracker, LambdaEvent } from "pino-lambda";
 
-import { bootstrap } from "@app/bootstrap";
+import { bootstrapHttpApp } from "@app/bootstrap";
 import { SWAGGER_DOCS_ROUTE } from "@app/constants";
 import { generateRequestId } from "@app/lib/request-id";
 import { SQSMessageEvent } from "@app/queue/application/lambda/sqs-event";
@@ -28,7 +28,7 @@ const withRequest = lambdaRequestTracker({
 
 const getServer = async (): Promise<Handler> => {
   if (!cachedServer) {
-    cachedApp = await (await bootstrap()).init();
+    cachedApp = await (await bootstrapHttpApp()).init();
     const app = cachedApp.getHttpAdapter().getInstance();
     cachedServer = serverlessExpress({ app });
   }

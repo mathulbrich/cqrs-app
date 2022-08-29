@@ -2,13 +2,11 @@
 import "source-map-support/register";
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
-import { NestFactory, ContextIdFactory } from "@nestjs/core";
-import { Logger as PinoLogger } from "nestjs-pino";
 
 import { AppModule } from "@app/app.module";
+import { bootstrapStandaloneApp } from "@app/bootstrap";
 import { validateConfig, Env } from "@app/common/config/config-envs";
 import { SQS_QUEUE_CONTEXT } from "@app/constants";
-import { DurableContextIdStrategy } from "@app/lib/nest/durable-context.strategy";
 import { SQSListener } from "@app/queue/application/sqs-listener";
 
 @Module({
@@ -26,10 +24,7 @@ import { SQSListener } from "@app/queue/application/sqs-listener";
 class ListenQueueModule {}
 
 (async () => {
-  const app = await NestFactory.createApplicationContext(ListenQueueModule, { bufferLogs: true });
-  ContextIdFactory.apply(new DurableContextIdStrategy());
-  app.useLogger(app.get(PinoLogger));
-  app.flushLogs();
+  const app = await bootstrapStandaloneApp(ListenQueueModule);
 
   const executionQueue = await app.resolve(SQSListener);
   await executionQueue.listenQueues();
