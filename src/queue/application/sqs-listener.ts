@@ -13,10 +13,11 @@ import { PARAMS_PROVIDER_TOKEN, Params } from "nestjs-pino";
 import { Logger } from "@app/common/logging/logger";
 import { wrapInContext, WrapParams } from "@app/common/logging/wrap-in-context";
 import { AppConfigService } from "@app/config/app-config-service";
+import { SQS_QUEUE_CONTEXT } from "@app/constants";
 import { Injectable } from "@app/lib/nest/injectable";
 import { QueueMapping } from "@app/queue/application/queue-mapper";
 import { QueueNames } from "@app/queue/application/queue-names";
-import { SQSQueueUrlBuilder } from "@app/queue/application/sqs-queue-url-builder";
+import { SQSQueueUtil } from "@app/queue/application/sqs-queue-util";
 
 @Injectable()
 export class SQSListener {
@@ -26,7 +27,7 @@ export class SQSListener {
   constructor(
     private readonly config: AppConfigService,
     private readonly moduleRef: ModuleRef,
-    private readonly queueBuilder: SQSQueueUrlBuilder,
+    private readonly utils: SQSQueueUtil,
     @Inject(PARAMS_PROVIDER_TOKEN)
     private readonly params: Params,
   ) {}
@@ -55,7 +56,7 @@ export class SQSListener {
     const client = new SQSClient({
       endpoint: this.config.queue.sqsQueueEndpoint,
     });
-    const queueUrl = this.queueBuilder.build(queueName);
+    const queueUrl = this.utils.buildUrl(queueName);
     const messages = await this.receiveMessages(client, queueUrl);
 
     // the processing is doing sequentially to avoid cross message event issues
@@ -110,7 +111,7 @@ export class SQSListener {
   private wrapParams(): WrapParams {
     return {
       loggerConfig: this.params,
-      executionContext: "SQS-QUEUE",
+      executionContext: SQS_QUEUE_CONTEXT,
     };
   }
 }

@@ -7,6 +7,7 @@ import { Logger as PinoLogger } from "nestjs-pino";
 
 import { AppModule } from "@app/app.module";
 import { validateConfig, Env } from "@app/config/config-envs";
+import { SQS_QUEUE_CONTEXT } from "@app/constants";
 import { DurableContextIdStrategy } from "@app/lib/nest/durable-context.strategy";
 import { SQSListener } from "@app/queue/application/sqs-listener";
 
@@ -16,7 +17,7 @@ import { SQSListener } from "@app/queue/application/sqs-listener";
       validate: (config) =>
         validateConfig({
           ...config,
-          [Env.APP_NAME]: "SQS-QUEUE",
+          [Env.APP_NAME]: SQS_QUEUE_CONTEXT,
         }),
     }),
     AppModule,

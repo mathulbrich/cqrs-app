@@ -4,14 +4,14 @@ import { Logger } from "@app/common/logging/logger";
 import { AppConfigService } from "@app/config/app-config-service";
 import { Injectable } from "@app/lib/nest/injectable";
 import { EnqueueArguments, Enqueuer } from "@app/queue/application/enqueuer";
-import { SQSQueueUrlBuilder } from "@app/queue/application/sqs-queue-url-builder";
+import { SQSQueueUtil } from "@app/queue/application/sqs-queue-util";
 
 @Injectable()
 export class SQSEnqueuer implements Enqueuer {
   private readonly logger = new Logger(SQSEnqueuer.name);
   private readonly client: SQSClient;
 
-  constructor(private readonly sqsUrlBuilder: SQSQueueUrlBuilder, config: AppConfigService) {
+  constructor(private readonly utils: SQSQueueUtil, config: AppConfigService) {
     this.client = new SQSClient({
       endpoint: config.queue.sqsQueueEndpoint,
     });
@@ -30,7 +30,7 @@ export class SQSEnqueuer implements Enqueuer {
         MessageBody: payload,
         MessageDeduplicationId: messageId,
         MessageGroupId: groupId ?? messageId,
-        QueueUrl: this.sqsUrlBuilder.build(queue),
+        QueueUrl: this.utils.buildUrl(queue),
       }),
     );
   }

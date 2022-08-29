@@ -47,6 +47,7 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.5.6",
+    "source-map-support": "^0.5.21",
     "validator": "^13.7.0",
     "zod": "^3.18.0"
   },
@@ -111,7 +112,9 @@
       "<rootDir>/src/lambda.ts",
       "<rootDir>/src/main.ts",
       "<rootDir>/src/queue.ts",
-      "<rootDir>/src/queue/application/sqs-listener.ts"
+      "<rootDir>/src/queue/application/sqs-listener.ts",
+      "<rootDir>/src/queue/application/lambda/sqs-event.ts",
+      "<rootDir>/src/queue/application/lambda/sqs-lambda.ts"
     ],
     "moduleNameMapper": {
       "^@app/(.*)$": "<rootDir>/src/$1",
