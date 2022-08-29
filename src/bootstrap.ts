@@ -2,9 +2,9 @@ import { INestApplication, INestApplicationContext } from "@nestjs/common";
 import { ContextIdFactory, NestFactory } from "@nestjs/core";
 import { Logger as PinoLogger } from "nestjs-pino";
 
-import { AppModule } from "@app/app.module";
 import { helmetMiddleware } from "@app/common/middleware/helmet-middleware";
 import { HEALTH_ROUTE } from "@app/constants";
+import { HttpAppModule } from "@app/http-app.module";
 import { DurableContextIdStrategy } from "@app/lib/nest/durable-context.strategy";
 
 const configureNest = <T extends INestApplicationContext>(app: T): void => {
@@ -17,7 +17,7 @@ export const bootstrapHttpApp = async (
 ): Promise<INestApplication> => {
   const app =
     createdApp ??
-    (await NestFactory.create(AppModule, {
+    (await NestFactory.create(HttpAppModule, {
       bufferLogs: true,
       cors: true,
     }));

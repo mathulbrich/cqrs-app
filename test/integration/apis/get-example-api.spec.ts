@@ -4,14 +4,17 @@ import request from "supertest";
 
 import { OptionalEnv } from "@app/common/config/config-envs";
 import { DynamoDBExampleRepository } from "@app/example/application/repositories/dynamodb-example.repository";
-import { TestSetup, INTEGRATION_DEFAULT_TIMEOUT } from "@test/integration/setup/test-setup";
+import {
+  IntegrationTestSetup,
+  INTEGRATION_DEFAULT_TIMEOUT,
+} from "@test/integration/setup/test-setup";
 import { ExampleFixture } from "@test/resources/fixtures/example-fixture";
 
 describe("Get Example API", () => {
   jest.setTimeout(INTEGRATION_DEFAULT_TIMEOUT);
 
   it("Should store then get the example", async () => {
-    await new TestSetup().run(async ({ app, dynamodb }) => {
+    await new IntegrationTestSetup().run(async ({ app, dynamodb }) => {
       const example = new ExampleFixture().build();
       const repository = new DynamoDBExampleRepository(dynamodb.config);
       await repository.store(example);
@@ -29,7 +32,7 @@ describe("Get Example API", () => {
   });
 
   it("Should get all examples", async () => {
-    await new TestSetup().run(async ({ app, dynamodb }) => {
+    await new IntegrationTestSetup().run(async ({ app, dynamodb }) => {
       const numberOfExamples = faker.datatype.number({ min: 2, max: 10 });
       const examples = new ExampleFixture().buildMany(numberOfExamples);
       const repository = new DynamoDBExampleRepository(dynamodb.config);
@@ -49,7 +52,7 @@ describe("Get Example API", () => {
       [OptionalEnv.USE_IN_MEMORY_REPOSITORY]: "1",
     };
 
-    await new TestSetup({ envs }).run(async ({ app }) => {
+    await new IntegrationTestSetup({ envs }).run(async ({ app }) => {
       const name = faker.lorem.word();
       const description = faker.lorem.words();
       const createResponse = await request(app.getHttpServer())
@@ -72,7 +75,7 @@ describe("Get Example API", () => {
   });
 
   it("Should return 400 when Uuid is invalid", async () => {
-    await new TestSetup().run(async ({ app }) => {
+    await new IntegrationTestSetup().run(async ({ app }) => {
       const invalidUuid = faker.random.word();
       const response = await request(app.getHttpServer())
         .get(`/api/v1/example/${invalidUuid}`)

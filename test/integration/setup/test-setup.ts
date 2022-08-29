@@ -2,9 +2,9 @@ import { INestApplication } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { Test } from "@nestjs/testing";
 
-import { AppModule } from "@app/app.module";
 import { bootstrapHttpApp } from "@app/bootstrap";
 import { Env, validateConfig, OptionalEnv } from "@app/common/config/config-envs";
+import { HttpAppModule } from "@app/http-app.module";
 import { Uuid } from "@app/lib/uuid";
 import { DynamoDBTestContainer } from "@test/integration/setup/dynamodb";
 import { SQSTestQueues } from "@test/integration/setup/sqs";
@@ -25,7 +25,7 @@ interface TestArguments {
 
 export const INTEGRATION_DEFAULT_TIMEOUT = 300_000;
 
-export class TestSetup {
+export class IntegrationTestSetup {
   private readonly queueSuffix = `${Uuid.generate().toString()}.fifo`;
   private readonly queues = new SQSTestQueues(this.queueSuffix);
   private readonly dynamodb = new DynamoDBTestContainer();
@@ -49,7 +49,7 @@ export class TestSetup {
         ConfigModule.forRoot({
           validate: (config) => validateConfig({ ...config, ...envs }),
         }),
-        AppModule,
+        HttpAppModule,
       ],
     }).compile();
 
