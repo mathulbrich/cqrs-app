@@ -25,7 +25,7 @@ interface TestArguments {
 
 export const INTEGRATION_DEFAULT_TIMEOUT = 300_000;
 
-export class TestSetup {
+export class IntegrationTestSetup {
   private readonly queueSuffix = `${Uuid.generate().toString()}.fifo`;
   private readonly queues = new SQSTestQueues(this.queueSuffix);
   private readonly dynamodb = new DynamoDBTestContainer();

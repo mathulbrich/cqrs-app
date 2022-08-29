@@ -4,13 +4,16 @@ import request from "supertest";
 
 import { DynamoDBExampleRepository } from "@app/example/application/repositories/dynamodb-example.repository";
 import { Uuid } from "@app/lib/uuid";
-import { TestSetup, INTEGRATION_DEFAULT_TIMEOUT } from "@test/integration/setup/test-setup";
+import {
+  IntegrationTestSetup,
+  INTEGRATION_DEFAULT_TIMEOUT,
+} from "@test/integration/setup/test-setup";
 
 describe("Create Example API", () => {
   jest.setTimeout(INTEGRATION_DEFAULT_TIMEOUT);
 
   it("Should create and store the example", async () => {
-    await new TestSetup().run(async ({ app, dynamodb }) => {
+    await new IntegrationTestSetup().run(async ({ app, dynamodb }) => {
       const response = await request(app.getHttpServer())
         .post("/api/v1/create-example")
         .send({
@@ -31,7 +34,7 @@ describe("Create Example API", () => {
   });
 
   it("Should return 400 when the example is invalid", async () => {
-    await new TestSetup().run(async ({ app }) => {
+    await new IntegrationTestSetup().run(async ({ app }) => {
       const response = await request(app.getHttpServer())
         .post("/api/v1/create-example")
         .send(faker.datatype.json())
