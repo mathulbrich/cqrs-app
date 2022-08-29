@@ -111,9 +111,9 @@
       "src/lambda.ts",
       "src/main.ts",
       "src/queue.ts",
-      "src/queue/application/sqs-listener.ts",
-      "src/queue/application/lambda/sqs-event.ts",
-      "src/queue/application/lambda/sqs-lambda.ts",
+      "src/queue/lambda/sqs-event.ts",
+      "src/queue/lambda/sqs-lambda.ts",
+      "src/queue/managed/sqs-listener.ts",
       "src/standalone.module.ts"
     ],
     "moduleNameMapper": {

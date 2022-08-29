@@ -1,4 +1,4 @@
-import { SQSMessageEvent } from "@app/queue/application/lambda/sqs-event";
+import { SQSMessageEvent } from "@app/queue/lambda/sqs-event";
 
 describe("SQSMessageEvent", () => {
   it("should not allow more than one SQS message", () => {

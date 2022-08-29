@@ -2,9 +2,9 @@ import { ModuleRef } from "@nestjs/core";
 
 import { Logger } from "@app/common/logging/logger";
 import { Injectable } from "@app/lib/nest/injectable";
-import { SQSMessageEvent } from "@app/queue/application/lambda/sqs-event";
 import { QueueMapping } from "@app/queue/application/queue-mapper";
 import { SQSQueueUtil } from "@app/queue/application/sqs-queue-util";
+import { SQSMessageEvent } from "@app/queue/lambda/sqs-event";
 
 @Injectable()
 export class SQSLambda {
