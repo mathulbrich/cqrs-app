@@ -26,6 +26,7 @@ export const OptionalEnv = {
   SQS_QUEUE_ENDPOINT: "SQS_QUEUE_ENDPOINT",
   SQS_QUEUE_WAIT_TIME_SECONDS: "SQS_QUEUE_WAIT_TIME_SECONDS",
   SQS_QUEUE_POLLING_INTERVAL_MILLIS: "SQS_QUEUE_POLLING_INTERVAL_MILLIS",
+  S3_STORAGE_ENDPOINT: "S3_STORAGE_ENDPOINT",
   USE_IN_MEMORY_REPOSITORY: "USE_IN_MEMORY_REPOSITORY",
 } as const;
 export type OptionalEnv = keyof typeof OptionalEnv;
@@ -57,6 +58,9 @@ export const ConfigEnvs = z.object({
     endpoint: z.string().optional(),
     tableName: z.string().default("example"),
   }),
+  s3: z.object({
+    endpoint: z.string().optional(),
+  }),
 });
 export type ConfigEnvs = z.infer<typeof ConfigEnvs>;
 
@@ -86,6 +90,9 @@ const configInput = (
   dynamoDb: {
     endpoint: inputConfig[OptionalEnv.DYNAMO_DB_ENDPOINT],
     tableName: inputConfig[Env.DYNAMO_DB_TABLE_NAME],
+  },
+  s3: {
+    endpoint: inputConfig[OptionalEnv.S3_STORAGE_ENDPOINT],
   },
 });
 

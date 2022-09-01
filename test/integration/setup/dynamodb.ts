@@ -9,7 +9,7 @@ import { DynamoDBConfig } from "@app/common/application/repositories/dynamodb-re
 import { OptionalEnv } from "@app/common/config/config-envs";
 import { Uuid } from "@app/lib/uuid";
 
-type ManagedDynamoDB = Omit<DynamoDBTestContainer, "setUp" | "tearDown" | "tableExists">;
+export type ManagedDynamoDB = Omit<DynamoDBTestContainer, "setUp" | "tearDown" | "tableExists">;
 
 export const runWithDynamoDB = async (cb: (dynamodb: ManagedDynamoDB) => Promise<void>) => {
   const dynamodb = new DynamoDBTestContainer();

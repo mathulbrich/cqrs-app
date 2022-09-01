@@ -13,6 +13,8 @@ import { QueueMapping } from "@app/queue/application/queue-mapper";
 import { QueueNames } from "@app/queue/application/queue-names";
 import { SQSListener } from "@app/queue/managed/sqs-listener";
 
+export type ManagedSQS = Omit<SQSTestQueues, "setUp" | "tearDown">;
+
 interface Message {
   queue: QueueNames;
   content: string;

@@ -6,8 +6,9 @@ import { bootstrapHttpApp } from "@app/bootstrap";
 import { Env, validateConfig, OptionalEnv } from "@app/common/config/config-envs";
 import { HttpAppModule } from "@app/http-app.module";
 import { Uuid } from "@app/lib/uuid";
-import { DynamoDBTestContainer } from "@test/integration/setup/dynamodb";
-import { SQSTestQueues } from "@test/integration/setup/sqs";
+import { DynamoDBTestContainer, ManagedDynamoDB } from "@test/integration/setup/dynamodb";
+import { ManagedS3, S3TestStorage } from "@test/integration/setup/s3";
+import { ManagedSQS, SQSTestQueues } from "@test/integration/setup/sqs";
 
 export type Envs = {
   [key: string]: string;
@@ -15,8 +16,9 @@ export type Envs = {
 
 interface TestParameters {
   app: INestApplication;
-  dynamodb: DynamoDBTestContainer;
-  queues: SQSTestQueues;
+  dynamodb: ManagedDynamoDB;
+  queues: ManagedSQS;
+  storage: ManagedS3;
 }
 
 interface TestArguments {
@@ -29,6 +31,7 @@ export class IntegrationTestSetup {
   private readonly queueSuffix = `${Uuid.generate().toString()}.fifo`;
   private readonly queues = new SQSTestQueues(this.queueSuffix);
   private readonly dynamodb = new DynamoDBTestContainer();
+  private readonly storage = new S3TestStorage();
   private readonly envs?: Envs;
 
   constructor(args?: TestArguments) {
@@ -58,7 +61,12 @@ export class IntegrationTestSetup {
     await this.dynamodb.setUp();
     await app.init();
 
-    await cb({ app, dynamodb: this.dynamodb, queues: this.queues })
+    await cb({
+      app,
+      dynamodb: this.dynamodb,
+      queues: this.queues,
+      storage: this.storage,
+    })
       .finally(() => app.close())
       .finally(() => this.dynamodb.tearDown())
       .finally(() => this.queues.tearDown());
