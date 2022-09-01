@@ -101,11 +101,12 @@ export class SQSListener {
     queueUrl: string,
     message: Message,
   ): Promise<void> {
-    const command = new DeleteMessageCommand({
-      QueueUrl: queueUrl,
-      ReceiptHandle: message.ReceiptHandle,
-    });
-    await client.send(command);
+    await client.send(
+      new DeleteMessageCommand({
+        QueueUrl: queueUrl,
+        ReceiptHandle: message.ReceiptHandle,
+      }),
+    );
   }
 
   private wrapParams(): WrapParams {
