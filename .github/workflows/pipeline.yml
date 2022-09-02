@@ -16,6 +16,7 @@ jobs:
       image: node:16-slim
     env:
       NODE_ENV: ci
+      SERVICE_NAME: cqrs-app
     steps:
       - run: env
       - name: Checkout repository
@@ -31,6 +32,18 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Build
         run: yarn build:prod
+      - name: Clean for packaging
+        run: |
+          set -e
+          apt update && apt install -y tar gzip zip
+          rm -rf node_modules
+          yarn install --production --frozen-lockfile
+          zip -qr /tmp/${SERVICE_NAME}.zip dist docs node_modules
+      - name: Upload lambda artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.SERVICE_NAME }}
+          path: /tmp/${{ env.SERVICE_NAME }}.zip
 
   lint:
     name: Lint
@@ -54,6 +67,41 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Run lint
         run: yarn lint
+
+  lambda-test:
+    name: Lambda Test
+    runs-on: ubuntu-latest
+    container:
+      image: amazon/aws-cli
+    needs: build
+    env:
+      SERVICE_NAME: cqrs-app
+    steps:
+    - name: Prepare
+      run: |
+        yum install -y tar gzip unzip jq wget
+        wget -q https://github.com/aws/aws-sam-cli/releases/latest/download/aws-sam-cli-linux-x86_64.zip
+        unzip -q aws-sam-cli-linux-x86_64.zip -d sam-installation
+        ./sam-installation/install
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Download lambda artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: ${{ env.SERVICE_NAME }}
+        path: /tmp
+    - name: Check lambda
+      run: |
+        unzip -q /tmp/${SERVICE_NAME}.zip -d lambda-package
+        cd lambda-package
+
+        sam local start-api -p 3001 -t ../template.yaml > /dev/null 2>&1 &
+
+        # HTTP_CODE=$(curl --retry 5 --retry-connrefused -s -o /dev/null -w "%{http_code}" http://localhost:3001/health)
+        # echo "Health response (HTTP CODE): $HTTP_CODE"
+        # if [[ ${HTTP_CODE} -ne 200 ]]; then
+        #   exit 1
+        # fi
 
   test:
     name: Unit and Integration Tests

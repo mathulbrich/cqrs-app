@@ -8,9 +8,12 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./
-      Handler: dist/src/lambda.handler
+      Handler: dist/src/main.handler
       Timeout: 15
       Runtime: nodejs16.x
+      Environment:
+        Variables:
+          NODE_ENV: test
       Events:
         Request:
           Type: Api
