@@ -7,10 +7,17 @@ Resources:
   LambdaApp:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: ./
-      Handler: dist/src/lambda.handler
+      CodeUri: lambda.zip
+      Handler: dist/src/main.handler
       Timeout: 15
       Runtime: nodejs16.x
+      Environment:
+        Variables:
+            APP_NAME: CQRS-APP
+            LOGGING_TYPE: lambda
+            NODE_ENV: lambda
+            SQS_QUEUE_BASE_URL: https://sqs.us-east-1.amazonaws.com/123456789012/
+            SQS_QUEUE_SUFFIX: .fifo
       Events:
         Request:
           Type: Api
