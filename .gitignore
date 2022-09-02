@@ -4,6 +4,9 @@
 /dist
 /node_modules
 
+# Ignore local files
+/scripts/*.local.ts
+
 # Logs
 logs
 *.log
