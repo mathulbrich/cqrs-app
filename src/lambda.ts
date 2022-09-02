@@ -7,9 +7,8 @@ import { lambdaRequestTracker, LambdaEvent } from "pino-lambda";
 
 import { bootstrapHttpApp } from "@app/bootstrap";
 import { SWAGGER_DOCS_ROUTE } from "@app/constants";
+import { LambdaTriggerEvent, LambdaEventFactory } from "@app/lambda.events";
 import { generateRequestId } from "@app/lib/request-id";
-import { SQSMessageEvent } from "@app/queue/lambda/sqs-event";
-import { SQSLambda } from "@app/queue/lambda/sqs-lambda";
 
 let cachedServer: Handler;
 let cachedApp: INestApplication;
@@ -52,10 +51,13 @@ export const handler = async (event: LambdaEvent, context: Context, callback: Ca
   }
 
   try {
-    const sqsEvent = SQSMessageEvent.safeParse(event);
-    if (sqsEvent.success) {
-      const sqsLambda = await cachedApp.resolve(SQSLambda);
-      return await sqsLambda.handle(sqsEvent.data);
+    const lambdaEvent = await LambdaTriggerEvent.safeParseAsync(event);
+    if (lambdaEvent.success) {
+      const { eventHandler, parser } = LambdaEventFactory[lambdaEvent.data];
+
+      const parsedEvent = await parser.parseAsync(event);
+      const handlerInstance = await cachedApp.resolve(eventHandler);
+      return await handlerInstance.handle(parsedEvent);
     }
 
     return await server(event, context, callback);

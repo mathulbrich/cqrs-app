@@ -109,6 +109,7 @@
     ],
     "coveragePathIgnorePatterns": [
       "src/bootstrap.ts",
+      "src/lambda.events.ts",
       "src/lambda.ts",
       "src/main.ts",
       "src/queue.ts",
