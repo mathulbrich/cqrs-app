@@ -59,6 +59,7 @@ export class IntegrationTestSetup {
     const app = await bootstrapHttpApp(moduleFixture.createNestApplication());
     await this.queues.setUp(app);
     await this.dynamodb.setUp();
+    await this.storage.setUp();
     await app.init();
 
     await cb({
@@ -69,6 +70,7 @@ export class IntegrationTestSetup {
     })
       .finally(() => app.close())
       .finally(() => this.dynamodb.tearDown())
-      .finally(() => this.queues.tearDown());
+      .finally(() => this.queues.tearDown())
+      .finally(() => this.storage.tearDown());
   }
 }

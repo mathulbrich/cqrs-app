@@ -1,0 +1,26 @@
+{
+  "version": "2.0",
+  "rawPath": "/health",
+  "headers": {
+    "Content-Type": "application/json"
+  },
+  "requestContext": {
+    "accountId": "123456789012",
+    "apiId": "api-id",
+    "domainName": "127.0.0.1",
+    "domainPrefix": "id",
+    "http": {
+      "method": "GET",
+      "path": "/health",
+      "protocol": "HTTP/1.2",
+      "sourceIp": "127.0.0.1",
+      "userAgent": "agent"
+    },
+    "requestId": "96683260-0841-4f29-8e1a-dc56d4b31c6a",
+    "stage": "test",
+    "time": "12/Mar/2020:19:03:58 +0000",
+    "timeEpoch": 1583348638390
+  },
+  "body": null,
+  "isBase64Encoded": false
+}

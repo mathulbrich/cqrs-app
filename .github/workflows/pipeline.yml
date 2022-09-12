@@ -16,6 +16,7 @@ jobs:
       image: node:16-slim
     env:
       NODE_ENV: ci
+      SERVICE_NAME: cqrs-app
     steps:
       - run: env
       - name: Checkout repository
@@ -31,6 +32,18 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Build
         run: yarn build:prod
+      - name: Clean for packaging
+        run: |
+          set -e
+          apt update && apt install -y tar gzip zip
+          rm -rf node_modules
+          yarn install --production --frozen-lockfile
+          zip -qr /tmp/${SERVICE_NAME}.zip dist docs node_modules
+      - name: Upload lambda artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.SERVICE_NAME }}
+          path: /tmp/${{ env.SERVICE_NAME }}.zip
 
   lint:
     name: Lint
@@ -55,13 +68,37 @@ jobs:
       - name: Run lint
         run: yarn lint
 
+  lambda-test:
+    name: Lambda Test
+    runs-on: ubuntu-latest
+    needs: build
+    env:
+      SERVICE_NAME: cqrs-app
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Download lambda artifact
+      uses: actions/download-artifact@v2
+      with:
+          name: ${{ env.SERVICE_NAME }}
+          path: /tmp
+    - name: Check lambda
+      run: |
+        mv /tmp/${SERVICE_NAME}.zip test/lambda/lambda.zip
+        cd test/lambda
+
+        HTTP_CODE=$(sam local invoke -e event.json | jq -r '.statusCode')
+        echo "Health response (HTTP CODE): $HTTP_CODE"
+        if [[ ${HTTP_CODE} -ne 200 ]]; then
+          exit 1
+        fi
+
   test:
     name: Unit and Integration Tests
     runs-on: ubuntu-latest
     environment: test
     container:
       image: node:16-slim
-      options: --name cqrs-app
     services:
       dynamodb:
         image: amazon/dynamodb-local:latest
