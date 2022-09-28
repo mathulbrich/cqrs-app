@@ -36,7 +36,7 @@
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/interface-name-prefix": "off",
     "@typescript-eslint/no-floating-promises": "error",
-    "@typescript-eslint/no-unused-vars": "error",
+    "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
     "@typescript-eslint/no-unused-expressions": "error",
     "@typescript-eslint/explicit-member-accessibility": ["error", { "accessibility": "no-public" }],
     "no-return-await": "error",
