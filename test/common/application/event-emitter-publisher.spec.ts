@@ -1,4 +1,4 @@
-import { INestApplication, Injectable } from "@nestjs/common";
+import { INestApplicationContext, Injectable } from "@nestjs/common";
 import { EventEmitterModule, OnEvent } from "@nestjs/event-emitter";
 import { Test } from "@nestjs/testing";
 
@@ -44,7 +44,7 @@ class FakeService {
 }
 
 describe(EventEmitterPublisher.name, () => {
-  let app: INestApplication;
+  let app: INestApplicationContext;
   let service: FakeService;
 
   beforeEach(async () => {
@@ -59,8 +59,7 @@ describe(EventEmitterPublisher.name, () => {
       imports: [EventEmitterModule.forRoot()],
     }).compile();
 
-    app = module.createNestApplication();
-    await app.init();
+    app = await module.init();
     service = app.get(FakeService);
   });
 

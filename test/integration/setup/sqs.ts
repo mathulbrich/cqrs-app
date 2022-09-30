@@ -1,3 +1,5 @@
+import envs from "@test/load-envs";
+
 import {
   CreateQueueCommand,
   CreateQueueCommandOutput,
@@ -8,7 +10,6 @@ import {
 import { INestApplication } from "@nestjs/common";
 import { isError, keys } from "lodash";
 
-import { OptionalEnv } from "@app/common/config/config-envs";
 import { QueueMapping } from "@app/queue/application/queue-mapper";
 import { QueueNames } from "@app/queue/application/queue-names";
 import { SQSListener } from "@app/queue/managed/sqs-listener";
@@ -29,7 +30,7 @@ export class SQSTestQueues {
   private queue?: SQSListener;
 
   constructor(private readonly suffix: string) {
-    this.sqsBaseUrl = process.env[OptionalEnv.SQS_QUEUE_ENDPOINT];
+    this.sqsBaseUrl = envs.queue.sqsQueueEndpoint;
     this.client = new SQSClient({
       endpoint: this.sqsBaseUrl,
     });
@@ -79,7 +80,7 @@ export class SQSTestQueues {
     this.queue?.stop();
 
     const client = new SQSClient({
-      endpoint: process.env[OptionalEnv.SQS_QUEUE_ENDPOINT],
+      endpoint: envs.queue.sqsQueueEndpoint,
     });
 
     await Promise.all(

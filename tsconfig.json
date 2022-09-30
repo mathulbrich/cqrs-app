@@ -24,8 +24,7 @@
     "moduleResolution": "node",
     "paths": {
       "@app/*": ["*"],
-      "@test/*": ["../test/*"],
-      "envs/load": ["../scripts/load-envs"],
+      "@test/*": ["../test/*"]
     }
   }
 }

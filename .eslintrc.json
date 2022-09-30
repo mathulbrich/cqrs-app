@@ -90,6 +90,10 @@
             "group": "parent"
           },
           {
+            "pattern": "@test/load-envs",
+            "group": "builtin"
+          },
+          {
             "pattern": "@test/**",
             "group": "parent"
           },
