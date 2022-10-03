@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+import envs from "@test/load-envs";
 import { Readable } from "stream";
 
 import {
@@ -12,7 +13,6 @@ import {
   S3Client,
 } from "@aws-sdk/client-s3";
 
-import { OptionalEnv } from "@app/common/config/config-envs";
 import { Optional, Option } from "@app/lib/optional";
 import { Uuid } from "@app/lib/uuid";
 
@@ -26,8 +26,8 @@ export const runWithStorage = async (cb: (storage: ManagedS3) => Promise<void>) 
 
 export class S3TestStorage {
   constructor(
-    readonly bucket = `cqrs-app-${Uuid.generate().toString()}`,
-    readonly endpoint = process.env[OptionalEnv.S3_STORAGE_ENDPOINT],
+    readonly bucket = `${envs.app.name}-${Uuid.generate().toString()}`,
+    readonly endpoint = envs.s3.endpoint,
     private readonly client = new S3Client({
       endpoint,
       forcePathStyle: true,

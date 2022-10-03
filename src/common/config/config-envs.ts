@@ -96,5 +96,5 @@ const configInput = (
   },
 });
 
-export const validateConfig = (config: Record<string, string | undefined>) =>
+export const validateConfig = (config?: Record<string, string | undefined>) =>
   ConfigEnvs.parse(configInput(config));

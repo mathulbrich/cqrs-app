@@ -1,3 +1,5 @@
+import envs from "@test/load-envs";
+
 import {
   CreateTableCommand,
   DeleteTableCommand,
@@ -6,7 +8,6 @@ import {
 } from "@aws-sdk/client-dynamodb";
 
 import { DynamoDBConfig } from "@app/common/application/repositories/dynamodb-repository";
-import { OptionalEnv } from "@app/common/config/config-envs";
 import { Uuid } from "@app/lib/uuid";
 
 export type ManagedDynamoDB = Omit<DynamoDBTestContainer, "setUp" | "tearDown" | "tableExists">;
@@ -19,8 +20,8 @@ export const runWithDynamoDB = async (cb: (dynamodb: ManagedDynamoDB) => Promise
 
 export class DynamoDBTestContainer {
   constructor(
-    private readonly tableName = `example-${Uuid.generate().toString()}`,
-    private readonly endpoint = process.env[OptionalEnv.DYNAMO_DB_ENDPOINT],
+    private readonly tableName = `${envs.app.name}-${Uuid.generate().toString()}`,
+    private readonly endpoint = envs.dynamoDb.endpoint,
     private readonly client = new DynamoDBClient({ endpoint }),
   ) {}
 

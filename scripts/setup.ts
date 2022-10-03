@@ -1,11 +1,11 @@
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-floating-promises */
-import "envs/load";
-import { Env } from "@app/common/config/config-envs";
+import envs from "@test/load-envs";
+
 import { DynamoDBTestContainer } from "@test/integration/setup/dynamodb";
 
 (async () => {
-  const container = new DynamoDBTestContainer(process.env[Env.DYNAMO_DB_TABLE_NAME]);
+  const container = new DynamoDBTestContainer(envs.dynamoDb.tableName);
   if (await container.tableExists()) {
     console.log("Table already created!");
     return;
