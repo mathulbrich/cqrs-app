@@ -1,9 +1,10 @@
-import { INestApplicationContext, Injectable } from "@nestjs/common";
+import { INestApplicationContext, Scope } from "@nestjs/common";
 import { EventEmitterModule, OnEvent } from "@nestjs/event-emitter";
 import { Test } from "@nestjs/testing";
 
 import { EventEmitterPublisher } from "@app/common/application/event-emitter-publisher";
 import { EventPublisher } from "@app/common/domain/event-publisher";
+import { Injectable } from "@app/lib/nest/injectable";
 
 class FakeSuccessfulEvent {
   constructor(readonly name: string) {}
@@ -13,7 +14,7 @@ class FakeFailedEvent {
   constructor(readonly name: string) {}
 }
 
-@Injectable()
+@Injectable({ scope: Scope.DEFAULT })
 class FakeService {
   successCalled = false;
   failCalled = false;
@@ -60,7 +61,7 @@ describe(EventEmitterPublisher.name, () => {
     }).compile();
 
     app = await module.init();
-    service = app.get(FakeService);
+    service = await app.resolve(FakeService);
   });
 
   it("should successfully handle event", async () => {
