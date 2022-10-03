@@ -20,16 +20,6 @@
     "node": true,
     "jest": true
   },
-  "settings": {
-    "import/resolver": {
-      "alias": {
-        "map": [
-          ["@app", "./src"]
-        ],
-        "extensions": [".ts", ".js", ".json"]
-      }
-    }
-  },
   "rules": {
     "prettier/prettier": ["error", { "singleQuote": false, "trailingComma": "all", "printWidth": 100 }],
     "import/prefer-default-export": "off",
@@ -61,13 +51,8 @@
       "paths": [
         {
           "name": "@nestjs/common",
-          "importNames": ["Injectable"],
-          "message": "Please use @app/lib/nest/injectable instead"
-        },
-        {
-          "name": "@nestjs/common",
-          "importNames": ["Logger"],
-          "message": "Please use @app/common/logging/logger instead"
+          "importNames": ["Injectable", "Logger"],
+          "message": "Please use import from @app instead"
         }
       ]
     }],
