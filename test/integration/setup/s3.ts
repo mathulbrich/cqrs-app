@@ -26,7 +26,7 @@ export const runWithStorage = async (cb: (storage: ManagedS3) => Promise<void>) 
 
 export class S3TestStorage {
   constructor(
-    readonly bucket = `${envs.app.name}-${Uuid.generate().toString()}`,
+    readonly bucket = `${envs.app.name.toLowerCase()}-${Uuid.generate().toString()}`,
     readonly endpoint = envs.s3.endpoint,
     private readonly client = new S3Client({
       endpoint,

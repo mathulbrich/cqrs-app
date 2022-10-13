@@ -20,6 +20,17 @@
     "node": true,
     "jest": true
   },
+  "settings": {
+    "import/resolver": {
+      "alias": {
+        "map": [
+          ["@app", "./src"],
+          ["@test", "./test"]
+        ],
+        "extensions": [".ts", ".js", ".json"]
+      }
+    }
+  },
   "rules": {
     "prettier/prettier": ["error", { "singleQuote": false, "trailingComma": "all", "printWidth": 100 }],
     "import/prefer-default-export": "off",
@@ -53,6 +64,11 @@
           "name": "@nestjs/common",
           "importNames": ["Injectable", "Logger"],
           "message": "Please use import from @app instead"
+        },
+        {
+          "name": "@nestjs/config",
+          "importNames": ["ConfigService"],
+          "message": "Please don't use ConfigService directly. Instead, use AppConfigService (or reassignEnvs for tests)"
         }
       ]
     }],
@@ -62,6 +78,11 @@
           "target": "./src/**/domain/**/*",
           "from": "./src/**/application/**/*",
           "message": "import from application layer is not allowed in domain layer"
+        },
+        {
+          "target": "./src/**/*",
+          "from": "./test/**/*",
+          "message": "Imports from ./test packages are not allowed in ./src packages"
         }
       ]
     }],
