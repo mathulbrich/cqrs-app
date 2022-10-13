@@ -1,4 +1,4 @@
-import envs from "@test/load-envs";
+import envs, { reassignEnvs } from "@test/load-envs";
 
 import {
   CreateTableCommand,
@@ -7,7 +7,7 @@ import {
   DynamoDBClient,
 } from "@aws-sdk/client-dynamodb";
 
-import { DynamoDBConfig } from "@app/common/application/repositories/dynamodb-repository";
+import { AppConfigService } from "@app/common/config/app-config-service";
 import { Uuid } from "@app/lib/uuid";
 
 export type ManagedDynamoDB = Omit<DynamoDBTestContainer, "setUp" | "tearDown" | "tableExists">;
@@ -25,11 +25,13 @@ export class DynamoDBTestContainer {
     private readonly client = new DynamoDBClient({ endpoint }),
   ) {}
 
-  get config(): DynamoDBConfig {
-    return {
-      tableName: this.tableName,
-      endpoint: this.endpoint,
-    };
+  get config(): AppConfigService {
+    return reassignEnvs({
+      dynamoDb: {
+        endpoint: this.endpoint,
+        tableName: this.tableName,
+      },
+    });
   }
 
   async setUp(): Promise<void> {

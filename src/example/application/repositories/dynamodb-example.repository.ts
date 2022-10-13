@@ -5,8 +5,8 @@ import {
   DynamoDBItem,
   marshall,
   unmarshall,
-  DynamoDBConfig,
 } from "@app/common/application/repositories/dynamodb-repository";
+import { AppConfigService } from "@app/common/config/app-config-service";
 import {
   examplePk,
   exampleSk,
@@ -22,7 +22,7 @@ import { Uuid } from "@app/lib/uuid";
 
 @Injectable()
 export class DynamoDBExampleRepository extends DynamoDBRepository implements ExampleRepository {
-  constructor(config: DynamoDBConfig) {
+  constructor(config: AppConfigService) {
     super(config);
   }
 

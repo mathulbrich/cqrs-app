@@ -41,7 +41,7 @@ export class IntegrationTestSetup {
   async run(cb: (params: TestParameters) => Promise<void>): Promise<void> {
     const envs = {
       [Env.SQS_QUEUE_SUFFIX]: this.queueSuffix,
-      [Env.DYNAMO_DB_TABLE_NAME]: this.dynamodb.config.tableName,
+      [Env.DYNAMO_DB_TABLE_NAME]: this.dynamodb.config.dynamoDb.tableName,
       [OptionalEnv.SQS_QUEUE_WAIT_TIME_SECONDS]: "0",
       [OptionalEnv.SQS_QUEUE_POLLING_INTERVAL_MILLIS]: "0",
       ...this.envs,

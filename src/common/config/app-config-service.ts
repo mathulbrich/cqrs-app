@@ -1,4 +1,5 @@
 import { Scope } from "@nestjs/common";
+// eslint-disable-next-line no-restricted-imports
 import { ConfigService } from "@nestjs/config";
 
 import { ConfigEnvs } from "@app/common/config/config-envs";

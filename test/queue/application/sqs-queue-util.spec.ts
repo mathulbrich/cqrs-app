@@ -1,16 +1,14 @@
-import { ConfigService } from "@nestjs/config";
+import { reassignEnvs } from "@test/load-envs";
 
-import { AppConfigService } from "@app/common/config/app-config-service";
 import { SQSQueueUtil } from "@app/queue/application/sqs-queue-util";
 
 class TestArguments {
-  readonly service = new ConfigService({
+  readonly config = reassignEnvs({
     queue: {
       sqsQueueBaseUrl: "http://queue/",
       sqsQueueSuffix: "-test-suffix",
     },
   });
-  readonly config = new AppConfigService(this.service);
   readonly utils = new SQSQueueUtil(this.config);
 }
 

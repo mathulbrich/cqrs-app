@@ -23,7 +23,7 @@ import { ExampleRepository } from "@app/example/domain/repositories/example.repo
       useFactory: (configService: AppConfigService) =>
         configService.app.useInMemoryRepository
           ? new InMemoryExampleRepository()
-          : new DynamoDBExampleRepository(configService.dynamoDb),
+          : new DynamoDBExampleRepository(configService),
     },
   ],
 })

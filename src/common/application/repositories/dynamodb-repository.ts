@@ -32,20 +32,18 @@ export const marshall = (item?: WritableDynamoDBItem): DynamoDBItem =>
 
 export const unmarshall = defaultUnmarshall;
 
-export type DynamoDBConfig = AppConfigService["dynamoDb"];
-
 export class DynamoDBRepository {
   constructor(
-    protected readonly config: DynamoDBConfig,
+    protected readonly config: AppConfigService,
     protected readonly client = new DynamoDBClient({
-      endpoint: config.endpoint,
+      endpoint: config.dynamoDb.endpoint,
     }),
   ) {}
 
   protected async storeItem(item: WritableDynamoDBItem): Promise<void> {
     const command = new PutItemCommand({
       Item: marshall(item),
-      TableName: this.config.tableName,
+      TableName: this.config.dynamoDb.tableName,
     });
 
     await this.client.send(command);
@@ -56,7 +54,7 @@ export class DynamoDBRepository {
       { client: this.client },
       {
         ...command,
-        TableName: this.config.tableName,
+        TableName: this.config.dynamoDb.tableName,
       },
     );
   }
