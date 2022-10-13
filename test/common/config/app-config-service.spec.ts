@@ -3,6 +3,7 @@ import envs, { reassignEnvs } from "@test/load-envs";
 import { faker } from "@faker-js/faker";
 // eslint-disable-next-line no-restricted-imports
 import { ConfigService } from "@nestjs/config";
+import { omit } from "lodash";
 
 import { AppConfigService } from "@app/common/config/app-config-service";
 
@@ -27,8 +28,9 @@ describe(AppConfigService.name, () => {
         name: fakeName,
       },
     });
+    expect(omit(reassigned, "app.name")).toEqual(omit(envs, "app.name"));
     expect(reassigned.app.name).toBe(fakeName);
     expect(reassigned.app.env).toBe(envs.app.env);
-    expect(envs.app.name).toBe("TEST-CQRS-APP");
+    expect(envs.app.name).not.toBe(fakeName);
   });
 });
