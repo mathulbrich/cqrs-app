@@ -1,0 +1,36 @@
+asyncapi: '2.4.0'
+
+info:
+  title: CQRS App
+  version: '1.0.0'
+
+servers:
+  local:
+    url: localhost:3000
+    protocol: sqs
+    description: Local environment server
+
+channels:
+  create-example:
+    subscribe:
+      bindings:
+        sqs:
+          description: Create example queue
+          message:
+            $ref: '#/components/messages/create-example-message'
+
+components:
+  messages:
+    create-example-message:
+      payload:
+        type: object
+        properties:
+          id:
+            type: string
+            description: Example id
+          name:
+            type: string
+            description: Example name
+          description:
+            type: string
+            description: Example description
