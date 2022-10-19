@@ -34,3 +34,9 @@ components:
           description:
             type: string
             description: Example description
+      examples:
+        - name: Example queue message
+          payload:
+            id: cb2ec885-1dee-49e2-9e78-0345901cd370
+            name: Lorem Ipsum
+            description: Lorem Ipsum is simply dummy text of the printing and typesetting industry
