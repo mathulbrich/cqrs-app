@@ -1,0 +1,45 @@
+name: AsyncApi Docs Pipeline
+
+on:
+  push:
+    branches:
+      - master
+      - docs/72672/add-asyncapi-docs
+    paths:
+      - "async_docs/**"
+
+permissions:
+  contents: read
+  deployments: write
+  id-token: write
+  pages: write
+
+jobs:
+  publish:
+    name: Publish docs
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Validate AsyncAPI document
+        uses: WaleedAshraf/asyncapi-github-action@v0.0.8
+        with:
+          filepath: docs/asyncapi.yaml
+      - name: Generate HTML from AsyncAPI document
+        uses: docker://asyncapi/github-action-for-generator:2.1.7
+        with:
+          filepath: docs/asyncapi.yaml
+          output: output-docs
+          template: '@asyncapi/html-template'
+      - name: Setup Pages
+        uses: actions/configure-pages@v2
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: 'output-docs'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
