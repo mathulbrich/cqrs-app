@@ -5,7 +5,7 @@ on:
     branches:
       - master
     paths:
-      - "async_docs/**"
+      - "docs/asyncapi.yml"
 
 permissions:
   contents: read
@@ -28,11 +28,11 @@ jobs:
       - name: Validate AsyncAPI document
         uses: WaleedAshraf/asyncapi-github-action@v0.0.8
         with:
-          filepath: async_docs/asyncapi.yaml
+          filepath: docs/asyncapi.yml
       - name: Generate HTML from AsyncAPI document
         uses: docker://asyncapi/github-action-for-generator:2.1.7
         with:
-          filepath: async_docs/asyncapi.yaml
+          filepath: docs/asyncapi.yml
           output: output-docs
           template: '@asyncapi/html-template'
       - name: Setup Pages
