@@ -13,13 +13,10 @@ class TestArguments {
 }
 
 describe(SQSQueueUtil.name, () => {
-  it("should build url correctly", () => {
+  it("should build internal fifo url correctly", () => {
     const { utils } = new TestArguments();
-    const queue = "any-queue";
-
-    const url = utils.buildUrl(queue);
-
-    expect(url).toBe("http://queue/any-queue-test-suffix");
+    const url = utils.buildUrl("create-example");
+    expect(url).toBe("http://queue/create-example-test-suffix.fifo");
   });
 
   it("should get queue from arn correctly", () => {

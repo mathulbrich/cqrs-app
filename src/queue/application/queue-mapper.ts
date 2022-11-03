@@ -1,12 +1,18 @@
 import { CreateExampleQueueHandler } from "@app/example/application/queues/create-example-queue.handler";
 import { Newable } from "@app/lib/newable";
-import { QueueNames } from "@app/queue/application/queue-names";
+import { InternalQueue, InternalQueues } from "@app/queue/application/queue-names";
+import { QueueListener } from "@app/queue/domain/queue-listener";
 
-type QueueHandler = Newable<{ execute(data: unknown): Promise<void> }>;
+type QueueStructure = { listener: Newable<QueueListener>; type: "fifo" | "standard" };
 
-export const QueueMapping: Record<QueueNames, QueueHandler> = {
-  "create-example": CreateExampleQueueHandler,
+export const QueueMapping: { [key in InternalQueue]: QueueStructure } = {
+  "create-example": { listener: CreateExampleQueueHandler, type: "fifo" },
 };
 
-export const isValidQueue = (queueName: string): queueName is QueueNames =>
-  QueueNames.includes(queueName as QueueNames);
+export const isValidQueue = (queueName: string): queueName is InternalQueue =>
+  InternalQueues.includes(queueName as InternalQueue);
+
+export const queueTypeSuffixFactory = {
+  fifo: ".fifo",
+  standard: "",
+} as const;

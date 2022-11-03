@@ -17,7 +17,7 @@ export class SQSLambda {
     const queueName = this.utils.getQueueFromArn(sqsMessage.eventSourceARN);
     const message = JSON.parse(sqsMessage.body ?? "{}");
     this.logger.info("Processing SQS Message", { message, queueName });
-    const queueHandler = await this.moduleRef.resolve(QueueMapping[queueName], undefined, {
+    const queueHandler = await this.moduleRef.resolve(QueueMapping[queueName].listener, undefined, {
       strict: false,
     });
 

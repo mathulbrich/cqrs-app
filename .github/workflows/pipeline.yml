@@ -140,7 +140,7 @@ jobs:
           S3_STORAGE_ENDPOINT: http://s3:9000
           SQS_QUEUE_BASE_URL: http://sqs:9324/queue/
           SQS_QUEUE_ENDPOINT: http://sqs:9324
-          SQS_QUEUE_SUFFIX: .fifo
+          SQS_QUEUE_SUFFIX: -pipeline
         run: |
           yarn test:cov
       - name: Store test results

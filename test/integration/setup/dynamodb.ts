@@ -9,6 +9,7 @@ import {
 
 import { AppConfigService } from "@app/common/config/app-config-service";
 import { Uuid } from "@app/lib/uuid";
+import { TestService } from "@test/integration/setup/service";
 
 export type ManagedDynamoDB = Omit<DynamoDBTestContainer, "setUp" | "tearDown" | "tableExists">;
 
@@ -18,7 +19,7 @@ export const runWithDynamoDB = async (cb: (dynamodb: ManagedDynamoDB) => Promise
   await cb(dynamodb).finally(() => dynamodb.tearDown());
 };
 
-export class DynamoDBTestContainer {
+export class DynamoDBTestContainer implements TestService {
   constructor(
     private readonly tableName = `${envs.app.name}-${Uuid.generate().toString()}`,
     private readonly endpoint = envs.dynamoDb.endpoint,
