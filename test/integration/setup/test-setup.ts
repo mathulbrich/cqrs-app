@@ -1,6 +1,9 @@
+import envs from "@test/load-envs";
+
 import { INestApplication } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { Test } from "@nestjs/testing";
+import { values } from "lodash";
 
 import { bootstrapHttpApp } from "@app/bootstrap";
 import { Env, validateConfig, OptionalEnv } from "@app/common/config/config-envs";
@@ -14,6 +17,15 @@ export type Envs = {
   [key: string]: string;
 };
 
+const ConfigurableServices = ["SQS", "DYNAMODB", "S3"] as const;
+type ConfigurableService = typeof ConfigurableServices[number];
+
+type MappedConfigurableServices = {
+  DYNAMODB: DynamoDBTestContainer;
+  SQS: SQSTestQueues;
+  S3: S3TestStorage;
+};
+
 interface TestParameters {
   app: INestApplication;
   dynamodb: ManagedDynamoDB;
@@ -23,54 +35,61 @@ interface TestParameters {
 
 interface TestArguments {
   envs?: Envs;
+  services?: Array<ConfigurableService>;
 }
 
 export const INTEGRATION_DEFAULT_TIMEOUT = 300_000;
 
 export class IntegrationTestSetup {
-  private readonly queueSuffix = `${Uuid.generate().toString()}.fifo`;
-  private readonly queues = new SQSTestQueues(this.queueSuffix);
-  private readonly dynamodb = new DynamoDBTestContainer();
-  private readonly storage = new S3TestStorage();
-  private readonly envs?: Envs;
+  private readonly queueSuffix = Uuid.generate().toString();
+  private readonly tableName = `${envs.app.name}-${Uuid.generate().toString()}`;
+  private readonly mappedServices: MappedConfigurableServices;
+  private readonly testEnvs?: Envs;
 
   constructor(args?: TestArguments) {
-    this.envs = args?.envs;
+    this.testEnvs = args?.envs;
+
+    const defaultServices: MappedConfigurableServices = {
+      DYNAMODB: new DynamoDBTestContainer(this.tableName),
+      SQS: new SQSTestQueues(this.queueSuffix),
+      S3: new S3TestStorage(),
+    };
+
+    this.mappedServices = args?.services
+      ? Object.assign({}, ...args.services.map((key) => ({ [key]: defaultServices[key] })))
+      : defaultServices;
   }
 
   async run(cb: (params: TestParameters) => Promise<void>): Promise<void> {
-    const envs = {
+    const testEnvs = {
       [Env.SQS_QUEUE_SUFFIX]: this.queueSuffix,
-      [Env.DYNAMO_DB_TABLE_NAME]: this.dynamodb.config.dynamoDb.tableName,
+      [Env.DYNAMO_DB_TABLE_NAME]: this.tableName,
       [OptionalEnv.SQS_QUEUE_WAIT_TIME_SECONDS]: "0",
       [OptionalEnv.SQS_QUEUE_POLLING_INTERVAL_MILLIS]: "0",
-      ...this.envs,
+      ...this.testEnvs,
     };
 
+    const services = values(this.mappedServices);
     const moduleFixture = await Test.createTestingModule({
       imports: [
         ConfigModule.forRoot({
-          validate: (config) => validateConfig({ ...config, ...envs }),
+          validate: (config) => validateConfig({ ...config, ...testEnvs }),
         }),
         HttpAppModule,
       ],
     }).compile();
 
     const app = await bootstrapHttpApp(moduleFixture.createNestApplication());
-    await this.queues.setUp(app);
-    await this.dynamodb.setUp();
-    await this.storage.setUp();
+    await Promise.all(services.map((service) => service.setUp(app)));
     await app.init();
 
     await cb({
       app,
-      dynamodb: this.dynamodb,
-      queues: this.queues,
-      storage: this.storage,
+      dynamodb: this.mappedServices.DYNAMODB,
+      queues: this.mappedServices.SQS,
+      storage: this.mappedServices.S3,
     })
       .finally(() => app.close())
-      .finally(() => this.dynamodb.tearDown())
-      .finally(() => this.queues.tearDown())
-      .finally(() => this.storage.tearDown());
+      .finally(() => Promise.all(services.map((service) => service.tearDown())));
   }
 }

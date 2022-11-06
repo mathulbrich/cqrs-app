@@ -15,6 +15,7 @@ import {
 
 import { Optional, Option } from "@app/lib/optional";
 import { Uuid } from "@app/lib/uuid";
+import { TestService } from "@test/integration/setup/service";
 
 export type ManagedS3 = Omit<S3TestStorage, "setUp" | "tearDown">;
 
@@ -24,7 +25,7 @@ export const runWithStorage = async (cb: (storage: ManagedS3) => Promise<void>) 
   await cb(storage).finally(() => storage.tearDown());
 };
 
-export class S3TestStorage {
+export class S3TestStorage implements TestService {
   constructor(
     readonly bucket = `${envs.app.name.toLowerCase()}-${Uuid.generate().toString()}`,
     readonly endpoint = envs.s3.endpoint,

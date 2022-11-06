@@ -8,22 +8,23 @@ import {
   SendMessageCommand,
 } from "@aws-sdk/client-sqs";
 import { INestApplication } from "@nestjs/common";
-import { isError, keys } from "lodash";
+import { isError } from "lodash";
 
-import { QueueMapping } from "@app/queue/application/queue-mapper";
-import { QueueNames } from "@app/queue/application/queue-names";
+import { QueueMapping, queueTypeSuffixFactory } from "@app/queue/application/queue-mapper";
+import { QueueName, InternalQueues } from "@app/queue/application/queue-names";
 import { SQSListener } from "@app/queue/managed/sqs-listener";
+import { TestService } from "@test/integration/setup/service";
 
 export type ManagedSQS = Omit<SQSTestQueues, "setUp" | "tearDown">;
 
 interface Message {
-  queue: QueueNames;
+  queue: QueueName;
   content: string;
   groupId?: string;
   messageId: string;
 }
 
-export class SQSTestQueues {
+export class SQSTestQueues implements TestService {
   private readonly sqsBaseUrl?: string;
   private readonly queueUrls: string[] = [];
   private readonly client: SQSClient;
@@ -37,25 +38,26 @@ export class SQSTestQueues {
   }
 
   async sendMessage({ content, messageId, queue, groupId }: Message): Promise<void> {
+    const typeSuffix = this.buildQueueTypeSuffix(queue);
     await this.client.send(
       new SendMessageCommand({
         MessageBody: content,
         MessageGroupId: groupId ?? messageId,
         MessageDeduplicationId: messageId,
-        QueueUrl: `${this.sqsBaseUrl}${queue}${this.suffix}`,
+        QueueUrl: `${this.sqsBaseUrl}${queue}${this.suffix}${typeSuffix}`,
       }),
     );
   }
 
   async setUp(app: INestApplication): Promise<void> {
     const results = await Promise.all(
-      keys(QueueMapping).map((queue) =>
+      InternalQueues.map((queue) =>
         this.client.send(
           new CreateQueueCommand({
             Attributes: {
-              FifoQueue: "true",
+              FifoQueue: (QueueMapping[queue].type === "fifo").toString(),
             },
-            QueueName: `${queue}${this.suffix}`,
+            QueueName: `${queue}${this.suffix}${queueTypeSuffixFactory[QueueMapping[queue].type]}`,
           }),
         ),
       ),
@@ -92,5 +94,10 @@ export class SQSTestQueues {
         ),
       ),
     );
+  }
+
+  private buildQueueTypeSuffix(queue: QueueName): string {
+    const queueType = QueueMapping[queue].type;
+    return queueTypeSuffixFactory[queueType];
   }
 }

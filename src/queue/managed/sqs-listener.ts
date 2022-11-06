@@ -16,7 +16,7 @@ import { wrapInContext, WrapParams } from "@app/common/logging/wrap-in-context";
 import { SQS_QUEUE_CONTEXT } from "@app/constants";
 import { Injectable } from "@app/lib/nest/injectable";
 import { QueueMapping } from "@app/queue/application/queue-mapper";
-import { QueueNames } from "@app/queue/application/queue-names";
+import { InternalQueue } from "@app/queue/application/queue-names";
 import { SQSQueueUtil } from "@app/queue/application/sqs-queue-util";
 
 @Injectable()
@@ -41,13 +41,13 @@ export class SQSListener {
 
     forOwn(QueueMapping, (_, queueName) => {
       this.logger.info("Starting SQS Listener", { queueName });
-      executeQueues.push(this.listen(queueName as QueueNames));
+      executeQueues.push(this.listen(queueName as InternalQueue));
     });
 
     await Promise.all(executeQueues);
   }
 
-  private async listen(queueName: QueueNames): Promise<void> {
+  private async listen(queueName: InternalQueue): Promise<void> {
     if (this.stopped) {
       this.logger.debug("Stopping listening queue", { queueName });
       return;
@@ -64,9 +64,13 @@ export class SQSListener {
       await wrapInContext(this.wrapParams(), async () => {
         const message = JSON.parse(sqsMessage.Body ?? "{}");
         this.logger.info("Processing SQS Message", { message, queueName });
-        const queueHandler = await this.moduleRef.resolve(QueueMapping[queueName], undefined, {
-          strict: false,
-        });
+        const queueHandler = await this.moduleRef.resolve(
+          QueueMapping[queueName].listener,
+          undefined,
+          {
+            strict: false,
+          },
+        );
 
         await queueHandler
           .execute(message)

@@ -1,10 +1,10 @@
-import { QueueNames } from "@app/queue/application/queue-names";
+import { QueueName } from "@app/queue/application/queue-names";
 
 export interface EnqueueArguments {
   groupId?: string;
-  messageId: string;
+  messageId?: string;
   payload: string;
-  queue: QueueNames;
+  queue: QueueName;
 }
 
 export abstract class Enqueuer {

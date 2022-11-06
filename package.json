@@ -113,6 +113,7 @@
       "src/lambda.ts",
       "src/main.ts",
       "src/queue.ts",
+      "src/queue/domain/queue-listener.ts",
       "src/queue/lambda/sqs-event.ts",
       "src/queue/lambda/sqs-lambda.ts",
       "src/queue/managed/sqs-listener.ts",
