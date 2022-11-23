@@ -15,7 +15,7 @@ describe(QueueResolver.name, () => {
     const { subscriber, publisher, resolver } = new TestArguments();
 
     await resolver.resolve({
-      execute: () => publisher.publish(new ResolvedEvent()),
+      execute: async () => publisher.publish(new ResolvedEvent()),
       resolves: [ResolvedEvent],
       rejects: [],
     });
@@ -29,7 +29,7 @@ describe(QueueResolver.name, () => {
     const { subscriber, publisher, resolver } = new TestArguments();
 
     await resolver.resolve({
-      execute: () => publisher.publish(new ResolvedEvent2()),
+      execute: async () => publisher.publish(new ResolvedEvent2()),
       resolves: [ResolvedEvent, ResolvedEvent2],
       rejects: [],
     });
@@ -44,7 +44,7 @@ describe(QueueResolver.name, () => {
 
     await expect(
       resolver.resolve({
-        execute: () => publisher.publish(new ResolvedEvent()),
+        execute: async () => publisher.publish(new ResolvedEvent()),
         resolves: [ResolvedEvent2],
         rejects: [],
       }),
@@ -79,7 +79,7 @@ describe(QueueResolver.name, () => {
 
     await expect(
       resolver.resolve({
-        execute: () => publisher.publish(new ResolvedEvent()),
+        execute: async () => publisher.publish(new ResolvedEvent()),
         resolves: [],
         rejects: [ResolvedEvent],
       }),
@@ -95,7 +95,7 @@ describe(QueueResolver.name, () => {
 
     await expect(
       resolver.resolve({
-        execute: () => publisher.publish(new ResolvedEvent2()),
+        execute: async () => publisher.publish(new ResolvedEvent2()),
         resolves: [],
         rejects: [ResolvedEvent, ResolvedEvent2],
       }),
@@ -110,7 +110,7 @@ describe(QueueResolver.name, () => {
     const { subscriber, publisher, resolver } = new TestArguments();
 
     await resolver.resolve({
-      execute: () => publisher.publish(new ResolvedEvent2()),
+      execute: async () => publisher.publish(new ResolvedEvent2()),
       resolves: [ResolvedEvent2],
       rejects: [ResolvedEvent],
     });

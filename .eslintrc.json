@@ -40,6 +40,7 @@
     "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
     "@typescript-eslint/no-unused-expressions": "error",
     "@typescript-eslint/explicit-member-accessibility": ["error", { "accessibility": "no-public" }],
+    "@typescript-eslint/promise-function-async": "error",
     "no-return-await": "error",
     "no-restricted-syntax": "off",
     "@typescript-eslint/no-redeclare": "off",

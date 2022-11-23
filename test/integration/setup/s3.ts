@@ -22,7 +22,7 @@ export type ManagedS3 = Omit<S3TestStorage, "setUp" | "tearDown">;
 export const runWithStorage = async (cb: (storage: ManagedS3) => Promise<void>) => {
   const storage = new S3TestStorage();
   await storage.setUp();
-  await cb(storage).finally(() => storage.tearDown());
+  await cb(storage).finally(async () => storage.tearDown());
 };
 
 export class S3TestStorage implements TestService {

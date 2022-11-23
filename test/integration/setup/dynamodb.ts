@@ -16,7 +16,7 @@ export type ManagedDynamoDB = Omit<DynamoDBTestContainer, "setUp" | "tearDown" |
 export const runWithDynamoDB = async (cb: (dynamodb: ManagedDynamoDB) => Promise<void>) => {
   const dynamodb = new DynamoDBTestContainer();
   await dynamodb.setUp();
-  await cb(dynamodb).finally(() => dynamodb.tearDown());
+  await cb(dynamodb).finally(async () => dynamodb.tearDown());
 };
 
 export class DynamoDBTestContainer implements TestService {

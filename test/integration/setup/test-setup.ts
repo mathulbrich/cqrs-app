@@ -80,7 +80,7 @@ export class IntegrationTestSetup {
     }).compile();
 
     const app = await bootstrapHttpApp(moduleFixture.createNestApplication());
-    await Promise.all(services.map((service) => service.setUp(app)));
+    await Promise.all(services.map(async (service) => service.setUp(app)));
     await app.init();
 
     await cb({
@@ -89,7 +89,7 @@ export class IntegrationTestSetup {
       queues: this.mappedServices.SQS,
       storage: this.mappedServices.S3,
     })
-      .finally(() => app.close())
-      .finally(() => Promise.all(services.map((service) => service.tearDown())));
+      .finally(async () => app.close())
+      .finally(async () => Promise.all(services.map(async (service) => service.tearDown())));
   }
 }

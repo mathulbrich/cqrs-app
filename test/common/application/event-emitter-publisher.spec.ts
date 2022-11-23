@@ -72,7 +72,9 @@ describe(EventEmitterPublisher.name, () => {
   });
 
   it("should fail when event isn't processed", async () => {
-    await expect(() => service.fail("failed")).rejects.toThrow("Failed to handle event failed");
+    await expect(async () => service.fail("failed")).rejects.toThrow(
+      "Failed to handle event failed",
+    );
     expect(service.successCalled).toBe(false);
     expect(service.failCalled).toBe(true);
     expect(service.processed).toBe(false);
