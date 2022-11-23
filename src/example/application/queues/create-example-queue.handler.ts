@@ -13,10 +13,10 @@ export class CreateExampleQueueHandler {
     private readonly resolver: QueueResolver,
   ) {}
 
-  execute(data: unknown): Promise<void> {
+  async execute(data: unknown): Promise<void> {
     const { description, id, name } = CreateExampleQueuePayload.parse(data);
     return this.resolver.resolve({
-      execute: () =>
+      execute: async () =>
         this.commandHandler.execute(
           new CreateExampleCommand({
             description,

@@ -58,7 +58,9 @@ describe("Optional", () => {
 
     it("Should map async value", async () => {
       const optional = Option(1);
-      expect(await optional.mapAsync((value) => Promise.resolve(value + 1))).toEqual(Option(2));
+      expect(await optional.mapAsync(async (value) => Promise.resolve(value + 1))).toEqual(
+        Option(2),
+      );
     });
 
     it("Should return None when value is undefined", () => {
@@ -68,7 +70,7 @@ describe("Optional", () => {
 
     it("Should return None when async value is undefined", async () => {
       const optional = None<number>();
-      expect(await optional.mapAsync((value) => Promise.resolve(value + 1))).toEqual(None());
+      expect(await optional.mapAsync(async (value) => Promise.resolve(value + 1))).toEqual(None());
     });
   });
 
@@ -85,8 +87,8 @@ describe("Optional", () => {
     it("Should match async value", async () => {
       const optional = Option(1);
       const result = await optional.matchAsync({
-        none: () => Promise.resolve(0),
-        some: (value) => Promise.resolve(value + 1),
+        none: async () => Promise.resolve(0),
+        some: async (value) => Promise.resolve(value + 1),
       });
       expect(result).toEqual(2);
     });
@@ -103,8 +105,8 @@ describe("Optional", () => {
     it("Should return none result async when is undefined", async () => {
       const optional = None<number>();
       const result = await optional.matchAsync({
-        none: () => Promise.resolve(0),
-        some: (value) => Promise.resolve(value + 1),
+        none: async () => Promise.resolve(0),
+        some: async (value) => Promise.resolve(value + 1),
       });
       expect(result).toEqual(0);
     });

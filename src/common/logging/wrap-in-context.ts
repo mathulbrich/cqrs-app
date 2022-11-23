@@ -14,7 +14,7 @@ export const wrapInContext = async (params: WrapParams, fn: () => Promise<void>)
   const contextName = isNil(params.executionContext) ? {} : { name: params.executionContext };
   const pinoLogger = new PinoLogger(params.loggerConfig);
 
-  return storage.run(new Store(pinoLogger.logger), () => {
+  return storage.run(new Store(pinoLogger.logger), async () => {
     pinoLogger.assign({
       requestId: params.requestId ?? randomUUID(),
       ...contextName,

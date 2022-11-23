@@ -51,7 +51,7 @@ export class SQSTestQueues implements TestService {
 
   async setUp(app: INestApplication): Promise<void> {
     const results = await Promise.all(
-      InternalQueues.map((queue) =>
+      InternalQueues.map(async (queue) =>
         this.client.send(
           new CreateQueueCommand({
             Attributes: {
@@ -86,7 +86,7 @@ export class SQSTestQueues implements TestService {
     });
 
     await Promise.all(
-      this.queueUrls.map((url) =>
+      this.queueUrls.map(async (url) =>
         client.send(
           new DeleteQueueCommand({
             QueueUrl: url,
