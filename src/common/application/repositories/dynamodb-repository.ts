@@ -5,6 +5,9 @@ import {
   QueryCommandInput,
   QueryCommandOutput,
   paginateQuery,
+  UpdateItemCommandInput,
+  UpdateItemCommandOutput,
+  UpdateItemCommand,
 } from "@aws-sdk/client-dynamodb";
 import { Paginator } from "@aws-sdk/types";
 import {
@@ -47,6 +50,19 @@ export class DynamoDBRepository {
     });
 
     await this.client.send(command);
+  }
+
+  protected async updateItem(
+    key: WritableDynamoDBItem,
+    options?: Partial<UpdateItemCommandInput>,
+  ): Promise<UpdateItemCommandOutput> {
+    const command = new UpdateItemCommand({
+      ...options,
+      Key: marshall(key),
+      TableName: this.config.dynamoDb.tableName,
+    });
+
+    return this.client.send(command);
   }
 
   protected query(command: QueryCommandInputWithoutTable): Paginator<QueryCommandOutput> {

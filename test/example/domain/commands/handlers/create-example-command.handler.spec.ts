@@ -1,10 +1,10 @@
 import { faker } from "@faker-js/faker";
 import { omit } from "lodash";
 
-import { InMemoryExampleRepository } from "@app/example/application/repositories/in-memory-example.repository";
-import { CreateExampleCommand } from "@app/example/domain/commands/create-example.command";
-import { CreateExampleCommandHandler } from "@app/example/domain/commands/handlers/create-example-command.handler";
-import { ExampleCreatedEvent } from "@app/example/domain/events/example-created.event";
+import { InMemoryExampleRepository } from "@app/example/application/repositories/in-memory-example-repository";
+import { CreateExampleCommand } from "@app/example/domain/commands/create-example-command";
+import { CreateExampleCommandHandler } from "@app/example/domain/commands/handlers/create-example-command-handler";
+import { ExampleCreatedEvent } from "@app/example/domain/events/example-created-event";
 import { Uuid } from "@app/lib/uuid";
 import { InMemoryPublisher } from "@test/resources/in-memory-publisher";
 

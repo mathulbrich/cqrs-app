@@ -3,7 +3,7 @@ import { retry } from "async";
 import request from "supertest";
 
 import { OptionalEnv } from "@app/common/config/config-envs";
-import { DynamoDBExampleRepository } from "@app/example/application/repositories/dynamodb-example.repository";
+import { DynamoDBExampleRepository } from "@app/example/application/repositories/dynamodb-example-repository";
 import {
   IntegrationTestSetup,
   INTEGRATION_DEFAULT_TIMEOUT,

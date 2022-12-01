@@ -17,11 +17,15 @@ export class SQSLambda {
     const queueName = this.utils.getQueueFromArn(sqsMessage.eventSourceARN);
     const message = JSON.parse(sqsMessage.body ?? "{}");
     this.logger.info("Processing SQS Message", { message, queueName });
-    const queueHandler = await this.moduleRef.resolve(QueueMapping[queueName].listener, undefined, {
-      strict: false,
-    });
+    const queueListener = await this.moduleRef.resolve(
+      QueueMapping[queueName].listener,
+      undefined,
+      {
+        strict: false,
+      },
+    );
 
-    await queueHandler.execute(message).catch((error) => {
+    await queueListener.execute(message).catch((error) => {
       this.logger.error(`Error processing queue ${queueName} message`, error.stack);
       throw error;
     });

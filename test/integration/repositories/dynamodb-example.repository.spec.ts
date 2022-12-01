@@ -1,4 +1,6 @@
-import { DynamoDBExampleRepository } from "@app/example/application/repositories/dynamodb-example.repository";
+import { faker } from "@faker-js/faker";
+
+import { DynamoDBExampleRepository } from "@app/example/application/repositories/dynamodb-example-repository";
 import { Example } from "@app/example/domain/example";
 import { Uuid } from "@app/lib/uuid";
 import { runWithDynamoDB } from "@test/integration/setup/dynamodb";
@@ -9,6 +11,25 @@ const sortFn = (a: Example, b: Example) => a.id.toString().localeCompare(b.id.to
 
 describe(DynamoDBExampleRepository.name, () => {
   jest.setTimeout(INTEGRATION_DEFAULT_TIMEOUT);
+
+  describe("#updateDescription", () => {
+    it("Should update only description", async () => {
+      await runWithDynamoDB(async ({ config }) => {
+        const repository = new DynamoDBExampleRepository(config);
+
+        const example = new ExampleFixture().build();
+        await repository.store(example);
+
+        const newDescription = faker.random.words();
+        await repository.updateDescription(example.id, newDescription);
+
+        const actual = await repository.findById(example.id);
+        expect(actual).toBeDefined();
+        expect(actual.get().description).toEqual(newDescription);
+        expect(actual.get().name).toEqual(example.name);
+      });
+    });
+  });
 
   describe("#findById", () => {
     it("Should find example by id", async () => {

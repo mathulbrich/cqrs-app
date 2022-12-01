@@ -2,7 +2,7 @@ import { Body, Controller, Post, Res } from "@nestjs/common";
 import { Response } from "express";
 
 import { ValidateSchema } from "@app/common/application/schema-validation-pipe";
-import { CreateExamplePayload } from "@app/example/application/controllers/create-example.payload";
+import { CreateExamplePayload } from "@app/example/application/controllers/create-example-payload";
 import { Uuid } from "@app/lib/uuid";
 import { Enqueuer } from "@app/queue/application/enqueuer";
 

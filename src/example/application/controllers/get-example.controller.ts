@@ -5,7 +5,7 @@ import {
   fromDomain,
   GetExampleResponse,
 } from "@app/example/application/controllers/get-example-response";
-import { ExampleRepository } from "@app/example/domain/repositories/example.repository";
+import { ExampleRepository } from "@app/example/domain/repositories/example-repository";
 import { UuidSchema, Uuid } from "@app/lib/uuid";
 
 @Controller("v1/example")

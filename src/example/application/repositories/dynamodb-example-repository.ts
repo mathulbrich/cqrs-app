@@ -15,7 +15,7 @@ import {
   DynamoDBExampleSchema,
 } from "@app/example/application/repositories/schema/dynamodb-example-schema";
 import { Example } from "@app/example/domain/example";
-import { ExampleRepository } from "@app/example/domain/repositories/example.repository";
+import { ExampleRepository } from "@app/example/domain/repositories/example-repository";
 import { Injectable } from "@app/lib/nest/injectable";
 import { Option, Optional } from "@app/lib/optional";
 import { Uuid } from "@app/lib/uuid";
@@ -28,6 +28,21 @@ export class DynamoDBExampleRepository extends DynamoDBRepository implements Exa
 
   async store(example: Example): Promise<void> {
     await this.storeItem(fromDomain(example));
+  }
+
+  async updateDescription(id: Uuid, description: string): Promise<void> {
+    await this.updateItem(
+      {
+        PK: examplePk(),
+        SK: exampleSk(id),
+      },
+      {
+        UpdateExpression: "SET description = :description",
+        ExpressionAttributeValues: marshall({
+          ":description": description,
+        }),
+      },
+    );
   }
 
   async findById(id: Uuid): Promise<Optional<Example>> {
