@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
 
-import { CreateExampleQueuePayload } from "@app/example/application/queues/create-example-queue.payload";
+import { CreateExampleQueuePayload } from "@app/example/application/queues/create-example-queue-payload";
 import { Uuid } from "@app/lib/uuid";
 
 describe("CreateExampleQueuePayload", () => {

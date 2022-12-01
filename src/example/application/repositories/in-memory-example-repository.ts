@@ -1,5 +1,5 @@
 import { Example } from "@app/example/domain/example";
-import { ExampleRepository } from "@app/example/domain/repositories/example.repository";
+import { ExampleRepository } from "@app/example/domain/repositories/example-repository";
 import { Injectable } from "@app/lib/nest/injectable";
 import { Optional, Option } from "@app/lib/optional";
 import { Uuid } from "@app/lib/uuid";

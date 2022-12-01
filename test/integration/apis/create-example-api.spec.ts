@@ -2,7 +2,7 @@ import { faker } from "@faker-js/faker";
 import { retry } from "async";
 import request from "supertest";
 
-import { DynamoDBExampleRepository } from "@app/example/application/repositories/dynamodb-example.repository";
+import { DynamoDBExampleRepository } from "@app/example/application/repositories/dynamodb-example-repository";
 import { Uuid } from "@app/lib/uuid";
 import {
   IntegrationTestSetup,

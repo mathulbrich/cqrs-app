@@ -64,7 +64,7 @@ export class SQSListener {
       await wrapInContext(this.wrapParams(), async () => {
         const message = JSON.parse(sqsMessage.Body ?? "{}");
         this.logger.info("Processing SQS Message", { message, queueName });
-        const queueHandler = await this.moduleRef.resolve(
+        const queueListener = await this.moduleRef.resolve(
           QueueMapping[queueName].listener,
           undefined,
           {
@@ -72,7 +72,7 @@ export class SQSListener {
           },
         );
 
-        await queueHandler
+        await queueListener
           .execute(message)
           .then(async () => this.deleteMessage(client, queueUrl, sqsMessage))
           .catch((error) => {
