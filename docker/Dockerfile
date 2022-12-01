@@ -1,4 +1,4 @@
-FROM node:16-slim as dev
+FROM node:18-slim as dev
 RUN apt update && apt install git procps -y
 USER node
 RUN yarn global add @nestjs/cli
@@ -8,7 +8,7 @@ HEALTHCHECK --interval=5s --timeout=5s --retries=5 CMD curl -f "http://localhost
 CMD [ "/usr/app/docker/entrypoint.sh" ]
 
 
-FROM node:16-slim as prod
+FROM node:18-slim as prod
 USER node
 ARG NODE_ENV=production
 ENV NODE_ENV=${NODE_ENV}
