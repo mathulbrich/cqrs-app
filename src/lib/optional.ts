@@ -1,10 +1,16 @@
 import assert from "assert";
 
-export const Option = <T>(value: T | undefined) => new Optional(value);
+import { isNil } from "lodash";
+
+export const Option = <T>(value: T | null | undefined) => new Optional(value);
 export const None = <T>() => new Optional<T>();
 
 export class Optional<T> {
-  constructor(private readonly value?: T) {}
+  constructor(private readonly internalValue?: T | null) {}
+
+  private get value(): T | undefined {
+    return isNil(this.internalValue) ? undefined : this.internalValue;
+  }
 
   unwrap(): T | undefined {
     return this.value;
