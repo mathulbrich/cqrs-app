@@ -8,8 +8,8 @@ describe("Optional", () => {
     });
 
     it("Should unwrap with undefined", () => {
-      const optional = None();
-      expect(optional.unwrap()).toBeUndefined();
+      expect(None().unwrap()).toBeUndefined();
+      expect(Option(null).unwrap()).toBeUndefined();
     });
   });
 
@@ -20,8 +20,8 @@ describe("Optional", () => {
     });
 
     it("Should throw error when value is undefined", () => {
-      const optional = None();
-      expect(() => optional.get()).toThrowError("Value is undefined");
+      expect(() => None().get()).toThrowError("Value is undefined");
+      expect(() => Option(null).get()).toThrowError("Value is undefined");
     });
   });
 
@@ -32,8 +32,8 @@ describe("Optional", () => {
     });
 
     it("Should get default value", () => {
-      const optional = None();
-      expect(optional.orElse(1)).toEqual(1);
+      expect(None().orElse(1)).toEqual(1);
+      expect(Option<number>(null).orElse(1)).toEqual(1);
     });
   });
 
@@ -44,9 +44,9 @@ describe("Optional", () => {
     });
 
     it("Should throw error when value is undefined", () => {
-      const optional = None();
       const error = new Error("test");
-      expect(() => optional.orElseThrow(error)).toThrowError("test");
+      expect(() => None().orElseThrow(error)).toThrowError("test");
+      expect(() => Option(null).orElseThrow(error)).toThrowError("test");
     });
   });
 
@@ -64,13 +64,17 @@ describe("Optional", () => {
     });
 
     it("Should return None when value is undefined", () => {
-      const optional = None<number>();
-      expect(optional.map((value) => value + 1)).toEqual(None());
+      expect(None<number>().map((value) => value + 1)).toEqual(None());
+      expect(Option<number>(null).map((value) => value + 1)).toEqual(None());
     });
 
     it("Should return None when async value is undefined", async () => {
-      const optional = None<number>();
-      expect(await optional.mapAsync(async (value) => Promise.resolve(value + 1))).toEqual(None());
+      expect(await None<number>().mapAsync(async (value) => Promise.resolve(value + 1))).toEqual(
+        None(),
+      );
+      expect(
+        await Option<number>(null).mapAsync(async (value) => Promise.resolve(value + 1)),
+      ).toEqual(None());
     });
   });
 
@@ -94,21 +98,29 @@ describe("Optional", () => {
     });
 
     it("Should return none result when is undefined", () => {
-      const optional = None<number>();
-      const result = optional.match({
+      const undefinedResult = None<number>().match({
         none: () => 0,
         some: (value) => value + 1,
       });
-      expect(result).toEqual(0);
+      const nullResult = Option<number>(null).match({
+        none: () => 0,
+        some: (value) => value + 1,
+      });
+      expect(undefinedResult).toEqual(0);
+      expect(nullResult).toEqual(0);
     });
 
     it("Should return none result async when is undefined", async () => {
-      const optional = None<number>();
-      const result = await optional.matchAsync({
+      const undefinedResult = await None<number>().matchAsync({
         none: async () => Promise.resolve(0),
         some: async (value) => Promise.resolve(value + 1),
       });
-      expect(result).toEqual(0);
+      const nullResult = await Option<number>(null).matchAsync({
+        none: async () => Promise.resolve(0),
+        some: async (value) => Promise.resolve(value + 1),
+      });
+      expect(undefinedResult).toEqual(0);
+      expect(nullResult).toEqual(0);
     });
   });
 
@@ -123,12 +135,16 @@ describe("Optional", () => {
     });
 
     it("Should not call function when value is undefined", () => {
-      let functionCalled = false;
-      const optional = None();
-      optional.onSome(() => {
-        functionCalled = true;
+      let undefinedFunctionCalled = false;
+      let nullFunctionCalled = false;
+      None().onSome(() => {
+        undefinedFunctionCalled = true;
       });
-      expect(functionCalled).toBeFalsy();
+      Option(null).onSome(() => {
+        nullFunctionCalled = true;
+      });
+      expect(undefinedFunctionCalled).toBeFalsy();
+      expect(nullFunctionCalled).toBeFalsy();
     });
 
     it("Should return value when value is defined as promise", async () => {
@@ -141,19 +157,23 @@ describe("Optional", () => {
     });
 
     it("Should return value when value is undefined as promise", async () => {
-      let functionCalled = false;
-      const optional = None();
-      await optional.onSomeAsync(async () => {
-        functionCalled = true;
+      let undefinedFunctionCalled = false;
+      let nullFunctionCalled = false;
+      await None().onSomeAsync(async () => {
+        undefinedFunctionCalled = true;
       });
-      expect(functionCalled).toBeFalsy();
+      await Option(null).onSomeAsync(async () => {
+        nullFunctionCalled = true;
+      });
+      expect(undefinedFunctionCalled).toBeFalsy();
+      expect(nullFunctionCalled).toBeFalsy();
     });
   });
 
   describe("#isEmpty", () => {
     it("Should return true when value is undefined", () => {
-      const optional = None();
-      expect(optional.isEmpty()).toBeTruthy();
+      expect(None().isEmpty()).toBeTruthy();
+      expect(Option(null).isEmpty()).toBeTruthy();
     });
 
     it("Should return false when value is defined", () => {
@@ -169,8 +189,8 @@ describe("Optional", () => {
     });
 
     it("Should return false when value is undefined", () => {
-      const optional = None();
-      expect(optional.isDefined()).toBeFalsy();
+      expect(None().isDefined()).toBeFalsy();
+      expect(Option(null).isDefined()).toBeFalsy();
     });
   });
 });
