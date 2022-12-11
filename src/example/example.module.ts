@@ -11,7 +11,6 @@ import { CreateExampleCommandHandler } from "@app/example/domain/commands/handle
 import { ExampleRepository } from "@app/example/domain/repositories/example-repository";
 
 @Module({
-  exports: [CreateExampleQueueListener],
   controllers: [CreateExampleController, GetExampleController],
   providers: [
     LogExampleCreatedEventHandler,

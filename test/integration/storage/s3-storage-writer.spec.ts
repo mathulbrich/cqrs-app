@@ -39,7 +39,7 @@ describe(S3StorageWriter.name, () => {
           key: testFile,
           data: Buffer.from(content),
         }),
-      ).rejects.toThrowError("The specified bucket does not exist");
+      ).rejects.toThrow("The specified bucket does not exist");
     });
   });
 });

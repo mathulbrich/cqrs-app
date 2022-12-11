@@ -12,7 +12,7 @@ import {
 describe("Create Example API", () => {
   jest.setTimeout(INTEGRATION_DEFAULT_TIMEOUT);
 
-  it("Should create and store the example", async () => {
+  it("should create and store the example", async () => {
     await new IntegrationTestSetup().run(async ({ app, dynamodb }) => {
       const response = await request(app.getHttpServer())
         .post("/api/v1/create-example")
@@ -33,7 +33,7 @@ describe("Create Example API", () => {
     });
   });
 
-  it("Should return 400 when the example is invalid", async () => {
+  it("should return 400 when the example is invalid", async () => {
     await new IntegrationTestSetup().run(async ({ app }) => {
       const response = await request(app.getHttpServer())
         .post("/api/v1/create-example")

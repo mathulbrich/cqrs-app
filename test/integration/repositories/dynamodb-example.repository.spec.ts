@@ -13,7 +13,7 @@ describe(DynamoDBExampleRepository.name, () => {
   jest.setTimeout(INTEGRATION_DEFAULT_TIMEOUT);
 
   describe("#updateDescription", () => {
-    it("Should update only description", async () => {
+    it("should update only description", async () => {
       await runWithDynamoDB(async ({ config }) => {
         const repository = new DynamoDBExampleRepository(config);
 
@@ -32,7 +32,7 @@ describe(DynamoDBExampleRepository.name, () => {
   });
 
   describe("#findById", () => {
-    it("Should find example by id", async () => {
+    it("should find example by id", async () => {
       await runWithDynamoDB(async ({ config }) => {
         // Setup
         const repository = new DynamoDBExampleRepository(config);
@@ -48,7 +48,7 @@ describe(DynamoDBExampleRepository.name, () => {
       });
     });
 
-    it("Should return None when example is not found", async () => {
+    it("should return None when example is not found", async () => {
       await runWithDynamoDB(async ({ config }) => {
         // Setup
         const repository = new DynamoDBExampleRepository(config);
@@ -65,7 +65,7 @@ describe(DynamoDBExampleRepository.name, () => {
   });
 
   describe("#findAll", () => {
-    it("Should find all examples", async () => {
+    it("should find all examples", async () => {
       await runWithDynamoDB(async ({ config }) => {
         // Setup
         const repository = new DynamoDBExampleRepository(config);
