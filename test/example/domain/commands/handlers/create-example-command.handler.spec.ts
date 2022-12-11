@@ -15,7 +15,7 @@ class TestArguments {
 }
 
 describe(CreateExampleCommandHandler.name, () => {
-  it("Should store example and publish event", async () => {
+  it("should store example and publish event", async () => {
     // Setup
     const { handler, repository, publisher } = new TestArguments();
     const command = new CreateExampleCommand({

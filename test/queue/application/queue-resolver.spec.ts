@@ -210,7 +210,7 @@ describe(QueueResolver.name, () => {
             name: "create-example",
           },
         }),
-      ).rejects.toThrowError("execute error");
+      ).rejects.toThrow("execute error");
 
       expect(enqueuer.getEnqueuedMessages()).toHaveLength(0);
     });

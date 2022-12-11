@@ -32,6 +32,6 @@ describe(SQSQueueUtil.name, () => {
     const { utils } = new TestArguments();
     const queueARN = "arn:aws:sqs:us-east-1:123456789012:invalid-queue-test-suffix";
 
-    expect(() => utils.getQueueFromArn(queueARN)).toThrowError("Invalid queue name: invalid-queue");
+    expect(() => utils.getQueueFromArn(queueARN)).toThrow("Invalid queue name: invalid-queue");
   });
 });

@@ -6,7 +6,7 @@ import { ExampleFixture } from "@test/resources/fixtures/example-fixture";
 
 describe("DynamoDB Example Schema", () => {
   describe("#fromDomain", () => {
-    it("Should parse from domain", () => {
+    it("should parse from domain", () => {
       // Setup
       const example = new ExampleFixture().build();
 
@@ -22,7 +22,7 @@ describe("DynamoDB Example Schema", () => {
   });
 
   describe("#toDomain", () => {
-    it("Should parse to domain", () => {
+    it("should parse to domain", () => {
       // Setup
       const example = new ExampleFixture().build();
       const parsed = fromDomain(example);

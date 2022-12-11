@@ -13,7 +13,7 @@ import { ExampleFixture } from "@test/resources/fixtures/example-fixture";
 describe("Get Example API", () => {
   jest.setTimeout(INTEGRATION_DEFAULT_TIMEOUT);
 
-  it("Should store then get the example", async () => {
+  it("should store then get the example", async () => {
     await new IntegrationTestSetup().run(async ({ app, dynamodb }) => {
       const example = new ExampleFixture().build();
       const repository = new DynamoDBExampleRepository(dynamodb.config);
@@ -31,7 +31,7 @@ describe("Get Example API", () => {
     });
   });
 
-  it("Should get all examples", async () => {
+  it("should get all examples", async () => {
     await new IntegrationTestSetup().run(async ({ app, dynamodb }) => {
       const numberOfExamples = faker.datatype.number({ min: 2, max: 10 });
       const examples = new ExampleFixture().buildMany(numberOfExamples);
@@ -47,7 +47,7 @@ describe("Get Example API", () => {
     });
   });
 
-  it("Should store and get all examples in memory", async () => {
+  it("should store and get all examples in memory", async () => {
     const envs = {
       [OptionalEnv.USE_IN_MEMORY_REPOSITORY]: "1",
     };
@@ -74,7 +74,7 @@ describe("Get Example API", () => {
     });
   });
 
-  it("Should return 400 when Uuid is invalid", async () => {
+  it("should return 400 when Uuid is invalid", async () => {
     await new IntegrationTestSetup().run(async ({ app }) => {
       const invalidUuid = faker.random.word();
       const response = await request(app.getHttpServer())
