@@ -6,6 +6,7 @@ on:
       - master
     paths:
       - "docs/asyncapi.yml"
+      - ".github/workflows/docs_pipeline.yml"
 
 permissions:
   contents: read
@@ -21,10 +22,12 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     container:
-      image: node:16-slim
+      image: node:18-slim
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      - name: Checkout files
+        uses: Bhacaz/checkout-files@v2
+        with:
+          files: docs
       - name: Validate AsyncAPI document
         uses: WaleedAshraf/asyncapi-github-action@v0.0.8
         with:
