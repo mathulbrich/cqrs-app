@@ -21,9 +21,9 @@ jobs:
     steps:
       - run: env
       - name: Checkout repository
-        uses: actions/checkout@v2
-      - name: Cache node modules
-        uses: actions/cache@v2
+        uses: actions/checkout@v3
+      - name: Restore node modules
+        uses: actions/cache/restore@v3
         env:
           cache-name: node-modules
         with:
@@ -36,12 +36,17 @@ jobs:
       - name: Clean for packaging
         run: |
           set -e
-          apt update && apt install -y tar gzip zip
+          apt update && apt install -y tar gzip zip curl
           rm -rf node_modules
           yarn install --production --frozen-lockfile
+          curl -sf https://gobinaries.com/tj/node-prune | sh
+          node-prune
+      - name: Package
+        run: |
+          set -e
           zip -qr /tmp/${SERVICE_NAME}.zip dist docs node_modules
       - name: Upload lambda artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ${{ env.SERVICE_NAME }}
           path: /tmp/${{ env.SERVICE_NAME }}.zip
@@ -56,9 +61,9 @@ jobs:
     steps:
       - run: env
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Cache node modules
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         env:
           cache-name: node-modules
         with:
@@ -77,9 +82,9 @@ jobs:
       SERVICE_NAME: cqrs-app
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: Download lambda artifact
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
       with:
           name: ${{ env.SERVICE_NAME }}
           path: /tmp
@@ -119,9 +124,9 @@ jobs:
     steps:
       - run: env
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Cache node modules
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         env:
           cache-name: node-modules
         with:
@@ -146,7 +151,7 @@ jobs:
           yarn test:cov
       - name: Store test results
         if: ${{ failure() }}
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: code-coverage-report
           path: coverage/
