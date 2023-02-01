@@ -1,6 +1,7 @@
 import { ModuleRef } from "@nestjs/core";
 
 import { Logger } from "@app/common/logging/logger";
+import { safeParseOrString } from "@app/lib/json";
 import { Injectable } from "@app/lib/nest/injectable";
 import { QueueMapping } from "@app/queue/application/queue-mapper";
 import { SQSQueueUtil } from "@app/queue/application/sqs-queue-util";
@@ -15,17 +16,13 @@ export class SQSLambda {
   async handle(messages: SQSMessageEvent): Promise<void> {
     const [sqsMessage] = messages.Records;
     const queueName = this.utils.getQueueFromArn(sqsMessage.eventSourceARN);
-    const message = JSON.parse(sqsMessage.body ?? "{}");
+    const message = safeParseOrString(sqsMessage.body ?? "{}");
     this.logger.info("Processing SQS Message", { message, queueName });
-    const queueListener = await this.moduleRef.resolve(
-      QueueMapping[queueName].listener,
-      undefined,
-      {
-        strict: false,
-      },
-    );
+    const queueHandler = await this.moduleRef.resolve(QueueMapping[queueName].listener, undefined, {
+      strict: false,
+    });
 
-    await queueListener.execute(message).catch((error) => {
+    await queueHandler.execute(message).catch((error) => {
       this.logger.error(`Error processing queue ${queueName} message`, error.stack);
       throw error;
     });

@@ -1,5 +1,4 @@
-if config.tilt_subcommand != 'down':
-  allow_k8s_contexts(k8s_context())
+allow_k8s_contexts(k8s_context())
 
 docker_compose("./docker/docker-compose.yml")
 watch_file("./docker")

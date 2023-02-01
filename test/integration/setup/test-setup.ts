@@ -18,7 +18,7 @@ export type Envs = {
 };
 
 const ConfigurableServices = ["SQS", "DYNAMODB", "S3"] as const;
-type ConfigurableService = typeof ConfigurableServices[number];
+type ConfigurableService = (typeof ConfigurableServices)[number];
 
 type MappedConfigurableServices = {
   DYNAMODB: DynamoDBTestContainer;

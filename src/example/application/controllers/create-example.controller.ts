@@ -24,6 +24,7 @@ export class CreateExampleController {
         name,
       }),
       messageId: id,
+      groupId: id,
     });
 
     res.set("example-id", id).send();

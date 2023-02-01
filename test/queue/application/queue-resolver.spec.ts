@@ -188,7 +188,129 @@ describe(QueueResolver.name, () => {
       expect(publisher.totalOfListenersFor(ResolvedEvent)).toBe(0);
       expect(enqueuer.getEnqueuedMessages()).toHaveLength(1);
       const enqueuedMessage = enqueuer.getEnqueuedMessages()[0];
-      expect(enqueuedMessage.payload).toBe(`{"foo":123}`);
+      expect(enqueuedMessage.payload).toStrictEqual({ foo: 123 });
+      expect(enqueuedMessage.queue).toBe("create-example");
+      expect(enqueuedMessage.messageId).toBe(messageId);
+      expect(enqueuedMessage.groupId).toBe(group);
+    });
+
+    it("should resolve with invalid payload and publish to DLQ with custom dlq payload", async () => {
+      const { enqueuer, publisher, resolver } = new TestArguments();
+      const group = Uuid.generate().toString();
+      const messageId = Uuid.generate().toString();
+
+      await resolver.resolveWith({
+        execute: async (payload) => publisher.publish(new ResolvedEvent(payload.foo)),
+        resolves: [ResolvedEvent],
+        rejects: [],
+        data: {
+          foo: 123,
+        },
+        parser: QueuePayload,
+        dlq: {
+          name: "create-example",
+          group,
+          messageId,
+          customizePayload: (payload, errorDetails) => ({
+            ...payload,
+            foo2: 456,
+            errorDetails,
+          }),
+        },
+      });
+
+      expect(publisher.totalOfListenersFor(ResolvedEvent)).toBe(0);
+      expect(enqueuer.getEnqueuedMessages()).toHaveLength(1);
+      const enqueuedMessage = enqueuer.getEnqueuedMessages()[0];
+      expect(enqueuedMessage.payload).toEqual({
+        foo: 123,
+        foo2: 456,
+        errorDetails: {
+          _errors: [],
+          foo: {
+            _errors: [
+              {
+                message: "Expected string, received number",
+                code: "invalid_type",
+              },
+            ],
+          },
+        },
+      });
+      expect(enqueuedMessage.queue).toBe("create-example");
+      expect(enqueuedMessage.messageId).toBe(messageId);
+      expect(enqueuedMessage.groupId).toBe(group);
+    });
+
+    it("should resolve with invalid payload and publish to DLQ with errorDetails containing nested properties", async () => {
+      const { enqueuer, publisher, resolver } = new TestArguments();
+      const group = Uuid.generate().toString();
+      const messageId = Uuid.generate().toString();
+      const NestedQueuePayload = z.object({
+        foo: z.object({
+          bar: z
+            .string()
+            .min(10)
+            .refine((v) => v.startsWith("bar"), "must start with bar"),
+          foo: z.number(),
+        }),
+      });
+      const data = {
+        foo: {
+          bar: "foo",
+          foo: "foo",
+        },
+      };
+
+      await resolver.resolveWith({
+        execute: async (payload) => publisher.publish(payload),
+        resolves: [ResolvedEvent],
+        rejects: [],
+        data,
+        parser: NestedQueuePayload,
+        dlq: {
+          name: "create-example",
+          group,
+          messageId,
+          customizePayload: (payload, errorDetails) => ({
+            ...payload,
+            errorDetails,
+          }),
+        },
+      });
+
+      expect(publisher.totalOfListenersFor(ResolvedEvent)).toBe(0);
+      expect(enqueuer.getEnqueuedMessages()).toHaveLength(1);
+      const enqueuedMessage = enqueuer.getEnqueuedMessages()[0];
+      expect(enqueuedMessage.payload).toEqual({
+        ...data,
+        errorDetails: {
+          _errors: [],
+          foo: {
+            _errors: [],
+            foo: {
+              _errors: [
+                {
+                  message: "Expected number, received string",
+                  code: "invalid_type",
+                },
+              ],
+            },
+            bar: {
+              _errors: [
+                {
+                  message: "String must contain at least 10 character(s)",
+                  code: "too_small",
+                },
+                {
+                  message: "must start with bar",
+                  code: "custom",
+                },
+              ],
+            },
+          },
+        },
+      });
       expect(enqueuedMessage.queue).toBe("create-example");
       expect(enqueuedMessage.messageId).toBe(messageId);
       expect(enqueuedMessage.groupId).toBe(group);
@@ -227,6 +349,31 @@ describe(QueueResolver.name, () => {
       });
 
       expect(enqueuer.getEnqueuedMessages()).toHaveLength(0);
+    });
+
+    it("should not customize payload when data is not an object", async () => {
+      const { enqueuer, publisher, resolver } = new TestArguments();
+      let customized = false;
+
+      await resolver.resolveWith({
+        execute: async (payload) => publisher.publish(new ResolvedEvent(payload.foo)),
+        resolves: [ResolvedEvent],
+        rejects: [],
+        data: "blah",
+        parser: QueuePayload,
+        dlq: {
+          name: "create-example",
+          customizePayload: (payload) => {
+            customized = true;
+            return { ...payload, foo: "bar" };
+          },
+        },
+      });
+
+      expect(enqueuer.getEnqueuedMessages()).toHaveLength(1);
+      expect(customized).toBe(false);
+      const enqueuedMessage = enqueuer.getEnqueuedMessages()[0];
+      expect(enqueuedMessage.payload).toEqual("blah");
     });
   });
 });
