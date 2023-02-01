@@ -1,4 +1,5 @@
 import { SendMessageCommand, SQSClient } from "@aws-sdk/client-sqs";
+import { isUndefined, omitBy } from "lodash";
 
 import { AppConfigService } from "@app/common/config/app-config-service";
 import { Logger } from "@app/common/logging/logger";
@@ -17,21 +18,33 @@ export class SQSEnqueuer implements Enqueuer {
     });
   }
 
-  async enqueue({ groupId, messageId, payload, queue }: EnqueueArguments): Promise<void> {
+  async enqueue({
+    groupId,
+    messageId,
+    payload,
+    queue,
+    delaySeconds,
+  }: EnqueueArguments): Promise<void> {
+    const queuePayload = typeof payload === "object" ? this.formatObjectPayload(payload) : payload;
     this.logger.log(`Sending message to ${queue}`, {
       groupId,
       messageId,
-      payload,
+      payload: queuePayload,
       queue,
     });
 
     await this.client.send(
       new SendMessageCommand({
-        MessageBody: payload,
+        DelaySeconds: delaySeconds && delaySeconds < 0 ? undefined : delaySeconds,
+        MessageBody: queuePayload,
         MessageDeduplicationId: messageId,
-        MessageGroupId: groupId ?? messageId,
-        QueueUrl: this.utils.buildUrl(queue),
+        MessageGroupId: groupId,
+        // TODO change to build for external queues too when we have them
+        QueueUrl: this.utils.buildInternalUrl(queue),
       }),
     );
+  }
+  private formatObjectPayload(payload: object): string {
+    return JSON.stringify(omitBy(payload, isUndefined));
   }
 }

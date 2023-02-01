@@ -2,15 +2,7 @@ import { NestMiddleware } from "@nestjs/common";
 import { Request, Response } from "express";
 
 import { Logger } from "@app/common/logging/logger";
-
-/* istanbul ignore next */
-export const safeParse = (data: unknown): unknown => {
-  try {
-    return typeof data === "string" ? JSON.parse(data) : data;
-  } catch (err) {
-    return data;
-  }
-};
+import { safeParse } from "@app/lib/json";
 
 export class LoggingMiddleware implements NestMiddleware<Request, Response> {
   private readonly logger = new Logger("HTTP");

@@ -1,4 +1,5 @@
-import { ZodType, ZodTypeDef } from "zod";
+import { defaultTo, isObject } from "lodash";
+import { ZodType, ZodTypeDef, z } from "zod";
 
 import { EventSubscriber } from "@app/common/domain/event-subscriber";
 import { Logger } from "@app/common/logging/logger";
@@ -13,15 +14,20 @@ interface ResolverOptions {
   rejects: Array<Newable<object>>;
 }
 
+type ErrorType = { message: string; code: string };
+type ParserType<T> = ZodType<T, ZodTypeDef, unknown>;
+type PayloadParseError<T> = z.inferFormattedError<ParserType<T>, ErrorType>;
+
 export interface ResolverWithDataOptions<T> {
-  data: object;
+  data: object | string;
   dlq?: {
+    customizePayload?: (payload: object, error: PayloadParseError<T>) => object;
     group?: string;
     messageId?: string;
     name: QueueName;
   };
   execute(data: T): Promise<void>;
-  parser: ZodType<T, ZodTypeDef, unknown>;
+  parser: ParserType<T>;
   resolves: Array<Newable<object>>;
   rejects: Array<Newable<object>>;
 }
@@ -42,21 +48,12 @@ export class QueueResolver {
       rejected = true;
     };
 
-    for (const event of resolves) {
-      this.subscriber.subscribe(event, resolvedCallback);
-    }
-
-    for (const event of rejects) {
-      this.subscriber.subscribe(event, rejectedCallback);
-    }
+    resolves.forEach((event) => this.subscriber.subscribe(event, resolvedCallback));
+    rejects.forEach((event) => this.subscriber.subscribe(event, rejectedCallback));
 
     await execute().finally(() => {
-      for (const event of resolves) {
-        this.subscriber.unsubscribe(event, resolvedCallback);
-      }
-      for (const event of rejects) {
-        this.subscriber.unsubscribe(event, rejectedCallback);
-      }
+      resolves.forEach((event) => this.subscriber.unsubscribe(event, resolvedCallback));
+      rejects.forEach((event) => this.subscriber.unsubscribe(event, rejectedCallback));
     });
 
     if (rejected || !resolved) {
@@ -72,31 +69,35 @@ export class QueueResolver {
     resolves,
     rejects,
   }: ResolverWithDataOptions<T>): Promise<void> {
-    try {
-      const parsed = await parser.parseAsync(data);
+    const parsed = await parser.safeParseAsync(data);
 
-      // eslint-disable-next-line @typescript-eslint/return-await
+    if (parsed.success) {
       return this.resolve({
-        execute: async () => execute(parsed),
+        execute: async () => execute(parsed.data),
         rejects,
         resolves,
       });
-    } catch (error) {
-      this.logger.error("Error parsing data using parser. Ignoring invalid payload", {
-        data,
-        error,
-        parser,
-      });
-      if (dlq) {
-        await this.enqueuer.enqueue({
-          payload: JSON.stringify(data),
-          messageId: dlq.messageId,
-          queue: dlq.name,
-          groupId: dlq.group,
-        });
-      }
-
-      return Promise.resolve();
     }
+    this.logger.error("Error parsing data using parser. Ignoring invalid payload", {
+      data,
+      error: parsed.error,
+      parser,
+    });
+    if (dlq) {
+      const errorDetails = parsed.error.format((issue) => ({
+        message: issue.message,
+        code: issue.code,
+      }));
+      await this.enqueuer.enqueue({
+        payload: isObject(data)
+          ? defaultTo(dlq?.customizePayload?.(data, errorDetails), data)
+          : data,
+        messageId: dlq.messageId,
+        queue: dlq.name,
+        groupId: dlq.group,
+      });
+    }
+
+    return Promise.resolve();
   }
 }

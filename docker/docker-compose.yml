@@ -24,7 +24,7 @@ services:
       - default
 
   dynamodb:
-    command: ["-jar", "DynamoDBLocal.jar", "-sharedDb", "-dbPath", "/var/lib/dynamodb/"]
+    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath /var/lib/dynamodb/ -cors http://localhost:8080"
     container_name: dynamodb
     image: amazon/dynamodb-local:latest
     networks:
@@ -66,6 +66,8 @@ services:
     ports:
       - 9000:9000
       - 9001:9001
+    networks:
+      - default
     volumes:
       - minio_data:/data
       - minio_config:/root/.minio

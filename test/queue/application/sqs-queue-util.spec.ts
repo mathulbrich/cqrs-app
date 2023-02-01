@@ -15,7 +15,7 @@ class TestArguments {
 describe(SQSQueueUtil.name, () => {
   it("should build internal fifo url correctly", () => {
     const { utils } = new TestArguments();
-    const url = utils.buildUrl("create-example");
+    const url = utils.buildInternalUrl("create-example");
     expect(url).toBe("http://queue/create-example-test-suffix.fifo");
   });
 

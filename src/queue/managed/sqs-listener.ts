@@ -14,6 +14,7 @@ import { AppConfigService } from "@app/common/config/app-config-service";
 import { Logger } from "@app/common/logging/logger";
 import { wrapInContext, WrapParams } from "@app/common/logging/wrap-in-context";
 import { SQS_QUEUE_CONTEXT } from "@app/constants";
+import { safeParseOrString } from "@app/lib/json";
 import { Injectable } from "@app/lib/nest/injectable";
 import { QueueMapping } from "@app/queue/application/queue-mapper";
 import { InternalQueue } from "@app/queue/application/queue-names";
@@ -23,6 +24,7 @@ import { SQSQueueUtil } from "@app/queue/application/sqs-queue-util";
 export class SQSListener {
   private readonly logger = new Logger(SQSListener.name);
   private stopped = false;
+  private readonly client;
 
   constructor(
     private readonly config: AppConfigService,
@@ -30,7 +32,11 @@ export class SQSListener {
     private readonly utils: SQSQueueUtil,
     @Inject(PARAMS_PROVIDER_TOKEN)
     private readonly params: Params,
-  ) {}
+  ) {
+    this.client = new SQSClient({
+      endpoint: config.queue.sqsQueueEndpoint,
+    });
+  }
 
   stop(): void {
     this.stopped = true;
@@ -53,18 +59,15 @@ export class SQSListener {
       return;
     }
 
-    const client = new SQSClient({
-      endpoint: this.config.queue.sqsQueueEndpoint,
-    });
-    const queueUrl = this.utils.buildUrl(queueName);
-    const messages = await this.receiveMessages(client, queueUrl);
+    const queueUrl = this.utils.buildInternalUrl(queueName);
+    const messages = await this.receiveMessages(queueUrl);
 
     // the processing is doing sequentially to avoid cross message event issues
     for (const sqsMessage of messages) {
       await wrapInContext(this.wrapParams(), async () => {
-        const message = JSON.parse(sqsMessage.Body ?? "{}");
+        const message = safeParseOrString(sqsMessage.Body ?? "{}");
         this.logger.info("Processing SQS Message", { message, queueName });
-        const queueListener = await this.moduleRef.resolve(
+        const queueHandler = await this.moduleRef.resolve(
           QueueMapping[queueName].listener,
           undefined,
           {
@@ -72,9 +75,9 @@ export class SQSListener {
           },
         );
 
-        await queueListener
+        await queueHandler
           .execute(message)
-          .then(async () => this.deleteMessage(client, queueUrl, sqsMessage))
+          .then(async () => this.deleteMessage(queueUrl, sqsMessage))
           .catch((error) => {
             this.logger.error(`Error processing queue ${queueName} message`, error.stack);
           });
@@ -84,14 +87,14 @@ export class SQSListener {
     setTimeout(this.listen.bind(this, queueName), this.config.queue.sqsPollingIntervalMillis);
   }
 
-  private async receiveMessages(client: SQSClient, queueUrl: string): Promise<Message[]> {
+  private async receiveMessages(queueUrl: string): Promise<Message[]> {
     const command = new ReceiveMessageCommand({
       MaxNumberOfMessages: this.config.queue.sqsQueueBatchConsumeSize,
       QueueUrl: queueUrl,
       WaitTimeSeconds: this.config.queue.sqsQueueWaitTimeSeconds,
     });
 
-    return client
+    return this.client
       .send(command)
       .then((result) => result.Messages ?? [])
       .catch((error) => {
@@ -100,12 +103,8 @@ export class SQSListener {
       });
   }
 
-  private async deleteMessage(
-    client: SQSClient,
-    queueUrl: string,
-    message: Message,
-  ): Promise<void> {
-    await client.send(
+  private async deleteMessage(queueUrl: string, message: Message): Promise<void> {
+    await this.client.send(
       new DeleteMessageCommand({
         QueueUrl: queueUrl,
         ReceiptHandle: message.ReceiptHandle,

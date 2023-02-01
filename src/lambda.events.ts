@@ -5,7 +5,7 @@ import { SQSMessageEvent } from "@app/queue/lambda/sqs-event";
 import { SQSLambda } from "@app/queue/lambda/sqs-lambda";
 
 const EventSource = ["aws:sqs"] as const;
-type EventSource = typeof EventSource[number];
+type EventSource = (typeof EventSource)[number];
 
 interface EventResolver {
   parser: z.AnyZodObject;
